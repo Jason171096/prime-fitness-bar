@@ -24,6 +24,7 @@ export function App() {
       quantity: 1,
       finalPrice: 8.90,
       customization: {
+        customerName: 'Carlos Mendoza (Socio #1042)',
         size: {
           id: '24oz' as const,
           label: 'Monster 24 oz',

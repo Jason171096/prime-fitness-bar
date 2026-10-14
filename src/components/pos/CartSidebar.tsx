@@ -135,13 +135,18 @@ export const CartSidebar: React.FC = () => {
 
                     {/* Size and base price */}
                     {hasCustom && (
-                      <div className="flex items-center gap-2 mt-0.5">
+                      <div className="flex flex-wrap items-center gap-2 mt-0.5">
                         <span className="text-xs font-bold text-emerald-400 font-mono">
                           {item.customization?.size.label} ({item.customization?.size.volumeLabel})
                         </span>
                         <span className="text-[11px] text-slate-400 font-mono">
                           ${item.customization?.unitPrice.toFixed(2)} c/u
                         </span>
+                        {item.customization?.customerName && (
+                          <span className="text-[10px] font-bold text-slate-200 bg-emerald-950/60 border border-emerald-500/40 px-2 py-0.5 rounded-md flex items-center gap-1">
+                            🏷️ Cliente: {item.customization.customerName}
+                          </span>
+                        )}
                       </div>
                     )}
                   </div>

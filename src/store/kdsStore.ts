@@ -39,6 +39,7 @@ const INITIAL_KDS_ORDERS: KDSOrder[] = [
         quantity: 1,
         finalPrice: 10.10,
         customization: {
+          customerName: 'Rodrigo Gómez (#1001)',
           size: SIZE_OPTIONS[1], // 24 oz
           liquidBase: LIQUID_BASES[1], // Leche de Almendras
           protein: PROTEIN_OPTIONS[0], // Isolate Choco
@@ -81,6 +82,7 @@ const INITIAL_KDS_ORDERS: KDSOrder[] = [
         quantity: 1,
         finalPrice: 9.70,
         customization: {
+          customerName: 'Valeria Sotomayor',
           size: SIZE_OPTIONS[0], // 16 oz bowl
           liquidBase: LIQUID_BASES[1], // Leche de Almendras
           protein: PROTEIN_OPTIONS[1], // Isolate Vainilla
@@ -122,6 +124,7 @@ const INITIAL_KDS_ORDERS: KDSOrder[] = [
         quantity: 1,
         finalPrice: 8.80,
         customization: {
+          customerName: 'Carlos Mendoza',
           size: SIZE_OPTIONS[1], // 24 oz
           liquidBase: LIQUID_BASES[5], // Agua de Coco
           protein: PROTEIN_OPTIONS[2], // Whey Fresa

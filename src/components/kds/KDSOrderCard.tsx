@@ -110,9 +110,16 @@ export const KDSOrderCard: React.FC<KDSOrderCardProps> = ({ order }) => {
                       {item.quantity}x {item.product.name}
                     </span>
                     {custom && (
-                      <span className="text-xs font-extrabold text-emerald-400 font-mono">
-                        {custom.size.label} ({custom.size.volumeLabel})
-                      </span>
+                      <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                        <span className="text-xs font-extrabold text-emerald-400 font-mono">
+                          {custom.size.label} ({custom.size.volumeLabel})
+                        </span>
+                        {custom.customerName && (
+                          <span className="text-[10px] font-bold text-slate-200 bg-emerald-950/80 border border-emerald-500/40 px-1.5 py-0.2 rounded font-mono">
+                            🏷️ {custom.customerName}
+                          </span>
+                        )}
+                      </div>
                     )}
                   </div>
 

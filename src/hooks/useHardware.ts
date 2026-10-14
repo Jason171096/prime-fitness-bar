@@ -188,7 +188,7 @@ export function useHardware() {
     ): Promise<HardwareResponse> => {
       const payload: LabelDataPayload = {
         orderNumber,
-        customerName: customerName || 'CLIENTE',
+        customerName: cartItem.customization?.customerName || customerName || 'CLIENTE',
         productName: cartItem.product.name,
         size: cartItem.customization?.size?.label,
         protein: cartItem.customization?.protein?.name,

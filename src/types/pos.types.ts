@@ -67,6 +67,7 @@ export interface Product {
 }
 
 export interface CartItemCustomization {
+  customerName: string; // Nombre del cliente / vaso para la etiqueta térmica de 58mm
   size: SizeOption;
   liquidBase: LiquidBase;
   protein: ProteinOption;

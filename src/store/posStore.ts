@@ -40,6 +40,7 @@ interface POSState {
   // Customization Modal
   isCustomizerOpen: boolean;
   selectedProduct: Product | null;
+  customCustomerName: string;
   customSize: SizeOption;
   customLiquid: LiquidBase;
   customProtein: ProteinOption;
@@ -50,6 +51,7 @@ interface POSState {
 
   openCustomizer: (product: Product, existingCartItem?: CartItem) => void;
   closeCustomizer: () => void;
+  setCustomCustomerName: (name: string) => void;
   setCustomSize: (size: SizeOption) => void;
   setCustomLiquid: (liquid: LiquidBase) => void;
   setCustomProtein: (protein: ProteinOption) => void;
@@ -107,6 +109,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
 
   isCustomizerOpen: false,
   selectedProduct: null,
+  customCustomerName: '',
   customSize: SIZE_OPTIONS[0],
   customLiquid: LIQUID_BASES[1], // Leche de almendras default
   customProtein: PROTEIN_OPTIONS[0], // Isolate choco default
@@ -146,6 +149,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
       set({
         isCustomizerOpen: true,
         selectedProduct: product,
+        customCustomerName: c.customerName || '',
         customSize: c.size,
         customLiquid: c.liquidBase,
         customProtein: c.protein,
@@ -163,9 +167,13 @@ export const usePOSStore = create<POSState>((set, get) => ({
       const defaultExtras =
         EXTRA_OPTIONS.filter((e) => product.defaultExtras?.includes(e.id)) || [];
 
+      // Default name: pre-fill with linked member if available
+      const defaultMemberName = get().selectedMember?.fullName || '';
+
       set({
         isCustomizerOpen: true,
         selectedProduct: product,
+        customCustomerName: defaultMemberName,
         customSize: SIZE_OPTIONS[0],
         customLiquid: defaultLiquid,
         customProtein: defaultProtein,
@@ -178,9 +186,10 @@ export const usePOSStore = create<POSState>((set, get) => ({
   },
 
   closeCustomizer: () => {
-    set({ isCustomizerOpen: false, selectedProduct: null, editingCartItemId: null });
+    set({ isCustomizerOpen: false, selectedProduct: null, customCustomerName: '', editingCartItemId: null });
   },
 
+  setCustomCustomerName: (customCustomerName) => set({ customCustomerName }),
   setCustomSize: (customSize) => set({ customSize }),
   setCustomLiquid: (customLiquid) => set({ customLiquid }),
   setCustomProtein: (customProtein) => set({ customProtein }),
@@ -278,6 +287,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
   saveCustomizationToCart: () => {
     const {
       selectedProduct,
+      customCustomerName,
       customSize,
       customLiquid,
       customProtein,
@@ -287,6 +297,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
       editingCartItemId,
       getCurrentCustomMacros,
       getCurrentCustomPrice,
+      selectedMember,
       cart,
     } = get();
 
@@ -294,8 +305,12 @@ export const usePOSStore = create<POSState>((set, get) => ({
 
     const finalMacros = getCurrentCustomMacros();
     const unitPrice = getCurrentCustomPrice();
+    const resolvedCustomerName =
+      customCustomerName.trim() ||
+      (selectedMember ? selectedMember.fullName : 'Cliente');
 
     const customization: CartItemCustomization = {
+      customerName: resolvedCustomerName,
       size: customSize,
       liquidBase: customLiquid,
       protein: customProtein,
@@ -318,8 +333,14 @@ export const usePOSStore = create<POSState>((set, get) => ({
         }
         return item;
       });
-      set({ cart: updated, isCustomizerOpen: false, editingCartItemId: null, selectedProduct: null });
-      get().showToast('¡Modificadores actualizados con éxito!', 'success');
+      set({
+        cart: updated,
+        isCustomizerOpen: false,
+        editingCartItemId: null,
+        selectedProduct: null,
+        customCustomerName: '',
+      });
+      get().showToast(`¡Vaso para ${resolvedCustomerName} actualizado!`, 'success');
     } else {
       // Adding new custom item
       const newItem: CartItem = {
@@ -334,8 +355,9 @@ export const usePOSStore = create<POSState>((set, get) => ({
         isCustomizerOpen: false,
         editingCartItemId: null,
         selectedProduct: null,
+        customCustomerName: '',
       });
-      get().showToast(`${selectedProduct.name} agregado al pedido`, 'success');
+      get().showToast(`${selectedProduct.name} (${resolvedCustomerName}) agregado al pedido`, 'success');
     }
   },
 

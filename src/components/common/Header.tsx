@@ -92,17 +92,16 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           id="nav-pos-btn"
           onClick={() => onViewChange('pos')}
-          className={`flex items-center gap-2.5 px-5 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[130px] justify-center ${
-            activeView === 'pos'
-              ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-600/30 ring-1 ring-emerald-400/50'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-          }`}
+          className={`flex items-center gap-2.5 px-5 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[130px] justify-center ${activeView === 'pos'
+            ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-600/30 ring-1 ring-emerald-400/50'
+            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+            }`}
         >
           <LayoutGrid className="w-5 h-5" />
           <span>Caja POS</span>
         </button>
 
-        <button
+        {/* <button
           id="nav-kds-btn"
           onClick={() => onViewChange('kds')}
           className={`flex items-center gap-2.5 px-5 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[150px] justify-center relative ${
@@ -118,16 +117,15 @@ export const Header: React.FC<HeaderProps> = ({
               {activeKDICount}
             </span>
           )}
-        </button>
+        </button> */}
 
         <button
           id="nav-inv-btn"
           onClick={() => onViewChange('inventory')}
-          className={`flex items-center gap-2.5 px-5 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[155px] justify-center relative ${
-            activeView === 'inventory'
-              ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-600/30 ring-1 ring-cyan-400/50'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-          }`}
+          className={`flex items-center gap-2.5 px-5 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[155px] justify-center relative ${activeView === 'inventory'
+            ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-600/30 ring-1 ring-cyan-400/50'
+            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+            }`}
         >
           <Boxes className="w-5 h-5" />
           <span>Inventario BOM</span>

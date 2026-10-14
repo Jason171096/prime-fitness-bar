@@ -28,6 +28,7 @@ export const StickerLabelPreview: React.FC<StickerLabelPreviewProps> = ({
   const [justPrinted, setJustPrinted] = useState<boolean>(false);
 
   const custom = item.customization;
+  const effectiveCustomerName = custom?.customerName || customerName || 'CLIENTE';
   const macros = custom ? custom.calculatedMacros : item.product.baseMacros;
 
   const handleSimulatePrint = () => {
@@ -75,7 +76,7 @@ export const StickerLabelPreview: React.FC<StickerLabelPreviewProps> = ({
           </div>
 
           <div className="text-left mt-1 text-[11px] font-bold text-slate-800 truncate">
-            CLIENTE: <span className="uppercase">{customerName}</span>
+            CLIENTE: <span className="uppercase">{effectiveCustomerName}</span>
           </div>
         </div>
 
