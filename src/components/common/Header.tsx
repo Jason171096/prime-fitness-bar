@@ -9,11 +9,13 @@ import {
   User,
   Zap,
   Tag,
+  Receipt,
 } from 'lucide-react';
 import { useKDSStore } from '../../store/kdsStore';
 import { useInventoryStore } from '../../store/inventoryStore';
+import { useBillingStore } from '../../store/billingStore';
 
-export type AppViewMode = 'pos' | 'kds' | 'inventory';
+export type AppViewMode = 'pos' | 'billing' | 'kds' | 'inventory';
 
 interface HeaderProps {
   activeView: AppViewMode;
@@ -31,6 +33,9 @@ export const Header: React.FC<HeaderProps> = ({
 
   const kdsOrders = useKDSStore((s) => s.orders);
   const activeKDICount = kdsOrders.filter((o) => o.status !== 'delivered').length;
+
+  const billingOrders = useBillingStore((s) => s.orders);
+  const pendingBillingCount = billingOrders.filter((o) => o.status === 'pending_payment').length;
 
   const inventory = useInventoryStore((s) => s.inventory);
   const getItemStatus = useInventoryStore((s) => s.getItemStockStatus);
@@ -92,19 +97,36 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           id="nav-pos-btn"
           onClick={() => onViewChange('pos')}
-          className={`flex items-center gap-2.5 px-5 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[130px] justify-center ${activeView === 'pos'
+          className={`flex items-center gap-2.5 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[125px] justify-center ${activeView === 'pos'
             ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-600/30 ring-1 ring-emerald-400/50'
             : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
             }`}
         >
           <LayoutGrid className="w-5 h-5" />
-          <span>Caja POS</span>
+          <span>Toma Comandas</span>
+        </button>
+
+        <button
+          id="nav-billing-btn"
+          onClick={() => onViewChange('billing')}
+          className={`flex items-center gap-2 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[145px] justify-center relative ${activeView === 'billing'
+            ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-600/30 ring-1 ring-emerald-400/50'
+            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+            }`}
+        >
+          <Receipt className="w-5 h-5" />
+          <span>Caja / Cobro</span>
+          {pendingBillingCount > 0 && (
+            <span className="ml-1 px-2 py-0.5 text-xs font-black rounded-full bg-emerald-400 text-slate-950 font-mono shadow-md animate-pulse">
+              {pendingBillingCount}
+            </span>
+          )}
         </button>
 
         {/* <button
           id="nav-kds-btn"
           onClick={() => onViewChange('kds')}
-          className={`flex items-center gap-2.5 px-5 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[150px] justify-center relative ${
+          className={`flex items-center gap-2 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[145px] justify-center relative ${
             activeView === 'kds'
               ? 'bg-gradient-to-r from-amber-600 to-amber-500 text-white shadow-lg shadow-amber-600/30 ring-1 ring-amber-400/50'
               : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
@@ -113,7 +135,7 @@ export const Header: React.FC<HeaderProps> = ({
           <ChefHat className="w-5 h-5" />
           <span>KDS Licuadoras</span>
           {activeKDICount > 0 && (
-            <span className="ml-1 px-2 py-0.5 text-xs font-black rounded-full bg-red-600 text-white animate-pulse shadow-md">
+            <span className="ml-1 px-2 py-0.5 text-xs font-black rounded-full bg-amber-500 text-slate-950 font-mono shadow-md">
               {activeKDICount}
             </span>
           )}
@@ -122,13 +144,13 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           id="nav-inv-btn"
           onClick={() => onViewChange('inventory')}
-          className={`flex items-center gap-2.5 px-5 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[155px] justify-center relative ${activeView === 'inventory'
+          className={`flex items-center gap-2 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[135px] justify-center relative ${activeView === 'inventory'
             ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-600/30 ring-1 ring-cyan-400/50'
             : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
             }`}
         >
           <Boxes className="w-5 h-5" />
-          <span>Inventario BOM</span>
+          <span>Inventario</span>
           {lowStockCount > 0 && (
             <span className="ml-1 px-2 py-0.5 text-xs font-black rounded-full bg-amber-500 text-slate-950 font-mono shadow-md">
               {lowStockCount} !

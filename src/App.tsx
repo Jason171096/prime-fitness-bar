@@ -8,6 +8,7 @@ import { PrintSimulatorModal } from './components/label/PrintSimulatorModal';
 import { OrderSuccessModal } from './components/pos/OrderSuccessModal';
 import { KDSScreen } from './components/kds/KDSScreen';
 import { InventoryScreen } from './components/inventory/InventoryScreen';
+import { BillingView } from './components/billing/BillingView';
 import { Toast } from './components/common/Toast';
 import { usePOSStore } from './store/posStore';
 import { MOCK_PRODUCTS } from './data/mockProducts';
@@ -106,9 +107,11 @@ export function App() {
             {/* Catalog Grid */}
             <ProductCatalog />
             {/* Active Cart & Checkout Trigger */}
-            <CartSidebar />
+            <CartSidebar onNavigateToBilling={() => setActiveView('billing')} />
           </div>
         )}
+
+        {activeView === 'billing' && <BillingView />}
 
         {activeView === 'kds' && <KDSScreen />}
 

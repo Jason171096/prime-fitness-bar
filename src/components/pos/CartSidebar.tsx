@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   ShoppingBag,
   Trash2,
@@ -10,12 +9,18 @@ import {
   UserCheck,
   ChevronRight,
   Flame,
-  ArrowRight,
+  Receipt,
+  Send,
 } from 'lucide-react';
 import { usePOSStore } from '../../store/posStore';
+import { useBillingStore } from '../../store/billingStore';
 import type { CartItem } from '../../types/pos.types';
 
-export const CartSidebar: React.FC = () => {
+interface CartSidebarProps {
+  onNavigateToBilling?: () => void;
+}
+
+export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling }) => {
   const cart = usePOSStore((s) => s.cart);
   const updateQuantity = usePOSStore((s) => s.updateQuantity);
   const removeFromCart = usePOSStore((s) => s.removeFromCart);
@@ -295,23 +300,59 @@ export const CartSidebar: React.FC = () => {
           </div>
         </div>
 
-        {/* Huge Tactile Checkout Button (min 60px height) */}
-        <button
-          id="btn-open-checkout"
-          disabled={cart.length === 0}
-          onClick={openCheckout}
-          className="w-full h-15 rounded-2xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-lime-600 hover:from-emerald-500 hover:to-lime-500 disabled:opacity-40 disabled:pointer-events-none text-white font-black text-base shadow-xl shadow-emerald-500/25 flex items-center justify-between px-6 transition-all active:scale-[0.98] ring-2 ring-emerald-400/40"
-        >
-          <div className="flex items-center gap-2.5">
-            <CreditCard className="w-5 h-5 text-emerald-200" />
-            <span className="tracking-wide uppercase text-sm">Cobrar Pedido</span>
-          </div>
+        {/* Dual Actions: Immediate Checkout OR Send to Billing Queue */}
+        <div className="space-y-2">
+          {/* Main: Send to Billing Queue (Decoupled Counter/Caja Flow) */}
+          <button
+            id="btn-send-to-billing"
+            disabled={cart.length === 0}
+            onClick={() => {
+              if (cart.length === 0) return;
+              const customerName = selectedMember ? selectedMember.fullName : 'Cliente Mostrador';
+              useBillingStore.getState().createPendingOrder({
+                items: cart,
+                customerName,
+                member: selectedMember || undefined,
+                orderType: 'takeaway',
+                source: 'pos_counter',
+                notes: 'Generado desde terminal mostrador',
+              });
+              clearCart();
+              if (onNavigateToBilling) {
+                onNavigateToBilling();
+              }
+            }}
+            className="w-full h-14 rounded-2xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-40 disabled:pointer-events-none text-white font-black text-sm shadow-xl shadow-emerald-500/20 flex items-center justify-between px-5 transition-all active:scale-[0.98] ring-2 ring-emerald-400/40"
+          >
+            <div className="flex items-center gap-2.5">
+              <Receipt className="w-5 h-5 text-emerald-200" />
+              <div className="text-left">
+                <span className="tracking-wide uppercase text-xs font-black block">
+                  Enviar a Caja (Cobro)
+                </span>
+                <span className="text-[10px] text-emerald-100/80 font-normal">
+                  Crea comanda en estado pendiente
+                </span>
+              </div>
+            </div>
 
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xl font-black">${subtotal.toFixed(2)}</span>
-            <ArrowRight className="w-5 h-5" />
-          </div>
-        </button>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-base font-black">${subtotal.toFixed(2)}</span>
+              <Send className="w-4 h-4 text-emerald-200" />
+            </div>
+          </button>
+
+          {/* Secondary: Instant Checkout at Counter */}
+          <button
+            id="btn-open-checkout"
+            disabled={cart.length === 0}
+            onClick={openCheckout}
+            className="w-full h-11 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none text-slate-300 hover:text-white font-bold text-xs border border-slate-800 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+          >
+            <CreditCard className="w-4 h-4 text-emerald-400" />
+            <span>Cobro Inmediato en este Terminal (${subtotal.toFixed(2)})</span>
+          </button>
+        </div>
       </div>
     </aside>
   );
