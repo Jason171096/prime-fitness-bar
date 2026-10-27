@@ -272,9 +272,6 @@ export const PaymentModal: React.FC = () => {
                 <h2 className="text-xl font-extrabold text-white tracking-tight font-mono">
                   LIQUIDAR PEDIDO #{orderBeingPaid.orderNumber}
                 </h2>
-                <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  {orderBeingPaid.orderType === 'takeaway' ? '🛍️ Para Llevar' : '🥤 Consumo en Barra'}
-                </span>
               </div>
               <p className="text-xs text-slate-400">
                 Cliente: <span className="text-slate-200 font-semibold">{orderBeingPaid.customerName}</span> ·{' '}
@@ -308,11 +305,10 @@ export const PaymentModal: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setMethod('cash')}
-                  className={`p-3 rounded-2xl border text-left transition-all active:scale-95 flex flex-col gap-1.5 min-h-[72px] justify-center ${
-                    method === 'cash'
+                  className={`p-3 rounded-2xl border text-left transition-all active:scale-95 flex flex-col gap-1.5 min-h-[72px] justify-center ${method === 'cash'
                       ? 'bg-emerald-950/60 border-emerald-400 text-emerald-300 ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-950/50'
                       : 'bg-slate-950/70 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <Banknote className="w-5 h-5" />
@@ -328,11 +324,10 @@ export const PaymentModal: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setMethod('card')}
-                  className={`p-3 rounded-2xl border text-left transition-all active:scale-95 flex flex-col gap-1.5 min-h-[72px] justify-center ${
-                    method === 'card'
+                  className={`p-3 rounded-2xl border text-left transition-all active:scale-95 flex flex-col gap-1.5 min-h-[72px] justify-center ${method === 'card'
                       ? 'bg-emerald-950/60 border-emerald-400 text-emerald-300 ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-950/50'
                       : 'bg-slate-950/70 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <CreditCard className="w-5 h-5" />
@@ -348,11 +343,10 @@ export const PaymentModal: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setMethod('gym_account')}
-                  className={`p-3 rounded-2xl border text-left transition-all active:scale-95 flex flex-col gap-1.5 min-h-[72px] justify-center ${
-                    method === 'gym_account'
+                  className={`p-3 rounded-2xl border text-left transition-all active:scale-95 flex flex-col gap-1.5 min-h-[72px] justify-center ${method === 'gym_account'
                       ? 'bg-emerald-950/60 border-emerald-400 text-emerald-300 ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-950/50'
                       : 'bg-slate-950/70 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <UserCheck className="w-5 h-5" />
@@ -379,11 +373,10 @@ export const PaymentModal: React.FC = () => {
                       setSplitCardAmount(Math.round((grandTotal - Math.floor(grandTotal / 2)) * 100) / 100);
                     }
                   }}
-                  className={`p-3 rounded-2xl border text-left transition-all active:scale-95 flex flex-col gap-1.5 min-h-[72px] justify-center ${
-                    method === 'split'
+                  className={`p-3 rounded-2xl border text-left transition-all active:scale-95 flex flex-col gap-1.5 min-h-[72px] justify-center ${method === 'split'
                       ? 'bg-emerald-950/60 border-emerald-400 text-emerald-300 ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-950/50'
                       : 'bg-slate-950/70 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <SplitIcon className="w-5 h-5" />
@@ -415,11 +408,10 @@ export const PaymentModal: React.FC = () => {
                       key={preset.label}
                       type="button"
                       onClick={() => setCashInput(preset.value.toFixed(2))}
-                      className={`h-11 rounded-xl text-xs font-mono font-bold border transition-all active:scale-95 flex items-center justify-center ${
-                        parseFloat(cashInput) === preset.value
+                      className={`h-11 rounded-xl text-xs font-mono font-bold border transition-all active:scale-95 flex items-center justify-center ${parseFloat(cashInput) === preset.value
                           ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-md font-black'
                           : 'bg-slate-900 text-slate-300 border-slate-800 hover:bg-slate-800'
-                      }`}
+                        }`}
                     >
                       {preset.label}
                     </button>
@@ -443,11 +435,10 @@ export const PaymentModal: React.FC = () => {
 
                   {/* Panel de Vuelto / Faltante */}
                   <div
-                    className={`sm:col-span-6 h-14 px-4 rounded-xl border flex items-center justify-between ${
-                      isCashSufficient
+                    className={`sm:col-span-6 h-14 px-4 rounded-xl border flex items-center justify-between ${isCashSufficient
                         ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
                         : 'bg-rose-950/40 border-rose-500/40 text-rose-300'
-                    }`}
+                      }`}
                   >
                     <div>
                       <span className="text-[10px] font-black uppercase tracking-wider block">
@@ -480,13 +471,12 @@ export const PaymentModal: React.FC = () => {
                               handleKeypadPress(key);
                             }
                           }}
-                          className={`h-11 rounded-xl font-mono text-sm font-black transition-all active:scale-95 flex items-center justify-center border ${
-                            isSpecial
+                          className={`h-11 rounded-xl font-mono text-sm font-black transition-all active:scale-95 flex items-center justify-center border ${isSpecial
                               ? 'bg-rose-950/30 text-rose-300 border-rose-800/40 hover:bg-rose-900/40'
                               : isPreset
-                              ? 'bg-slate-800/80 text-emerald-400 border-slate-700 hover:bg-slate-700'
-                              : 'bg-slate-900 text-slate-100 border-slate-800 hover:bg-slate-800'
-                          }`}
+                                ? 'bg-slate-800/80 text-emerald-400 border-slate-700 hover:bg-slate-700'
+                                : 'bg-slate-900 text-slate-100 border-slate-800 hover:bg-slate-800'
+                            }`}
                         >
                           {key === 'DEL' ? <Delete className="w-4 h-4" /> : key}
                         </button>
@@ -582,11 +572,10 @@ export const PaymentModal: React.FC = () => {
                         key={m.id}
                         type="button"
                         onClick={() => setSelectedMember(m)}
-                        className={`p-2.5 rounded-xl border text-left transition-all active:scale-95 flex items-center justify-between ${
-                          isSelected
+                        className={`p-2.5 rounded-xl border text-left transition-all active:scale-95 flex items-center justify-between ${isSelected
                             ? 'bg-emerald-950/60 border-emerald-400 ring-2 ring-emerald-500/30'
                             : 'bg-slate-900 border-slate-800 hover:bg-slate-850'
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center gap-2.5">
                           <img
@@ -603,9 +592,8 @@ export const PaymentModal: React.FC = () => {
                         </div>
                         <div className="text-right">
                           <span
-                            className={`text-xs font-mono font-black block ${
-                              canAfford ? 'text-emerald-400' : 'text-rose-400'
-                            }`}
+                            className={`text-xs font-mono font-black block ${canAfford ? 'text-emerald-400' : 'text-rose-400'
+                              }`}
                           >
                             ${m.balance.toFixed(2)}
                           </span>
@@ -619,11 +607,10 @@ export const PaymentModal: React.FC = () => {
                 {/* Banner de Validación de Saldo */}
                 {selectedMember ? (
                   <div
-                    className={`p-3 rounded-xl border flex items-center justify-between ${
-                      selectedMember.balance >= grandTotal
+                    className={`p-3 rounded-xl border flex items-center justify-between ${selectedMember.balance >= grandTotal
                         ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
                         : 'bg-rose-950/40 border-rose-500/40 text-rose-300'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-2.5">
                       {selectedMember.balance >= grandTotal ? (
@@ -638,11 +625,11 @@ export const PaymentModal: React.FC = () => {
                         <span className="text-[11px] opacity-80">
                           {selectedMember.balance >= grandTotal
                             ? `Saldo suficiente ($${selectedMember.balance.toFixed(2)}). Restarán $${(
-                                selectedMember.balance - grandTotal
-                              ).toFixed(2)} tras el cobro.`
+                              selectedMember.balance - grandTotal
+                            ).toFixed(2)} tras el cobro.`
                             : `Saldo insuficiente ($${selectedMember.balance.toFixed(2)}). Faltan $${(
-                                grandTotal - selectedMember.balance
-                              ).toFixed(2)} (Utiliza cobro dividido).`}
+                              grandTotal - selectedMember.balance
+                            ).toFixed(2)} (Utiliza cobro dividido).`}
                         </span>
                       </div>
                     </div>
@@ -668,11 +655,10 @@ export const PaymentModal: React.FC = () => {
 
                 {/* Estado de Cobertura */}
                 <div
-                  className={`p-3 rounded-xl border flex items-center justify-between ${
-                    isSplitFullyCovered
+                  className={`p-3 rounded-xl border flex items-center justify-between ${isSplitFullyCovered
                       ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
                       : 'bg-amber-950/40 border-amber-500/40 text-amber-300'
-                  }`}
+                    }`}
                 >
                   <div>
                     <span className="text-xs font-black block">
@@ -682,8 +668,8 @@ export const PaymentModal: React.FC = () => {
                       {isSplitFullyCovered
                         ? 'La suma de las partes coincide exactamente con el total.'
                         : remainingSplit > 0
-                        ? `Faltan $${remainingSplit.toFixed(2)} por asignar.`
-                        : `Exceso de $${Math.abs(remainingSplit).toFixed(2)} asignado.`}
+                          ? `Faltan $${remainingSplit.toFixed(2)} por asignar.`
+                          : `Exceso de $${Math.abs(remainingSplit).toFixed(2)} asignado.`}
                     </span>
                   </div>
                   <div className="text-right">
@@ -803,11 +789,10 @@ export const PaymentModal: React.FC = () => {
                       setIsCustomTipActive(false);
                       setTipPercent(pct);
                     }}
-                    className={`h-11 rounded-xl text-xs font-mono font-bold transition-all active:scale-95 border flex flex-col items-center justify-center ${
-                      !isCustomTipActive && tipPercent === pct
+                    className={`h-11 rounded-xl text-xs font-mono font-bold transition-all active:scale-95 border flex flex-col items-center justify-center ${!isCustomTipActive && tipPercent === pct
                         ? 'bg-amber-500 text-slate-950 border-amber-400 font-black shadow-md'
                         : 'bg-slate-900 text-slate-300 border-slate-800 hover:bg-slate-800'
-                    }`}
+                      }`}
                   >
                     <span>{pct === 0 ? '0%' : `${pct}%`}</span>
                     {pct > 0 && (
@@ -821,11 +806,10 @@ export const PaymentModal: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsCustomTipActive(true)}
-                  className={`h-11 rounded-xl text-xs font-mono font-bold transition-all active:scale-95 border flex items-center justify-center ${
-                    isCustomTipActive
+                  className={`h-11 rounded-xl text-xs font-mono font-bold transition-all active:scale-95 border flex items-center justify-center ${isCustomTipActive
                       ? 'bg-amber-500 text-slate-950 border-amber-400 font-black shadow-md'
                       : 'bg-slate-900 text-slate-300 border-slate-800 hover:bg-slate-800'
-                  }`}
+                    }`}
                 >
                   Libre
                 </button>
@@ -920,10 +904,10 @@ export const PaymentModal: React.FC = () => {
                     {method === 'cash'
                       ? 'Efectivo'
                       : method === 'card'
-                      ? 'Tarjeta'
-                      : method === 'gym_account'
-                      ? 'Saldo Socio'
-                      : 'Mixto'}
+                        ? 'Tarjeta'
+                        : method === 'gym_account'
+                          ? 'Saldo Socio'
+                          : 'Mixto'}
                   </span>
                 </div>
 

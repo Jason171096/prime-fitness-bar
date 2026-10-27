@@ -10,12 +10,13 @@ import {
   Zap,
   Tag,
   Receipt,
+  Scale,
 } from 'lucide-react';
 import { useKDSStore } from '../../store/kdsStore';
 import { useInventoryStore } from '../../store/inventoryStore';
 import { useBillingStore } from '../../store/billingStore';
 
-export type AppViewMode = 'pos' | 'billing' | 'kds' | 'inventory';
+export type AppViewMode = 'pos' | 'billing' | 'closure' | 'kds' | 'inventory';
 
 interface HeaderProps {
   activeView: AppViewMode;
@@ -121,6 +122,18 @@ export const Header: React.FC<HeaderProps> = ({
               {pendingBillingCount}
             </span>
           )}
+        </button>
+
+        <button
+          id="nav-closure-btn"
+          onClick={() => onViewChange('closure')}
+          className={`flex items-center gap-2 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[145px] justify-center ${activeView === 'closure'
+            ? 'bg-gradient-to-r from-teal-600 to-emerald-500 text-white shadow-lg shadow-teal-600/30 ring-1 ring-emerald-400/50'
+            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+            }`}
+        >
+          <Scale className="w-5 h-5" />
+          <span>Cierre / Arqueo</span>
         </button>
 
         {/* <button

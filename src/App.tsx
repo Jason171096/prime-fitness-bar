@@ -9,6 +9,7 @@ import { OrderSuccessModal } from './components/pos/OrderSuccessModal';
 import { KDSScreen } from './components/kds/KDSScreen';
 import { InventoryScreen } from './components/inventory/InventoryScreen';
 import { BillingView } from './components/billing/BillingView';
+import { CashClosureView } from './components/closure/CashClosureView';
 import { Toast } from './components/common/Toast';
 import { usePOSStore } from './store/posStore';
 import { MOCK_PRODUCTS } from './data/mockProducts';
@@ -111,7 +112,13 @@ export function App() {
           </div>
         )}
 
-        {activeView === 'billing' && <BillingView />}
+        {activeView === 'billing' && (
+          <BillingView onNavigateToClosure={() => setActiveView('closure')} />
+        )}
+
+        {activeView === 'closure' && (
+          <CashClosureView onNavigateToBilling={() => setActiveView('billing')} />
+        )}
 
         {activeView === 'kds' && <KDSScreen />}
 
