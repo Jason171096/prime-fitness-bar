@@ -22,6 +22,7 @@ import {
   RefreshCw,
   X,
   Plus,
+  Scale,
 } from 'lucide-react';
 import { useBilling } from '../../hooks/useBilling';
 import { PaymentModal } from './PaymentModal';
@@ -29,7 +30,11 @@ import { usePOSStore } from '../../store/posStore';
 import type { BillingOrder } from '../../types/billing';
 import type { ReceiptDataPayload } from '../../types/electron';
 
-export const BillingView: React.FC = () => {
+interface BillingViewProps {
+  onNavigateToClosure?: () => void;
+}
+
+export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure }) => {
   const {
     filteredPendingOrders,
     selectedOrderId,
@@ -143,13 +148,6 @@ export const BillingView: React.FC = () => {
             </span>
           </div>
 
-          {/* KPI 2: Urgentes */}
-          {/* {stats.urgentCount > 0 && (
-            <div className="flex items-center gap-1.5 text-xs text-rose-400 animate-pulse font-bold">
-              <AlertTriangle className="w-4 h-4" />
-              <span>{stats.urgentCount} con espera &gt; 7 min</span>
-            </div>
-          )} */}
         </div>
 
         <div className="flex items-center gap-4 text-xs text-slate-400">
@@ -166,6 +164,17 @@ export const BillingView: React.FC = () => {
               ✅ Cobradas Turno: <strong className="text-emerald-400 font-mono">{stats.paidCount}</strong> (${stats.paidTotalAmount.toFixed(2)})
             </span>
           </div>
+
+          {onNavigateToClosure && (
+            <button
+              onClick={onNavigateToClosure}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold active:scale-95 transition-all shadow-sm"
+              title="Ir al Arqueo y Cierre de Turno"
+            >
+              <Scale className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Arqueo de Turno</span>
+            </button>
+          )}
         </div>
       </section>
 
@@ -295,15 +304,7 @@ export const BillingView: React.FC = () => {
                       : 'bg-slate-950/70 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900/60'
                       }`}
                   >
-                    {/* Barra de Acento Izquierda según Urgencia */}
-                    {/* <div
-                      className={`absolute left-0 top-0 bottom-0 w-1.5 ${urgency === 'urgent'
-                          ? 'bg-rose-500'
-                          : urgency === 'warning'
-                            ? 'bg-amber-400'
-                            : 'bg-emerald-500'
-                        }`}
-                    /> */}
+
 
                     {/* Cabecera de la Tarjeta: #ID, Origen y Tiempo en Espera */}
                     <div className="flex items-start justify-between gap-2 pl-1.5">
@@ -323,16 +324,6 @@ export const BillingView: React.FC = () => {
                         </span>
                       </div>
 
-                      {/* Indicador Visual de Tiempo en Espera */}
-                      {/* <div
-                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-mono font-bold ${urgencyConfig.badge}`}
-                      >
-                        <Clock className="w-3.5 h-3.5" />
-                        <span>{formatElapsedTime(elapsed)}</span>
-                        {urgency === 'urgent' && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping" />
-                        )}
-                      </div> */}
                     </div>
 
                     {/* Cliente e Información de Membresía */}
