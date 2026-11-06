@@ -54,7 +54,6 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure })
     getOrderUrgency,
     formatElapsedTime,
     getUrgencyConfig,
-    getSourceLabel,
   } = useBilling();
 
   const showToast = usePOSStore((s) => s.showToast);
@@ -224,8 +223,6 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure })
                 const elapsed = getOrderElapsedSeconds(order);
                 const urgency = getOrderUrgency(order);
                 const urgencyConfig = getUrgencyConfig(urgency);
-                const sourceConfig = getSourceLabel(order.source);
-
                 return (
                   <div
                     key={order.id}
@@ -242,12 +239,6 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure })
                       <div className="flex items-center gap-2.5">
                         <span className="font-mono font-black text-lg text-white tracking-tight">
                           #{order.orderNumber}
-                        </span>
-
-                        <span
-                          className={`text-[10px] px-2 py-0.5 rounded-md font-bold border ${sourceConfig.color}`}
-                        >
-                          {sourceConfig.label}
                         </span>
 
                         <span className="text-[10px] px-2 py-0.5 rounded-md font-bold bg-slate-800 text-slate-300 border border-slate-700">

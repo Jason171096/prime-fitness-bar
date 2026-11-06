@@ -32,6 +32,9 @@ interface POSState {
 
   // Cart
   cart: CartItem[];
+  orderCustomerName: string;
+  setOrderCustomerName: (name: string) => void;
+  getOrderCustomerName: () => string;
   addToCart: (product: Product, custom?: CartItemCustomization) => void;
   removeFromCart: (cartItemId: string) => void;
   updateQuantity: (cartItemId: string, delta: number) => void;
@@ -103,6 +106,26 @@ export const usePOSStore = create<POSState>((set, get) => ({
   activeCategory: 'smoothies',
   searchQuery: '',
   cart: [],
+  orderCustomerName: '',
+  setOrderCustomerName: (orderCustomerName) => set({ orderCustomerName }),
+  getOrderCustomerName: () => {
+    const { selectedMember, orderCustomerName, cart } = get();
+    if (selectedMember) {
+      return selectedMember.fullName;
+    }
+    if (orderCustomerName.trim()) {
+      return orderCustomerName.trim();
+    }
+    const customNames = cart
+      .map((item) => item.customization?.customerName?.trim())
+      .filter((name): name is string => !!name && name.toLowerCase() !== 'cliente');
+
+    if (customNames.length > 0) {
+      const uniqueNames = Array.from(new Set(customNames));
+      return uniqueNames.join(', ');
+    }
+    return 'Cliente Mostrador';
+  },
   members: MOCK_MEMBERS,
   selectedMember: null,
   memberSearchQuery: '',
@@ -321,6 +344,11 @@ export const usePOSStore = create<POSState>((set, get) => ({
       unitPrice,
     };
 
+    const nextOrderCustomerName =
+      get().orderCustomerName.trim() === '' && resolvedCustomerName && resolvedCustomerName !== 'Cliente'
+        ? resolvedCustomerName
+        : get().orderCustomerName;
+
     if (editingCartItemId) {
       // Updating existing item
       const updated = cart.map((item) => {
@@ -339,6 +367,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
         editingCartItemId: null,
         selectedProduct: null,
         customCustomerName: '',
+        orderCustomerName: nextOrderCustomerName,
       });
       get().showToast(`¡Vaso para ${resolvedCustomerName} actualizado!`, 'success');
     } else {
@@ -356,6 +385,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
         editingCartItemId: null,
         selectedProduct: null,
         customCustomerName: '',
+        orderCustomerName: nextOrderCustomerName,
       });
       get().showToast(`${selectedProduct.name} (${resolvedCustomerName}) agregado al pedido`, 'success');
     }
@@ -423,10 +453,14 @@ export const usePOSStore = create<POSState>((set, get) => ({
   },
 
   clearCart: () => {
-    set({ cart: [], selectedMember: null });
+    set({ cart: [], selectedMember: null, orderCustomerName: '' });
   },
 
-  setSelectedMember: (selectedMember) => set({ selectedMember }),
+  setSelectedMember: (selectedMember) =>
+    set((state) => ({
+      selectedMember,
+      orderCustomerName: selectedMember ? selectedMember.fullName : state.orderCustomerName,
+    })),
   setMemberSearchQuery: (memberSearchQuery) => set({ memberSearchQuery }),
 
   openCheckout: () => set({ isCheckoutOpen: true }),
@@ -485,11 +519,15 @@ export const usePOSStore = create<POSState>((set, get) => ({
       cashChange = Math.max(0, Math.round((cashAmount - total) * 100) / 100);
     }
 
+    const resolvedCustomer = selectedMember
+      ? `${selectedMember.fullName} (#${selectedMember.memberNumber})`
+      : get().getOrderCustomerName();
+
     const order: Order = {
       id: `ord-${Date.now()}`,
       orderNumber,
       createdAt: orderCreatedAt,
-      customerName: selectedMember ? `${selectedMember.fullName} (#${selectedMember.memberNumber})` : 'Cliente Mostrador',
+      customerName: resolvedCustomer,
       member: selectedMember || undefined,
       items: [...cart],
       subtotal,
@@ -518,6 +556,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
       lastOrder: order,
       isSuccessModalOpen: true,
       selectedMember: null,
+      orderCustomerName: '',
     });
 
     get().showToast(`¡Pedido #${orderNumber} cobrado y enviado al KDS!`, 'success');

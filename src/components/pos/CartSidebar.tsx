@@ -6,6 +6,7 @@ import {
   Edit2,
   Tag,
   CreditCard,
+  User,
   UserCheck,
   ChevronRight,
   Flame,
@@ -22,6 +23,9 @@ interface CartSidebarProps {
 
 export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling }) => {
   const cart = usePOSStore((s) => s.cart);
+  const orderCustomerName = usePOSStore((s) => s.orderCustomerName);
+  const setOrderCustomerName = usePOSStore((s) => s.setOrderCustomerName);
+  const getOrderCustomerName = usePOSStore((s) => s.getOrderCustomerName);
   const updateQuantity = usePOSStore((s) => s.updateQuantity);
   const removeFromCart = usePOSStore((s) => s.removeFromCart);
   const clearCart = usePOSStore((s) => s.clearCart);
@@ -97,16 +101,29 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
             </button>
           </div>
         ) : (
-          <button
-            onClick={openCheckout}
-            className="w-full py-2 px-3 rounded-xl bg-slate-900 border border-dashed border-slate-700 hover:border-emerald-500/50 text-slate-300 hover:text-emerald-300 flex items-center justify-between text-xs font-semibold transition-all group"
-          >
-            <span className="flex items-center gap-2">
-              <UserCheck className="w-4 h-4 text-emerald-400" />
-              Asignar Socio / Cuenta Gimnasio
-            </span>
-            <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-400" />
-          </button>
+          <div className="space-y-2">
+            <div className="relative">
+              <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={orderCustomerName}
+                onChange={(e) => setOrderCustomerName(e.target.value)}
+                placeholder="Nombre del cliente..."
+                className="w-full h-9 pl-9 pr-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-semibold"
+              />
+            </div>
+
+            <button
+              onClick={openCheckout}
+              className="w-full py-1.5 px-3 rounded-lg bg-slate-900/60 border border-dashed border-slate-700 hover:border-emerald-500/50 text-slate-400 hover:text-emerald-300 flex items-center justify-between text-[11px] font-medium transition-all group"
+            >
+              <span className="flex items-center gap-1.5">
+                <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
+                Asignar Socio / Cuenta Gimnasio
+              </span>
+              <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400" />
+            </button>
+          </div>
         )}
       </div>
 
@@ -308,7 +325,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
             disabled={cart.length === 0}
             onClick={() => {
               if (cart.length === 0) return;
-              const customerName = selectedMember ? selectedMember.fullName : 'Cliente Mostrador';
+              const customerName = getOrderCustomerName();
               useBillingStore.getState().createPendingOrder({
                 items: cart,
                 customerName,

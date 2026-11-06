@@ -168,21 +168,6 @@ export function useBilling() {
     }
   }, []);
 
-  // Helper de origen
-  const getSourceLabel = useCallback((source: OrderSource) => {
-    switch (source) {
-      case 'kiosk':
-        return { label: 'Quiosco #01', color: 'text-purple-400 bg-purple-500/15 border-purple-500/30' };
-      case 'presale':
-        return { label: 'Preventa Recepción', color: 'text-sky-400 bg-sky-500/15 border-sky-500/30' };
-      case 'mobile_app':
-        return { label: 'App PrimeBar', color: 'text-amber-400 bg-amber-500/15 border-amber-500/30' };
-      case 'pos_counter':
-      default:
-        return { label: 'Mostrador Barra', color: 'text-emerald-400 bg-emerald-500/15 border-emerald-500/30' };
-    }
-  }, []);
-
   const handleSettle = useCallback(
     async (payload: PaymentSettlementPayload) => {
       return await settlePayment(payload);
@@ -220,6 +205,5 @@ export function useBilling() {
     getOrderUrgency,
     formatElapsedTime,
     getUrgencyConfig,
-    getSourceLabel,
   };
 }

@@ -3,6 +3,7 @@ import {
   X,
   CreditCard,
   Banknote,
+  User,
   UserCheck,
   Search,
   CheckCircle2,
@@ -18,6 +19,8 @@ export const CheckoutModal: React.FC = () => {
   const isCheckoutOpen = usePOSStore((s) => s.isCheckoutOpen);
   const closeCheckout = usePOSStore((s) => s.closeCheckout);
   const cart = usePOSStore((s) => s.cart);
+  const orderCustomerName = usePOSStore((s) => s.orderCustomerName);
+  const setOrderCustomerName = usePOSStore((s) => s.setOrderCustomerName);
   const members = usePOSStore((s) => s.members);
   const selectedMember = usePOSStore((s) => s.selectedMember);
   const setSelectedMember = usePOSStore((s) => s.setSelectedMember);
@@ -108,6 +111,30 @@ export const CheckoutModal: React.FC = () => {
                 {total.toFixed(2)}
               </span>
             </div>
+          </div>
+
+          {/* Customer Identifier Bar */}
+          <div className="px-4 py-3 rounded-2xl bg-slate-950/80 border border-slate-800 flex items-center justify-between gap-3 text-xs">
+            <span className="text-slate-400 font-bold flex items-center gap-1.5 shrink-0">
+              <User className="w-4 h-4 text-emerald-400" />
+              Cliente:
+            </span>
+            {selectedMember ? (
+              <span className="font-extrabold text-white flex items-center gap-2">
+                {selectedMember.fullName}
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">
+                  {selectedMember.memberNumber}
+                </span>
+              </span>
+            ) : (
+              <input
+                type="text"
+                value={orderCustomerName}
+                onChange={(e) => setOrderCustomerName(e.target.value)}
+                placeholder="Nombre del cliente (ej. Carlos, Valeria)..."
+                className="flex-1 max-w-sm h-8 px-3 rounded-lg bg-slate-900 border border-slate-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-semibold"
+              />
+            )}
           </div>
 
           {/* Payment Method Selector Tabs (Touch 54px height) */}

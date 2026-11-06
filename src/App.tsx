@@ -6,7 +6,6 @@ import { CustomizerModal } from './components/pos/CustomizerModal';
 import { CheckoutModal } from './components/pos/CheckoutModal';
 import { PrintSimulatorModal } from './components/label/PrintSimulatorModal';
 import { OrderSuccessModal } from './components/pos/OrderSuccessModal';
-import { KDSScreen } from './components/kds/KDSScreen';
 import { InventoryScreen } from './components/inventory/InventoryScreen';
 import { BillingView } from './components/billing/BillingView';
 import { CashClosureView } from './components/closure/CashClosureView';
@@ -119,8 +118,6 @@ export function App() {
         {activeView === 'closure' && (
           <CashClosureView onNavigateToBilling={() => setActiveView('billing')} />
         )}
-
-        {activeView === 'kds' && <KDSScreen />}
 
         {activeView === 'inventory' && <InventoryScreen />}
       </main>
