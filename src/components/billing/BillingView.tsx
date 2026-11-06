@@ -337,8 +337,6 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure })
                     </div>
 
                     <p className="text-xs text-slate-400 mt-1 flex items-center gap-2">
-                      <span>Origen: {getSourceLabel(selectedOrder.source).label}</span>
-                      <span>·</span>
                       <span>Creada a las {selectedOrder.createdAt}</span>
                       <span>·</span>
                       <span>Cajero: {selectedOrder.cashierName}</span>
