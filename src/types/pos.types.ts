@@ -1,4 +1,15 @@
-export type Category = 'smoothies' | 'bowls' | 'salads' | 'snacks' | 'drinks';
+export type Category =
+  | 'omelets'
+  | 'chilaquiles'
+  | 'toasts'
+  | 'salads'
+  | 'juices'
+  | 'smoothies'
+  | 'bowls'
+  | 'snacks'
+  | 'drinks';
+
+export type ProteinMeatOption = 'pollo' | 'bistec';
 
 export interface MacroNutrients {
   calories: number; // kcal
@@ -60,6 +71,8 @@ export interface Product {
   isCustomizable: boolean;
   popularBadge?: string;
   tags?: string[];
+  proteinOptions?: ProteinMeatOption[];
+  sideIncluded?: string;
   defaultLiquidId?: string;
   defaultProteinId?: string;
   defaultProteinScoops?: number;

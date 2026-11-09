@@ -1,5 +1,5 @@
 import React from 'react';
-import { CupSoda, Utensils, Salad, Cookie, Droplets } from 'lucide-react';
+import { EggFried, Flame, Sandwich, Salad, Citrus, CupSoda } from 'lucide-react';
 import type { Category } from '../../types/pos.types';
 import { usePOSStore } from '../../store/posStore';
 import { MOCK_PRODUCTS } from '../../data/mockProducts';
@@ -13,34 +13,40 @@ interface CategoryItem {
 
 const CATEGORIES: CategoryItem[] = [
   {
-    id: 'smoothies',
-    label: 'Smoothies Proteicos',
-    sublabel: 'Batidos & Shakes Fit',
-    icon: CupSoda,
+    id: 'omelets',
+    label: 'Omelets & Huevos',
+    sublabel: 'Con Hash Brown & Desayunos',
+    icon: EggFried,
   },
   {
-    id: 'bowls',
-    label: 'Bowls & Açaí Power',
-    sublabel: 'Tazones con Toppings',
-    icon: Utensils,
+    id: 'chilaquiles',
+    label: 'Chilaquiles Fit',
+    sublabel: 'Pollo o Bistec a Elegir',
+    icon: Flame,
+  },
+  {
+    id: 'toasts',
+    label: 'Tost Variedad',
+    sublabel: 'Aguacate, Requesón & Salmón',
+    icon: Sandwich,
   },
   {
     id: 'salads',
-    label: 'Ensaladas & Meals',
-    sublabel: 'Pollo, Salmón & Wraps',
+    label: 'Ensaladas Variedad',
+    sublabel: 'Pollo, Atún, Tofu & Pavo',
     icon: Salad,
   },
   {
-    id: 'snacks',
-    label: 'Snacks & Barritas',
-    sublabel: 'Whey Cookies & Barras',
-    icon: Cookie,
+    id: 'juices',
+    label: 'Jugos Variedad',
+    sublabel: 'Detox, Betabel & Cítricos',
+    icon: Citrus,
   },
   {
-    id: 'drinks',
-    label: 'Bebidas & Hidratación',
-    sublabel: 'BCAA & Electrolitos',
-    icon: Droplets,
+    id: 'smoothies',
+    label: 'Smoothies Variedad',
+    sublabel: 'Whey, Matcha & Creatina',
+    icon: CupSoda,
   },
 ];
 
