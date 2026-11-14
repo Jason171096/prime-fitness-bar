@@ -159,11 +159,6 @@ export const InventoryScreen: React.FC = () => {
     return 'optimal';
   };
 
-  const handleRestock = (item: InventoryItem) => {
-    const restockAmount = Math.round(item.maxCapacity * 0.4);
-    restockItem(item.id, restockAmount);
-    showToast(`Reabastecido: +${restockAmount} ${item.unit} a ${item.name}`, 'success');
-  };
 
   const toggleStepCompleted = (productId: string, stepIndex: number) => {
     setCompletedSteps((prev) => {
@@ -307,11 +302,10 @@ export const InventoryScreen: React.FC = () => {
         <div className="flex items-center gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
           <button
             onClick={() => setActiveTab('stock')}
-            className={`px-4 py-2 rounded-lg text-xs font-black transition-all flex items-center gap-2 ${
-              activeTab === 'stock'
-                ? 'bg-cyan-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
+            className={`px-4 py-2 rounded-lg text-xs font-black transition-all flex items-center gap-2 ${activeTab === 'stock'
+              ? 'bg-cyan-600 text-white shadow-md'
+              : 'text-slate-400 hover:text-slate-200'
+              }`}
           >
             <Boxes className="w-4 h-4" />
             <span>Stock Insumos ({inventory.length})</span>
@@ -319,11 +313,10 @@ export const InventoryScreen: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('bom')}
-            className={`px-4 py-2 rounded-lg text-xs font-black transition-all flex items-center gap-2 ${
-              activeTab === 'bom'
-                ? 'bg-cyan-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
+            className={`px-4 py-2 rounded-lg text-xs font-black transition-all flex items-center gap-2 ${activeTab === 'bom'
+              ? 'bg-cyan-600 text-white shadow-md'
+              : 'text-slate-400 hover:text-slate-200'
+              }`}
           >
             <BookOpen className="w-4 h-4" />
             <span>Recetario & BOM ({recipes.length})</span>
@@ -367,11 +360,10 @@ export const InventoryScreen: React.FC = () => {
                 <button
                   key={cat.id}
                   onClick={() => setFilterStockCategory(cat.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
-                    filterStockCategory === cat.id
-                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                      : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
-                  }`}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${filterStockCategory === cat.id
+                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
+                    : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                    }`}
                 >
                   {cat.label}
                 </button>
@@ -434,12 +426,11 @@ export const InventoryScreen: React.FC = () => {
                             {item.unit === 'ml'
                               ? `${(item.currentStock / 1000).toFixed(2)} L`
                               : item.unit === 'g'
-                              ? `${
-                                  item.currentStock >= 1000
-                                    ? (item.currentStock / 1000).toFixed(2) + ' kg'
-                                    : item.currentStock + ' g'
+                                ? `${item.currentStock >= 1000
+                                  ? (item.currentStock / 1000).toFixed(2) + ' kg'
+                                  : item.currentStock + ' g'
                                 }`
-                              : `${item.currentStock} ${item.unit}`}
+                                : `${item.currentStock} ${item.unit}`}
                           </span>
 
                           <span className="text-xs font-bold text-slate-300 font-mono">
@@ -447,8 +438,8 @@ export const InventoryScreen: React.FC = () => {
                             {item.unit === 'g'
                               ? 'porciones'
                               : item.unit === 'ml'
-                              ? 'servicios'
-                              : item.unit}
+                                ? 'servicios'
+                                : item.unit}
                           </span>
                         </div>
 
@@ -469,16 +460,6 @@ export const InventoryScreen: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Quick Restock Tactile Button */}
-                    <div className="mt-3 pt-2.5 border-t border-slate-800">
-                      <button
-                        onClick={() => handleRestock(item)}
-                        className="w-full h-10 rounded-xl bg-slate-800 hover:bg-cyan-700/80 text-slate-200 hover:text-white text-xs font-black flex items-center justify-center gap-1.5 transition-all active:scale-95 border border-slate-700 cursor-pointer"
-                      >
-                        <Plus className="w-3.5 h-3.5" />
-                        <span>Reabastecer Lote (+Stock)</span>
-                      </button>
-                    </div>
                   </div>
                 );
               })}
@@ -514,51 +495,6 @@ export const InventoryScreen: React.FC = () => {
               )}
             </div>
 
-            {/* Filtro por Estaciones de Preparación */}
-            <div className="flex items-center gap-1.5 overflow-x-auto">
-              <span className="text-[10px] uppercase font-black tracking-wider text-slate-500 mr-1 flex items-center gap-1">
-                <ChefHat className="w-3 h-3" /> Estación:
-              </span>
-              {[
-                { id: 'all', label: 'Todas', icon: Layers },
-                {
-                  id: 'Cocina Caliente / Plancha',
-                  label: 'Cocina Caliente',
-                  icon: Flame,
-                  activeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
-                },
-                {
-                  id: 'Barra Fría / Ensaladas',
-                  label: 'Barra Fría / Toasts',
-                  icon: Salad,
-                  activeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
-                },
-                {
-                  id: 'Barra de Smoothies y Jugos',
-                  label: 'Smoothies & Jugos',
-                  icon: Zap,
-                  activeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
-                },
-              ].map((st) => {
-                const Icon = st.icon;
-                const isSelected = filterStation === st.id;
-                return (
-                  <button
-                    key={st.id}
-                    onClick={() => setFilterStation(st.id)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer ${
-                      isSelected
-                        ? st.activeColor || 'bg-cyan-600 text-white shadow-sm'
-                        : 'bg-slate-950 text-slate-400 hover:text-slate-200 border border-slate-800'
-                    }`}
-                  >
-                    <Icon className="w-3.5 h-3.5" />
-                    <span>{st.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-
             {/* Chips de Categorías */}
             <div className="flex items-center gap-1 overflow-x-auto">
               {[
@@ -573,11 +509,10 @@ export const InventoryScreen: React.FC = () => {
                 <button
                   key={c.id}
                   onClick={() => setFilterCategory(c.id)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all shrink-0 cursor-pointer ${
-                    filterCategory === c.id
-                      ? 'bg-slate-800 text-white border border-slate-700'
-                      : 'text-slate-500 hover:text-slate-300'
-                  }`}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all shrink-0 cursor-pointer ${filterCategory === c.id
+                    ? 'bg-slate-800 text-white border border-slate-700'
+                    : 'text-slate-500 hover:text-slate-300'
+                    }`}
                 >
                   {c.label}
                 </button>
@@ -595,7 +530,6 @@ export const InventoryScreen: React.FC = () => {
                 <span className="text-xs font-black uppercase tracking-wider text-slate-400">
                   Fórmulas Registradas ({filteredRecipes.length})
                 </span>
-                <span className="text-[10px] text-slate-500 font-mono">100% Menú POS</span>
               </div>
 
               {filteredRecipes.length === 0 ? (
@@ -625,11 +559,10 @@ export const InventoryScreen: React.FC = () => {
                     <button
                       key={rec.productId}
                       onClick={() => setSelectedRecipeProductId(rec.productId)}
-                      className={`p-3.5 rounded-xl border text-left transition-all active:scale-[0.98] cursor-pointer relative overflow-hidden flex flex-col gap-2 ${
-                        isSelected
-                          ? 'bg-cyan-950/40 border-cyan-400 ring-1 ring-cyan-500/40 shadow-md'
-                          : 'bg-slate-950 border-slate-850 hover:border-slate-700 hover:bg-slate-900/70'
-                      }`}
+                      className={`p-3.5 rounded-xl border text-left transition-all active:scale-[0.98] cursor-pointer relative overflow-hidden flex flex-col gap-2 ${isSelected
+                        ? 'bg-cyan-950/40 border-cyan-400 ring-1 ring-cyan-500/40 shadow-md'
+                        : 'bg-slate-950 border-slate-850 hover:border-slate-700 hover:bg-slate-900/70'
+                        }`}
                     >
                       {/* Cabecera de la tarjeta */}
                       <div className="flex items-start justify-between gap-2">
@@ -639,30 +572,12 @@ export const InventoryScreen: React.FC = () => {
                           <StationIcon className="w-3 h-3" />
                           <span>{stationInfo.label}</span>
                         </span>
-
-                        {/* Indicador de Stock de Insumos */}
-                        {stockStatus === 'critical' ? (
-                          <span className="flex items-center gap-1 text-[10px] font-black text-rose-400 bg-rose-500/15 px-2 py-0.5 rounded border border-rose-500/30 animate-pulse">
-                            <AlertTriangle className="w-3 h-3" />
-                            <span>Stock Crítico</span>
-                          </span>
-                        ) : stockStatus === 'warning' ? (
-                          <span className="flex items-center gap-1 text-[10px] font-black text-amber-400 bg-amber-500/15 px-2 py-0.5 rounded border border-amber-500/30">
-                            <span>Reordenar</span>
-                          </span>
-                        ) : (
-                          <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-400/90">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                            <span>Insumos OK</span>
-                          </span>
-                        )}
                       </div>
 
                       {/* Nombre del Producto */}
                       <span
-                        className={`font-black text-sm leading-snug line-clamp-1 ${
-                          isSelected ? 'text-cyan-300' : 'text-slate-200'
-                        }`}
+                        className={`font-black text-sm leading-snug line-clamp-1 ${isSelected ? 'text-cyan-300' : 'text-slate-200'
+                          }`}
                       >
                         {rec.productName}
                       </span>
@@ -711,9 +626,8 @@ export const InventoryScreen: React.FC = () => {
                       <div>
                         <div className="flex flex-wrap items-center gap-2">
                           <span
-                            className={`px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider border flex items-center gap-1.5 ${
-                              getStationBadge(selectedRecipe.station).bg
-                            }`}
+                            className={`px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider border flex items-center gap-1.5 ${getStationBadge(selectedRecipe.station).bg
+                              }`}
                           >
                             {React.createElement(getStationBadge(selectedRecipe.station).icon, {
                               className: 'w-3.5 h-3.5',
@@ -808,8 +722,6 @@ export const InventoryScreen: React.FC = () => {
                             <th className="p-3 text-center">Descuento por Venta</th>
                             <th className="p-3">Unidad</th>
                             <th className="p-3">Stock Actual en Almacén</th>
-                            <th className="p-3 text-center">Estado Stock</th>
-                            <th className="p-3 text-right">Acción</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-850">
@@ -886,25 +798,23 @@ export const InventoryScreen: React.FC = () => {
                                           {invItem.unit === 'ml'
                                             ? `${(invItem.currentStock / 1000).toFixed(2)} L`
                                             : invItem.unit === 'g'
-                                            ? `${
-                                                invItem.currentStock >= 1000
-                                                  ? (invItem.currentStock / 1000).toFixed(2) +
-                                                    ' kg'
-                                                  : invItem.currentStock + ' g'
+                                              ? `${invItem.currentStock >= 1000
+                                                ? (invItem.currentStock / 1000).toFixed(2) +
+                                                ' kg'
+                                                : invItem.currentStock + ' g'
                                               }`
-                                            : `${invItem.currentStock} ${invItem.unit}`}
+                                              : `${invItem.currentStock} ${invItem.unit}`}
                                         </span>
                                         <span className="text-slate-500">{percent}%</span>
                                       </div>
                                       <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
                                         <div
-                                          className={`h-full rounded-full ${
-                                            status === 'critical'
-                                              ? 'bg-rose-500'
-                                              : status === 'warning'
+                                          className={`h-full rounded-full ${status === 'critical'
+                                            ? 'bg-rose-500'
+                                            : status === 'warning'
                                               ? 'bg-amber-500'
                                               : 'bg-emerald-500'
-                                          }`}
+                                            }`}
                                           style={{ width: `${Math.min(100, Math.max(5, percent))}%` }}
                                         />
                                       </div>
@@ -916,18 +826,6 @@ export const InventoryScreen: React.FC = () => {
 
                                 <td className="p-3 text-center">{statusBadge}</td>
 
-                                <td className="p-3 text-right">
-                                  {invItem && (
-                                    <button
-                                      onClick={() => handleRestock(invItem)}
-                                      className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-cyan-700/80 text-slate-300 hover:text-white text-[11px] font-bold inline-flex items-center gap-1 border border-slate-700 active:scale-95 transition-all cursor-pointer"
-                                      title="Reabastecer stock de este insumo"
-                                    >
-                                      <Plus className="w-3 h-3" />
-                                      <span>+Stock</span>
-                                    </button>
-                                  )}
-                                </td>
                               </tr>
                             );
                           })}
@@ -974,29 +872,26 @@ export const InventoryScreen: React.FC = () => {
                           <div
                             key={idx}
                             onClick={() => toggleStepCompleted(selectedRecipe.productId, idx)}
-                            className={`p-3.5 rounded-xl border flex items-start gap-3.5 transition-all cursor-pointer select-none active:scale-[0.99] ${
-                              isDone
-                                ? 'bg-emerald-950/20 border-emerald-500/40 opacity-80'
-                                : 'bg-slate-950 border-slate-850 hover:border-slate-700 hover:bg-slate-900/60'
-                            }`}
+                            className={`p-3.5 rounded-xl border flex items-start gap-3.5 transition-all cursor-pointer select-none active:scale-[0.99] ${isDone
+                              ? 'bg-emerald-950/20 border-emerald-500/40 opacity-80'
+                              : 'bg-slate-950 border-slate-850 hover:border-slate-700 hover:bg-slate-900/60'
+                              }`}
                           >
                             {/* Checkbox táctil / Número */}
                             <div
-                              className={`w-7 h-7 rounded-lg shrink-0 flex items-center justify-center font-mono font-black text-xs transition-all ${
-                                isDone
-                                  ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/30'
-                                  : 'bg-slate-850 text-cyan-400 border border-slate-700'
-                              }`}
+                              className={`w-7 h-7 rounded-lg shrink-0 flex items-center justify-center font-mono font-black text-xs transition-all ${isDone
+                                ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/30'
+                                : 'bg-slate-850 text-cyan-400 border border-slate-700'
+                                }`}
                             >
                               {isDone ? <Check className="w-4 h-4 stroke-[3]" /> : idx + 1}
                             </div>
 
                             <p
-                              className={`text-xs font-sans leading-relaxed pt-0.5 ${
-                                isDone
-                                  ? 'line-through text-slate-400'
-                                  : 'text-slate-200 font-medium'
-                              }`}
+                              className={`text-xs font-sans leading-relaxed pt-0.5 ${isDone
+                                ? 'line-through text-slate-400'
+                                : 'text-slate-200 font-medium'
+                                }`}
                             >
                               {step}
                             </p>
