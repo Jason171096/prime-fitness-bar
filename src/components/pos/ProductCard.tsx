@@ -1,5 +1,5 @@
 import React from 'react';
-import { SlidersHorizontal, Plus, Flame, Sparkles } from 'lucide-react';
+import { SlidersHorizontal, Plus } from 'lucide-react';
 import type { Product } from '../../types/pos.types';
 import { usePOSStore } from '../../store/posStore';
 

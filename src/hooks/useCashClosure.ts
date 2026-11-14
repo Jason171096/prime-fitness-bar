@@ -15,7 +15,7 @@ import { useClosureStore } from '../store/closureStore';
 import { useBillingStore } from '../store/billingStore';
 import { usePOSStore } from '../store/posStore';
 import { MOCK_SHIFT_SALES, CATEGORY_METADATA } from '../data/mockShiftSales';
-import { STORE_RECEIPT_INFO, DENOMINATION_CONFIGS } from '../data/closureConstants';
+import { STORE_RECEIPT_INFO } from '../data/closureConstants';
 import type {
   CashClosureReport,
   ShiftFinancialSummary,
@@ -27,7 +27,6 @@ import type {
   SoldProductSummary,
   CategorySalesSummary,
   ShiftPaymentMethod,
-  CashDenominationKey,
 } from '../types/closure';
 import type { ReceiptDataPayload, ReceiptItemPayload } from '../types/electron';
 
@@ -130,7 +129,7 @@ export function useCashClosure() {
         paymentMethod: pMethod,
         paymentMethodLabel: pLabel,
         customerName: order.customerName,
-        memberNumber: order.member?.membershipNumber,
+        memberNumber: order.member?.memberNumber,
         isMember: Boolean(order.member),
         itemsCount: order.items.reduce((acc, i) => acc + i.quantity, 0),
         subtotal: order.subtotal,

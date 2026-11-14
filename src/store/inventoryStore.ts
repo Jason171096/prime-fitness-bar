@@ -21,6 +21,7 @@ interface InventoryState {
   deductStockForOrder: (order: Order) => void;
   restockItem: (itemId: string, addAmount: number) => void;
   resetStock: () => void;
+  updateRecipe: (updatedRecipe: RecipeBOM) => void;
   getItemStockStatus: (item: InventoryItem) => 'critical' | 'warning' | 'optimal';
 }
 
@@ -49,6 +50,14 @@ export const useInventoryStore = create<InventoryState>((set, get) => ({
       return 'warning';
     }
     return 'optimal';
+  },
+
+  updateRecipe: (updatedRecipe: RecipeBOM) => {
+    set((state) => ({
+      recipes: state.recipes.map((rec) =>
+        rec.productId === updatedRecipe.productId ? updatedRecipe : rec
+      ),
+    }));
   },
 
   restockItem: (itemId: string, addAmount: number) => {
@@ -80,7 +89,8 @@ export const useInventoryStore = create<InventoryState>((set, get) => ({
       // 1. Check if product has a base recipe
       const recipe = get().recipes.find((r) => r.productId === item.product.id);
       if (recipe) {
-        recipe.baseIngredients.forEach((ing) => {
+        const ingredientsToDeduct = recipe.ingredients || recipe.baseIngredients || [];
+        ingredientsToDeduct.forEach((ing) => {
           const totalQty = ing.quantity * item.quantity;
           const target = currentInventory.find((inv) => inv.id === ing.inventoryItemId);
           if (target) {
@@ -151,7 +161,7 @@ export const useInventoryStore = create<InventoryState>((set, get) => ({
 
     set({
       inventory: currentInventory,
-      deductionLogs: [newLog, ...get().deductionLogs.slice(0, 15)],
+      deductionLogs: [newLog, ...get().deductionLogs].slice(0, 50),
     });
   },
 }));

@@ -11,17 +11,14 @@
 import React, { useState } from 'react';
 import {
   Search,
-  Clock,
   ShoppingBag,
   Flame,
   CreditCard,
-  AlertTriangle,
   Receipt,
   Printer,
   XCircle,
   RefreshCw,
   X,
-  Plus,
   Scale,
 } from 'lucide-react';
 import { useBilling } from '../../hooks/useBilling';
@@ -45,15 +42,9 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure })
     stats,
     setSelectedOrderId,
     setSearchQuery,
-    setTypeFilter,
-    setUrgencyFilter,
     resetFilters,
     openPaymentModal,
     cancelOrder,
-    getOrderElapsedSeconds,
-    getOrderUrgency,
-    formatElapsedTime,
-    getUrgencyConfig,
   } = useBilling();
 
   const showToast = usePOSStore((s) => s.showToast);
@@ -220,9 +211,6 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure })
             ) : (
               filteredPendingOrders.map((order) => {
                 const isSelected = selectedOrderId === order.id;
-                const elapsed = getOrderElapsedSeconds(order);
-                const urgency = getOrderUrgency(order);
-                const urgencyConfig = getUrgencyConfig(urgency);
                 return (
                   <div
                     key={order.id}

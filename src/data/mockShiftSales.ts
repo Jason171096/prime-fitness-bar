@@ -4,7 +4,7 @@
  * de PrimeFitness Bar para auditar ventas, métodos de pago y consolidado de productos vendidos.
  */
 
-import type { ShiftTransactionSummary, SoldProductSummary, CategorySalesSummary } from '../types/closure';
+import type { ShiftTransactionSummary } from '../types/closure';
 
 export const MOCK_SHIFT_SALES: ShiftTransactionSummary[] = [
   {

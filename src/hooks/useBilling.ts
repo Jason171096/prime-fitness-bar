@@ -12,7 +12,6 @@ import { useBillingStore } from '../store/billingStore';
 import type {
   WaitTimeUrgency,
   PaymentSettlementPayload,
-  OrderSource,
 } from '../types/billing';
 
 export function useBilling() {

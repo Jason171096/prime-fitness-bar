@@ -4,7 +4,6 @@ import {
   Clock,
   Printer,
   LayoutGrid,
-  ChefHat,
   Boxes,
   User,
   Zap,
@@ -12,7 +11,6 @@ import {
   Receipt,
   Scale,
 } from 'lucide-react';
-import { useKDSStore } from '../../store/kdsStore';
 import { useInventoryStore } from '../../store/inventoryStore';
 import { useBillingStore } from '../../store/billingStore';
 
@@ -31,9 +29,6 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [currentTime, setCurrentTime] = useState<string>('');
   const [currentDate, setCurrentDate] = useState<string>('');
-
-  const kdsOrders = useKDSStore((s) => s.orders);
-  const activeKDICount = kdsOrders.filter((o) => o.status !== 'delivered').length;
 
   const billingOrders = useBillingStore((s) => s.orders);
   const pendingBillingCount = billingOrders.filter((o) => o.status === 'pending_payment').length;

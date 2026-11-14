@@ -13,7 +13,6 @@ import {
   Printer,
   Lock,
   Wallet,
-  Receipt,
   TrendingUp,
 } from 'lucide-react';
 import type { ShiftFinancialSummary } from '../../types/closure';
