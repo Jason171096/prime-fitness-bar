@@ -41,8 +41,15 @@ export interface BOMIngredient {
   itemName: string;
   quantity: number;
   unit: InventoryUnit;
+  imageUrl: string;
   isOptional?: boolean;
   costEstimate?: number;
+}
+
+export interface PreparationStep {
+  stepNumber: number;
+  imageUrl: string;
+  instruction: string;
 }
 
 export interface RecipeBOM {
@@ -51,9 +58,13 @@ export interface RecipeBOM {
   category: string;
   station: RecipeStation;
   prepTimeMinutes: number;
+  heroImageUrl: string;
+  tagline: string;
+  badgeText: string;
+  tags: string[];
   ingredients: BOMIngredient[];
   baseIngredients: BOMIngredient[]; // Retrocompatibilidad para useInventoryStore
-  preparationSteps: string[];
+  preparationSteps: PreparationStep[];
   preparationNotes: string;
   chefNotes?: string;
   allergens?: string[];

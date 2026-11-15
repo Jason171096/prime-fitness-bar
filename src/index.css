@@ -65,3 +65,27 @@
 .animate-pulse-glow {
   animation: pulseGlow 1.5s infinite;
 }
+
+/* Kitchen Recipe Card Print Rules */
+@media print {
+  body,
+  html,
+  #root {
+    background: #FAF6F0 !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: auto !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-recipe-sheet {
+    position: static !important;
+    overflow: visible !important;
+    height: auto !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}

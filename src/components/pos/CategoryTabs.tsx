@@ -13,6 +13,12 @@ interface CategoryItem {
 
 const CATEGORIES: CategoryItem[] = [
   {
+    id: 'smoothies',
+    label: 'Smoothies',
+    sublabel: 'Whey, Matcha & Creatina',
+    icon: CupSoda,
+  },
+  {
     id: 'omelets',
     label: 'Omelets & Huevos',
     sublabel: 'Con Hash Brown & Desayunos',
@@ -26,27 +32,21 @@ const CATEGORIES: CategoryItem[] = [
   },
   {
     id: 'toasts',
-    label: 'Tost Variedad',
+    label: 'Tost',
     sublabel: 'Aguacate, Requesón & Salmón',
     icon: Sandwich,
   },
   {
     id: 'salads',
-    label: 'Ensaladas Variedad',
+    label: 'Ensaladas',
     sublabel: 'Pollo, Atún, Tofu & Pavo',
     icon: Salad,
   },
   {
     id: 'juices',
-    label: 'Jugos Variedad',
+    label: 'Jugos',
     sublabel: 'Detox, Betabel & Cítricos',
     icon: Citrus,
-  },
-  {
-    id: 'smoothies',
-    label: 'Smoothies Variedad',
-    sublabel: 'Whey, Matcha & Creatina',
-    icon: CupSoda,
   },
 ];
 
@@ -66,18 +66,16 @@ export const CategoryTabs: React.FC = () => {
             key={cat.id}
             id={`category-tab-${cat.id}`}
             onClick={() => setActiveCategory(cat.id)}
-            className={`flex items-center gap-3.5 px-4.5 py-3 rounded-2xl min-h-[58px] transition-all text-left active:scale-[0.98] border shrink-0 ${
-              isActive
+            className={`flex items-center gap-3.5 px-4.5 py-3 rounded-2xl min-h-[58px] transition-all text-left active:scale-[0.98] border shrink-0 ${isActive
                 ? 'bg-gradient-to-r from-emerald-600 via-emerald-500 to-lime-600 text-white border-emerald-400/60 shadow-lg shadow-emerald-500/25 ring-2 ring-emerald-400/30'
                 : 'bg-slate-900/90 text-slate-300 border-slate-800/90 hover:bg-slate-800/80 hover:border-slate-700'
-            }`}
+              }`}
           >
             <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                isActive
+              className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isActive
                   ? 'bg-white/20 text-white'
                   : 'bg-slate-800 text-emerald-400'
-              }`}
+                }`}
             >
               <Icon className="w-5 h-5" />
             </div>
@@ -88,19 +86,17 @@ export const CategoryTabs: React.FC = () => {
                   {cat.label}
                 </span>
                 <span
-                  className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full ${
-                    isActive
+                  className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full ${isActive
                       ? 'bg-black/25 text-white'
                       : 'bg-slate-800 text-slate-400'
-                  }`}
+                    }`}
                 >
                   {count}
                 </span>
               </div>
               <span
-                className={`text-[11px] ${
-                  isActive ? 'text-emerald-100 font-medium' : 'text-slate-400'
-                }`}
+                className={`text-[11px] ${isActive ? 'text-emerald-100 font-medium' : 'text-slate-400'
+                  }`}
               >
                 {cat.sublabel}
               </span>

@@ -8,27 +8,128 @@ import {
   Flame,
   Salad,
   Zap,
-  CheckCircle2,
-  AlertTriangle,
   Edit3,
   Trash2,
   Save,
   X,
   ChefHat,
-  Layers,
   Sparkles,
   Check,
   RotateCcw,
+  Printer,
+  ChevronLeft,
+  Utensils,
 } from 'lucide-react';
 import { useInventoryStore } from '../../store/inventoryStore';
-import type { InventoryItem, RecipeBOM, RecipeStation, BOMIngredient } from '../../types/inventory.types';
+import type {
+  RecipeBOM,
+  RecipeStation,
+  BOMIngredient,
+  PreparationStep,
+} from '../../types/inventory.types';
 import { usePOSStore } from '../../store/posStore';
 import { MOCK_PRODUCTS } from '../../data/mockProducts';
+import {
+  INGREDIENT_IMAGE_MAP,
+  DEFAULT_INGREDIENT_IMAGE,
+  DEFAULT_STEP_IMAGE,
+} from '../../data/mockRecipes';
+
+// =============================================================================
+// HELPERS EDITORIALES Y DE IMAGEN
+// =============================================================================
+
+interface EditorialImageProps {
+  src: string;
+  alt: string;
+  className?: string;
+}
+
+const EditorialImage: React.FC<EditorialImageProps> = ({ src, alt, className = '' }) => {
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const hasError = !src || failedSrc === src;
+
+  if (hasError) {
+    return (
+      <div
+        className={`flex items-center justify-center bg-[#EFE8DC] text-[#7B7263] ${className}`}
+        aria-label={alt}
+      >
+        <Utensils className="w-6 h-6 opacity-60" />
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      onError={() => setFailedSrc(src)}
+      className={className}
+    />
+  );
+};
+
+const splitEditorialTitle = (name: string): { scriptPart: string; boldPart: string } => {
+  if (name.includes('/')) {
+    const [left, right] = name.split('/').map((s) => s.trim());
+    return { scriptPart: left, boldPart: right };
+  }
+
+  if (name.includes('(') && name.includes(')')) {
+    const openIdx = name.indexOf('(');
+    const closeIdx = name.indexOf(')');
+    const left = name.slice(0, openIdx).trim();
+    const inside = name.slice(openIdx + 1, closeIdx).trim();
+    return { scriptPart: left, boldPart: inside };
+  }
+
+  if (name.includes(':')) {
+    const [left, right] = name.split(':').map((s) => s.trim());
+    return { scriptPart: left, boldPart: right };
+  }
+
+  if (name.includes('&')) {
+    const ampIdx = name.indexOf('&');
+    const left = name.slice(0, ampIdx + 1).trim();
+    const right = name.slice(ampIdx + 1).trim();
+    return { scriptPart: left, boldPart: right };
+  }
+
+  const words = name.split(' ').filter(Boolean);
+  if (words.length <= 2) {
+    return { scriptPart: words[0] || '', boldPart: words.slice(1).join(' ') || name };
+  }
+  const splitIndex = Math.ceil(words.length / 2);
+  return {
+    scriptPart: words.slice(0, splitIndex).join(' '),
+    boldPart: words.slice(splitIndex).join(' '),
+  };
+};
+
+const getCategoryDisplayLabel = (category: string): string => {
+  switch (category) {
+    case 'omelets':
+      return 'Omelets & Huevos';
+    case 'chilaquiles':
+      return 'Chilaquiles Fit';
+    case 'toasts':
+      return 'Tost Artesanal';
+    case 'salads':
+      return 'Ensaladas Fit';
+    case 'juices':
+      return 'Cold-Pressed';
+    case 'smoothies':
+      return 'Smoothie Proteico';
+    default:
+      return category;
+  }
+};
 
 export const InventoryScreen: React.FC = () => {
   const inventory = useInventoryStore((s) => s.inventory);
   const recipes = useInventoryStore((s) => s.recipes);
-  const restockItem = useInventoryStore((s) => s.restockItem);
   const getItemStockStatus = useInventoryStore((s) => s.getItemStockStatus);
   const updateRecipe = useInventoryStore((s) => s.updateRecipe);
   const showToast = usePOSStore((s) => s.showToast);
@@ -89,6 +190,7 @@ export const InventoryScreen: React.FC = () => {
         !q ||
         rec.productName.toLowerCase().includes(q) ||
         rec.category.toLowerCase().includes(q) ||
+        rec.tagline.toLowerCase().includes(q) ||
         (rec.ingredients || rec.baseIngredients || []).some((ing) =>
           ing.name.toLowerCase().includes(q)
         );
@@ -97,12 +199,11 @@ export const InventoryScreen: React.FC = () => {
     });
   }, [recipes, filterStation, filterCategory, searchRecipeQuery]);
 
-  // Receta seleccionada actual
+  // Receta seleccionada actual (permite cerrar la vista cuando selectedRecipeProductId === '')
   const selectedRecipe = useMemo(() => {
-    const found = recipes.find((r) => r.productId === selectedRecipeProductId);
-    if (found) return found;
-    return filteredRecipes[0] || recipes[0] || null;
-  }, [recipes, selectedRecipeProductId, filteredRecipes]);
+    if (!selectedRecipeProductId) return null;
+    return recipes.find((r) => r.productId === selectedRecipeProductId) || null;
+  }, [recipes, selectedRecipeProductId]);
 
   // Metadatos de producto desde mockProducts
   const selectedProductMeta = useMemo(() => {
@@ -159,7 +260,6 @@ export const InventoryScreen: React.FC = () => {
     return 'optimal';
   };
 
-
   const toggleStepCompleted = (productId: string, stepIndex: number) => {
     setCompletedSteps((prev) => {
       const currentRecipeSteps = prev[productId] || {};
@@ -181,12 +281,19 @@ export const InventoryScreen: React.FC = () => {
     showToast('Pasos de preparación reiniciados', 'info');
   };
 
+  const handlePrintRecipe = () => {
+    if (!selectedRecipe) return;
+    showToast(`Preparando ficha de cocina: ${selectedRecipe.productName}`, 'info');
+    setTimeout(() => {
+      window.print();
+    }, 150);
+  };
+
   // ===========================================================================
   // ACCIONES DEL MODAL DE EDICIÓN RÁPIDA
   // ===========================================================================
   const handleOpenEditModal = () => {
     if (!selectedRecipe) return;
-    // Clonar para edición local aislada
     setEditingRecipe(JSON.parse(JSON.stringify(selectedRecipe)));
     setNewStepText('');
     setSelectedNewInventoryId(inventory[0]?.id || '');
@@ -241,6 +348,7 @@ export const InventoryScreen: React.FC = () => {
       itemName: invItem.name,
       quantity: Number(newIngredientQty) || 10,
       unit: invItem.unit,
+      imageUrl: INGREDIENT_IMAGE_MAP[invItem.id] || DEFAULT_INGREDIENT_IMAGE,
     };
 
     const updated = [...currentList, newIng];
@@ -254,17 +362,35 @@ export const InventoryScreen: React.FC = () => {
 
   const handleAddStep = () => {
     if (!editingRecipe || !newStepText.trim()) return;
-    const updatedSteps = [...editingRecipe.preparationSteps, newStepText.trim()];
+    const nextNumber = editingRecipe.preparationSteps.length + 1;
+    const newStep: PreparationStep = {
+      stepNumber: nextNumber,
+      imageUrl: DEFAULT_STEP_IMAGE,
+      instruction: newStepText.trim(),
+    };
     setEditingRecipe({
       ...editingRecipe,
-      preparationSteps: updatedSteps,
+      preparationSteps: [...editingRecipe.preparationSteps, newStep],
     });
     setNewStepText('');
   };
 
+  const handleUpdateStepInstruction = (index: number, instruction: string) => {
+    if (!editingRecipe) return;
+    const updatedSteps = editingRecipe.preparationSteps.map((st, i) =>
+      i === index ? { ...st, instruction } : st
+    );
+    setEditingRecipe({
+      ...editingRecipe,
+      preparationSteps: updatedSteps,
+    });
+  };
+
   const handleRemoveStep = (index: number) => {
     if (!editingRecipe) return;
-    const updatedSteps = editingRecipe.preparationSteps.filter((_, i) => i !== index);
+    const updatedSteps = editingRecipe.preparationSteps
+      .filter((_, i) => i !== index)
+      .map((st, idx) => ({ ...st, stepNumber: idx + 1 }));
     setEditingRecipe({
       ...editingRecipe,
       preparationSteps: updatedSteps,
@@ -279,20 +405,20 @@ export const InventoryScreen: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-slate-950 p-4 gap-4 overflow-hidden select-none">
+    <div className="flex-1 flex flex-col h-full bg-slate-950 p-3 sm:p-4 gap-3 sm:gap-4 overflow-hidden select-none">
       {/* =========================================================================== */}
       {/* TOP INVENTORY TOOLBAR */}
       {/* =========================================================================== */}
-      <div className="h-16 px-5 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between shrink-0 shadow-lg">
+      <div className="no-print min-h-16 px-4 sm:px-5 py-2 rounded-2xl bg-slate-900 border border-slate-800 flex flex-wrap items-center justify-between gap-3 shrink-0 shadow-lg">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0">
             <Boxes className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-base font-black text-white tracking-tight">
+            <h2 className="text-sm sm:text-base font-black text-white tracking-tight">
               Control de Inventario & BOM (Recetario / Fichas Técnicas)
             </h2>
-            <p className="text-xs text-slate-400">
+            <p className="text-[11px] sm:text-xs text-slate-400">
               Descuento automático en tiempo real por cada porción y gramo vendido
             </p>
           </div>
@@ -302,10 +428,11 @@ export const InventoryScreen: React.FC = () => {
         <div className="flex items-center gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
           <button
             onClick={() => setActiveTab('stock')}
-            className={`px-4 py-2 rounded-lg text-xs font-black transition-all flex items-center gap-2 ${activeTab === 'stock'
-              ? 'bg-cyan-600 text-white shadow-md'
-              : 'text-slate-400 hover:text-slate-200'
-              }`}
+            className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-black transition-all flex items-center gap-2 cursor-pointer ${
+              activeTab === 'stock'
+                ? 'bg-cyan-600 text-white shadow-md'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
           >
             <Boxes className="w-4 h-4" />
             <span>Stock Insumos ({inventory.length})</span>
@@ -313,10 +440,11 @@ export const InventoryScreen: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('bom')}
-            className={`px-4 py-2 rounded-lg text-xs font-black transition-all flex items-center gap-2 ${activeTab === 'bom'
-              ? 'bg-cyan-600 text-white shadow-md'
-              : 'text-slate-400 hover:text-slate-200'
-              }`}
+            className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-black transition-all flex items-center gap-2 cursor-pointer ${
+              activeTab === 'bom'
+                ? 'bg-cyan-600 text-white shadow-md'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
           >
             <BookOpen className="w-4 h-4" />
             <span>Recetario & BOM ({recipes.length})</span>
@@ -331,7 +459,6 @@ export const InventoryScreen: React.FC = () => {
         <div className="flex-1 flex flex-col overflow-hidden gap-3">
           {/* Subheader Filters */}
           <div className="flex items-center justify-between gap-3 shrink-0">
-            {/* Search */}
             <div className="relative max-w-sm flex-1">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
@@ -343,7 +470,6 @@ export const InventoryScreen: React.FC = () => {
               />
             </div>
 
-            {/* Category Pills */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5">
               {[
                 { id: 'all', label: 'Todos' },
@@ -360,10 +486,11 @@ export const InventoryScreen: React.FC = () => {
                 <button
                   key={cat.id}
                   onClick={() => setFilterStockCategory(cat.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${filterStockCategory === cat.id
-                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                    : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
-                    }`}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                    filterStockCategory === cat.id
+                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
+                      : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                  }`}
                 >
                   {cat.label}
                 </button>
@@ -398,7 +525,6 @@ export const InventoryScreen: React.FC = () => {
                     className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between shadow-lg relative overflow-hidden"
                   >
                     <div>
-                      {/* Card Header */}
                       <div className="flex items-start justify-between gap-2">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 truncate">
                           {item.supplier}
@@ -419,17 +545,17 @@ export const InventoryScreen: React.FC = () => {
                         {item.containerInfo}
                       </span>
 
-                      {/* Stock Big Metric */}
                       <div className="mt-3 p-3 rounded-xl bg-slate-950 border border-slate-850">
                         <div className="flex items-baseline justify-between">
                           <span className="text-2xl font-black font-mono text-cyan-400 tracking-tight">
                             {item.unit === 'ml'
                               ? `${(item.currentStock / 1000).toFixed(2)} L`
                               : item.unit === 'g'
-                                ? `${item.currentStock >= 1000
-                                  ? (item.currentStock / 1000).toFixed(2) + ' kg'
-                                  : item.currentStock + ' g'
-                                }`
+                                ? `${
+                                    item.currentStock >= 1000
+                                      ? (item.currentStock / 1000).toFixed(2) + ' kg'
+                                      : item.currentStock + ' g'
+                                  }`
                                 : `${item.currentStock} ${item.unit}`}
                           </span>
 
@@ -443,7 +569,6 @@ export const InventoryScreen: React.FC = () => {
                           </span>
                         </div>
 
-                        {/* Visual Capacity Bar */}
                         <div className="mt-2 w-full h-2 bg-slate-900 rounded-full overflow-hidden">
                           <div
                             className={`h-full ${progressColor} transition-all duration-300 rounded-full`}
@@ -459,7 +584,6 @@ export const InventoryScreen: React.FC = () => {
                         </div>
                       </div>
                     </div>
-
                   </div>
                 );
               })}
@@ -469,14 +593,14 @@ export const InventoryScreen: React.FC = () => {
       )}
 
       {/* =========================================================================== */}
-      {/* TAB 2: RECIPE BILL OF MATERIALS (BOM) & FICHA TÉCNICA */}
+      {/* TAB 2: RECIPE BILL OF MATERIALS (BOM) - INFOGRAFÍA EDITORIAL CULINARIA */}
       {/* =========================================================================== */}
       {activeTab === 'bom' && (
         <div className="flex-1 flex flex-col overflow-hidden gap-3">
           {/* Subheader: Búsqueda y Filtros de Estación / Categoría */}
-          <div className="flex flex-wrap items-center justify-between gap-3 shrink-0 bg-slate-900/60 p-2.5 rounded-2xl border border-slate-800">
+          <div className="no-print flex flex-wrap items-center justify-between gap-2.5 shrink-0 bg-slate-900/70 p-2.5 rounded-2xl border border-slate-800">
             {/* Buscador de Receta o Insumo */}
-            <div className="relative w-80 max-w-full">
+            <div className="relative w-full sm:w-72 md:w-80">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="text"
@@ -488,11 +612,33 @@ export const InventoryScreen: React.FC = () => {
               {searchRecipeQuery && (
                 <button
                   onClick={() => setSearchRecipeQuery('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
               )}
+            </div>
+
+            {/* Filtro rápido de Estación */}
+            <div className="flex items-center gap-1 overflow-x-auto">
+              {[
+                { id: 'all', label: 'Todas las estaciones' },
+                { id: 'Cocina Caliente / Plancha', label: 'Cocina Caliente' },
+                { id: 'Barra Fría / Ensaladas', label: 'Barra Fría' },
+                { id: 'Barra de Smoothies y Jugos', label: 'Barra Bebidas' },
+              ].map((st) => (
+                <button
+                  key={st.id}
+                  onClick={() => setFilterStation(st.id)}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all shrink-0 cursor-pointer ${
+                    filterStation === st.id
+                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                      : 'text-slate-400 hover:text-slate-200 bg-slate-950/60 border border-slate-800/60'
+                  }`}
+                >
+                  {st.label}
+                </button>
+              ))}
             </div>
 
             {/* Chips de Categorías */}
@@ -509,10 +655,11 @@ export const InventoryScreen: React.FC = () => {
                 <button
                   key={c.id}
                   onClick={() => setFilterCategory(c.id)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all shrink-0 cursor-pointer ${filterCategory === c.id
-                    ? 'bg-slate-800 text-white border border-slate-700'
-                    : 'text-slate-500 hover:text-slate-300'
-                    }`}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all shrink-0 cursor-pointer ${
+                    filterCategory === c.id
+                      ? 'bg-slate-800 text-white border border-slate-700'
+                      : 'text-slate-500 hover:text-slate-300'
+                  }`}
                 >
                   {c.label}
                 </button>
@@ -520,15 +667,19 @@ export const InventoryScreen: React.FC = () => {
             </div>
           </div>
 
-          {/* Layout Maestro-Detalle */}
-          <div className="flex-1 flex overflow-hidden gap-4">
+          {/* Layout Maestro-Detalle Responsivo para POS Táctil */}
+          <div className="flex-1 flex flex-col lg:flex-row overflow-hidden gap-4">
             {/* =================================================================== */}
-            {/* COLUMNA IZQUIERDA: LISTA MAESTRO DE RECETAS */}
+            {/* COLUMNA IZQUIERDA: LISTA MAESTRO DE RECETAS                         */}
             {/* =================================================================== */}
-            <div className="w-96 bg-slate-900/90 rounded-2xl border border-slate-800 p-3 flex flex-col gap-2 overflow-y-auto shrink-0 shadow-lg">
+            <div
+              className={`no-print w-full lg:w-80 xl:w-96 bg-slate-900/90 rounded-2xl border border-slate-800 p-3 flex-col gap-2 overflow-y-auto shrink-0 shadow-lg ${
+                selectedRecipe ? 'hidden lg:flex' : 'flex flex-1 lg:flex-initial'
+              }`}
+            >
               <div className="flex items-center justify-between px-2 py-1">
                 <span className="text-xs font-black uppercase tracking-wider text-slate-400">
-                  Fórmulas Registradas ({filteredRecipes.length})
+                  Catálogo de Recetas ({filteredRecipes.length})
                 </span>
               </div>
 
@@ -542,7 +693,7 @@ export const InventoryScreen: React.FC = () => {
                       setFilterStation('all');
                       setFilterCategory('all');
                     }}
-                    className="text-cyan-400 underline mt-1 font-bold"
+                    className="text-cyan-400 underline mt-1 font-bold cursor-pointer"
                   >
                     Restablecer filtros
                   </button>
@@ -559,40 +710,71 @@ export const InventoryScreen: React.FC = () => {
                     <button
                       key={rec.productId}
                       onClick={() => setSelectedRecipeProductId(rec.productId)}
-                      className={`p-3.5 rounded-xl border text-left transition-all active:scale-[0.98] cursor-pointer relative overflow-hidden flex flex-col gap-2 ${isSelected
-                        ? 'bg-cyan-950/40 border-cyan-400 ring-1 ring-cyan-500/40 shadow-md'
-                        : 'bg-slate-950 border-slate-850 hover:border-slate-700 hover:bg-slate-900/70'
-                        }`}
+                      className={`p-3 rounded-xl border text-left transition-all active:scale-[0.98] cursor-pointer relative overflow-hidden flex items-center gap-3 ${
+                        isSelected
+                          ? 'bg-cyan-950/40 border-cyan-400 ring-1 ring-cyan-500/40 shadow-md'
+                          : 'bg-slate-950 border-slate-850 hover:border-slate-700 hover:bg-slate-900/70'
+                      }`}
                     >
-                      {/* Cabecera de la tarjeta */}
-                      <div className="flex items-start justify-between gap-2">
-                        <span
-                          className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider border flex items-center gap-1 ${stationInfo.bg}`}
-                        >
-                          <StationIcon className="w-3 h-3" />
-                          <span>{stationInfo.label}</span>
-                        </span>
+                      {/* Miniatura Editorial */}
+                      <div className="w-14 h-14 rounded-xl overflow-hidden border border-slate-800 bg-slate-900 shrink-0">
+                        <EditorialImage
+                          src={rec.heroImageUrl}
+                          alt={rec.productName}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
 
-                      {/* Nombre del Producto */}
-                      <span
-                        className={`font-black text-sm leading-snug line-clamp-1 ${isSelected ? 'text-cyan-300' : 'text-slate-200'
+                      <div className="flex-1 min-w-0 flex flex-col gap-1.5">
+                        {/* Cabecera de la tarjeta */}
+                        <div className="flex items-center justify-between gap-2">
+                          <span
+                            className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider border flex items-center gap-1 ${stationInfo.bg}`}
+                          >
+                            <StationIcon className="w-3 h-3" />
+                            <span>{stationInfo.label}</span>
+                          </span>
+
+                          {/* Indicador discreto de salud de inventario */}
+                          <span
+                            title={
+                              stockStatus === 'critical'
+                                ? 'Insumo en nivel crítico'
+                                : stockStatus === 'warning'
+                                  ? 'Insumo con stock bajo'
+                                  : 'Todos los insumos disponibles'
+                            }
+                            className={`w-2.5 h-2.5 rounded-full shrink-0 ${
+                              stockStatus === 'critical'
+                                ? 'bg-rose-500 animate-pulse'
+                                : stockStatus === 'warning'
+                                  ? 'bg-amber-400'
+                                  : 'bg-emerald-400'
+                            }`}
+                          />
+                        </div>
+
+                        {/* Nombre del Producto */}
+                        <span
+                          className={`font-black text-sm leading-snug line-clamp-1 ${
+                            isSelected ? 'text-cyan-300' : 'text-slate-100'
                           }`}
-                      >
-                        {rec.productName}
-                      </span>
-
-                      {/* Metadatos inferiores */}
-                      <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono border-t border-slate-850/60 pt-1.5">
-                        <span className="flex items-center gap-1">
-                          <Boxes className="w-3 h-3 text-slate-500" />
-                          <span>{ingredientsCount} insumos BOM</span>
+                        >
+                          {rec.productName}
                         </span>
 
-                        <span className="flex items-center gap-1 text-slate-300 font-bold">
-                          <Clock className="w-3 h-3 text-cyan-400" />
-                          <span>{rec.prepTimeMinutes} min</span>
-                        </span>
+                        {/* Metadatos inferiores */}
+                        <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                          <span className="flex items-center gap-1">
+                            <Boxes className="w-3 h-3 text-slate-500" />
+                            <span>{ingredientsCount} insumos</span>
+                          </span>
+
+                          <span className="flex items-center gap-1 text-slate-300 font-bold">
+                            <Clock className="w-3 h-3 text-cyan-400" />
+                            <span>{rec.prepTimeMinutes} min</span>
+                          </span>
+                        </div>
                       </div>
                     </button>
                   );
@@ -601,334 +783,419 @@ export const InventoryScreen: React.FC = () => {
             </div>
 
             {/* =================================================================== */}
-            {/* COLUMNA DERECHA: FICHA TÉCNICA Y OPERATIVA (BOM + PREPARACIÓN) */}
+            {/* COLUMNA DERECHA: FICHA DE RECETA EDITORIAL / INFOGRAFÍA CULINARIA   */}
             {/* =================================================================== */}
-            <div className="flex-1 bg-slate-900/90 rounded-2xl border border-slate-800 p-6 flex flex-col overflow-y-auto shadow-xl">
+            <div
+              className={`flex-1 overflow-y-auto rounded-3xl print-recipe-sheet ${
+                selectedRecipe
+                  ? 'bg-[#FAF6F0] text-[#2B2A27] border border-[#E6DDD0] shadow-2xl'
+                  : 'hidden lg:flex bg-[#FAF6F0]/95 text-[#2B2A27] border border-[#E6DDD0]'
+              }`}
+            >
               {selectedRecipe ? (
-                <div className="space-y-6">
-                  {/* Encabezado Principal del Producto */}
-                  <div className="flex flex-col md:flex-row items-start justify-between gap-4 pb-4 border-b border-slate-800">
-                    <div className="flex items-start gap-4">
-                      {selectedProductMeta?.image ? (
-                        <div className="w-20 h-20 rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 shrink-0 shadow-md">
-                          <img
-                            src={selectedProductMeta.image}
+                <div className="max-w-5xl mx-auto p-5 sm:p-8 lg:p-10 space-y-10">
+                  {/* Botón volver para pantallas táctiles medianas/pequeñas */}
+                  <div className="no-print flex lg:hidden items-center justify-between">
+                    <button
+                      onClick={() => setSelectedRecipeProductId('')}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#EFE8DC] hover:bg-[#E5DCCB] text-[#3F3A32] text-xs font-bold transition-colors cursor-pointer"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                      <span>Volver al Catálogo</span>
+                    </button>
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#7A7164]">
+                      Ficha de Cocina
+                    </span>
+                  </div>
+
+                  {/* =============================================================== */}
+                  {/* BLOQUE 1: ENCABEZADO HERO & PLATILLO PRINCIPAL                  */}
+                  {/* =============================================================== */}
+                  <section className="text-center space-y-4">
+                    {/* Etiqueta superior tipo listón (Banner verde oliva/salvia) */}
+                    <div className="flex justify-center">
+                      <div className="relative inline-flex items-center gap-2 bg-[#4A6B3E] text-[#FAF6F0] px-6 py-1.5 rounded-full shadow-md text-xs font-extrabold uppercase tracking-[0.16em]">
+                        <Clock className="w-3.5 h-3.5 text-[#D8E7D1]" />
+                        <span>
+                          {getCategoryDisplayLabel(selectedRecipe.category)} •{' '}
+                          {selectedRecipe.prepTimeMinutes} min
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Título Principal Combinado (Script cálido + Bold Display) */}
+                    {(() => {
+                      const { scriptPart, boldPart } = splitEditorialTitle(
+                        selectedRecipe.productName
+                      );
+                      return (
+                        <div className="space-y-0.5 pt-1">
+                          <p
+                            style={{ fontFamily: "'Caveat', cursive" }}
+                            className="text-4xl sm:text-5xl text-[#4A6B3E] font-bold leading-none"
+                          >
+                            {scriptPart}
+                          </p>
+                          <h3 className="font-sans text-2xl sm:text-4xl lg:text-[2.65rem] font-black uppercase tracking-tight text-[#1F241D] leading-tight">
+                            {boldPart}
+                          </h3>
+                        </div>
+                      );
+                    })()}
+
+                    {/* Subtítulo de atributos (3 palabras clave) */}
+                    <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.24em] text-[#6E675C]">
+                      {selectedRecipe.tagline}
+                    </p>
+
+                    {/* Imagen Principal (Hero Photo) + Insignia circular flotante */}
+                    <div className="relative max-w-2xl mx-auto pt-2">
+                      <div className="p-2.5 sm:p-3 bg-white rounded-[2rem] border border-[#E6DDD0] shadow-[0_18px_40px_-14px_rgba(43,42,39,0.22)]">
+                        <div className="overflow-hidden rounded-[1.5rem] bg-[#F2ECE1]">
+                          <EditorialImage
+                            src={selectedRecipe.heroImageUrl}
                             alt={selectedRecipe.productName}
-                            className="w-full h-full object-cover"
+                            className="w-full h-60 sm:h-72 md:h-80 object-cover"
                           />
                         </div>
-                      ) : (
-                        <div className="w-20 h-20 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
-                          <ChefHat className="w-9 h-9" />
-                        </div>
+                      </div>
+
+                      {/* Insignia circular flotante (Badge) */}
+                      <div className="absolute -top-2 -right-1 sm:top-4 sm:-right-5 w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#D96B43] text-[#FAF6F0] border-4 border-[#FAF6F0] shadow-xl rotate-6 flex flex-col items-center justify-center p-2.5 text-center">
+                        <Sparkles className="w-4 h-4 text-[#FFE3D6] mb-0.5 shrink-0" />
+                        <span
+                          style={{ fontFamily: "'Caveat', cursive" }}
+                          className="text-base sm:text-lg font-bold leading-tight"
+                        >
+                          {selectedRecipe.badgeText}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Banda discreta de Macros & Estación para POS */}
+                    <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                      <span className="px-3 py-1 rounded-full bg-[#EFE9DF] border border-[#E2D8C7] text-[11px] font-bold text-[#4B463E]">
+                        {selectedRecipe.station}
+                      </span>
+                      {selectedRecipe.servingSizeGrams && (
+                        <span className="px-3 py-1 rounded-full bg-[#EFE9DF] border border-[#E2D8C7] text-[11px] font-bold text-[#4B463E]">
+                          Porción ~{selectedRecipe.servingSizeGrams}g
+                        </span>
                       )}
+                      {selectedProductMeta?.baseMacros && (
+                        <>
+                          <span className="px-3 py-1 rounded-full bg-[#EBF1E8] border border-[#D4E2CE] text-[11px] font-extrabold text-[#3E5C33]">
+                            {selectedProductMeta.baseMacros.calories} kcal
+                          </span>
+                          <span className="px-3 py-1 rounded-full bg-[#EBF1E8] border border-[#D4E2CE] text-[11px] font-extrabold text-[#3E5C33]">
+                            {selectedProductMeta.baseMacros.protein}g Proteína
+                          </span>
+                          <span className="px-3 py-1 rounded-full bg-[#EFE9DF] border border-[#E2D8C7] text-[11px] font-bold text-[#5C5549]">
+                            {selectedProductMeta.baseMacros.carbs}g Carbos •{' '}
+                            {selectedProductMeta.baseMacros.fat}g Grasas
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </section>
 
-                      <div>
-                        <div className="flex flex-wrap items-center gap-2">
+                  {/* =============================================================== */}
+                  {/* BLOQUE 2: CUADRÍCULA VISUAL DE INGREDIENTES (INSUMOS BOM)       */}
+                  {/* =============================================================== */}
+                  <section className="space-y-5">
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                      <div className="hidden sm:block sm:w-44" />
+
+                      {/* Título de sección: Listón verde */}
+                      <div className="inline-flex items-center gap-2 bg-[#4A6B3E] text-[#FAF6F0] px-7 py-2 rounded-full shadow-md">
+                        <Boxes className="w-4 h-4 text-[#D8E7D1]" />
+                        <h4 className="text-sm font-black uppercase tracking-[0.18em]">
+                          Ingredientes
+                        </h4>
+                      </div>
+
+                      {/* Nota decorativa lateral inclinada */}
+                      <div className="sm:w-44 flex justify-center sm:justify-end">
+                        <div className="-rotate-2 bg-[#F4EBD9] border border-dashed border-[#C7B89E] text-[#5B4F3E] px-3.5 py-1 rounded-xl shadow-sm">
                           <span
-                            className={`px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider border flex items-center gap-1.5 ${getStationBadge(selectedRecipe.station).bg
-                              }`}
+                            style={{ fontFamily: "'Caveat', cursive" }}
+                            className="text-lg font-bold leading-none block"
                           >
-                            {React.createElement(getStationBadge(selectedRecipe.station).icon, {
-                              className: 'w-3.5 h-3.5',
-                            })}
-                            <span>{selectedRecipe.station}</span>
+                            Ingredientes frescos, gran sabor
                           </span>
-
-                          <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-slate-800 text-slate-300 border border-slate-700 font-mono">
-                            {selectedRecipe.category}
-                          </span>
-
-                          <span className="flex items-center gap-1 text-xs text-amber-300 font-bold font-mono bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
-                            <Clock className="w-3.5 h-3.5 text-amber-400" />
-                            <span>Prep: {selectedRecipe.prepTimeMinutes} min</span>
-                          </span>
-
-                          {selectedRecipe.servingSizeGrams && (
-                            <span className="text-xs text-slate-400 font-mono">
-                              Porción: ~{selectedRecipe.servingSizeGrams}g
-                            </span>
-                          )}
                         </div>
+                      </div>
+                    </div>
 
-                        <h3 className="text-2xl font-black text-white mt-1.5 tracking-tight">
-                          {selectedRecipe.productName}
-                        </h3>
+                    {/* Grid responsivo de tarjetas minimalistas (4 a 5 columnas) */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3.5">
+                      {(
+                        selectedRecipe.ingredients ||
+                        selectedRecipe.baseIngredients ||
+                        []
+                      ).map((ing) => {
+                        const invItem = inventory.find(
+                          (inv) => inv.id === ing.inventoryItemId
+                        );
+                        const status = invItem ? getItemStockStatus(invItem) : 'optimal';
 
-                        {selectedProductMeta?.baseMacros && (
-                          <div className="flex items-center gap-3 mt-1.5 text-xs font-mono">
-                            <span className="text-cyan-400 font-bold">
-                              {selectedProductMeta.baseMacros.calories} kcal
+                        const dotClass = !invItem
+                          ? 'bg-stone-400'
+                          : status === 'critical'
+                            ? 'bg-rose-500 animate-pulse'
+                            : status === 'warning'
+                              ? 'bg-amber-500'
+                              : 'bg-emerald-500';
+
+                        const statusLabel = !invItem
+                          ? 'Sin vínculo'
+                          : status === 'critical'
+                            ? 'Crítico'
+                            : status === 'warning'
+                              ? 'Stock bajo'
+                              : 'Disponible';
+
+                        const stockText = invItem
+                          ? invItem.unit === 'ml'
+                            ? `${(invItem.currentStock / 1000).toFixed(2)} L`
+                            : invItem.unit === 'g'
+                              ? invItem.currentStock >= 1000
+                                ? `${(invItem.currentStock / 1000).toFixed(2)} kg`
+                                : `${invItem.currentStock} g`
+                              : `${invItem.currentStock} ${invItem.unit}`
+                          : 'N/D';
+
+                        return (
+                          <div
+                            key={ing.ingredientId || ing.inventoryItemId}
+                            className="bg-white rounded-2xl p-3.5 border border-[#EAE1D3] shadow-sm hover:shadow-md hover:border-[#D5C9B6] transition-all flex flex-col items-center text-center relative"
+                          >
+                            {/* Indicador operativo POS discreto */}
+                            <div
+                              title={`${statusLabel} • Almacén: ${stockText}`}
+                              className="absolute top-2.5 right-2.5 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#FAF6F0] border border-[#EAE1D3]"
+                            >
+                              <span className={`w-2 h-2 rounded-full ${dotClass}`} />
+                              <span className="text-[9px] font-bold text-[#6E675C] uppercase tracking-wider">
+                                {status === 'critical'
+                                  ? 'Bajo!'
+                                  : status === 'warning'
+                                    ? 'Bajo'
+                                    : 'OK'}
+                              </span>
+                            </div>
+
+                            {/* Fotografía en bowl/porción */}
+                            <div className="w-20 h-20 rounded-full overflow-hidden bg-[#F5EFE6] border-2 border-[#EDE5D8] shadow-inner mt-2 mb-2.5 shrink-0">
+                              <EditorialImage
+                                src={
+                                  ing.imageUrl ||
+                                  INGREDIENT_IMAGE_MAP[ing.inventoryItemId] ||
+                                  DEFAULT_INGREDIENT_IMAGE
+                                }
+                                alt={ing.name || ing.itemName}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+
+                            {/* Cantidad exacta + Unidad */}
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#EBF1E8] text-[#3E5D33] text-xs font-extrabold tracking-tight mb-1">
+                              {ing.quantity} {ing.unit}
                             </span>
-                            <span className="text-slate-600">·</span>
-                            <span className="text-emerald-400 font-bold">
-                              {selectedProductMeta.baseMacros.protein}g Proteína
-                            </span>
-                            <span className="text-slate-600">·</span>
-                            <span className="text-amber-400 font-bold">
-                              {selectedProductMeta.baseMacros.carbs}g Carbos
-                            </span>
-                            <span className="text-slate-600">·</span>
-                            <span className="text-purple-400 font-bold">
-                              {selectedProductMeta.baseMacros.fat}g Grasas
+
+                            {/* Nombre del insumo */}
+                            <p className="text-xs font-bold text-[#2B2A27] leading-snug line-clamp-2">
+                              {ing.name || ing.itemName}
+                            </p>
+
+                            {/* Stock disponible en almacén (discreto) */}
+                            <span className="mt-auto pt-1.5 text-[10px] font-mono text-[#8A8174]">
+                              Stock: {stockText}
                             </span>
                           </div>
-                        )}
+                        );
+                      })}
+                    </div>
+                  </section>
+
+                  {/* =============================================================== */}
+                  {/* BLOQUE 3: PASO A PASO VISUAL (STEP-BY-STEP / PREPARACIÓN)       */}
+                  {/* =============================================================== */}
+                  <section className="space-y-5">
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                      <div className="hidden sm:block sm:w-40" />
+
+                      {/* Título de sección: Listón verde */}
+                      <div className="inline-flex items-center gap-2 bg-[#4A6B3E] text-[#FAF6F0] px-7 py-2 rounded-full shadow-md">
+                        <ChefHat className="w-4 h-4 text-[#D8E7D1]" />
+                        <h4 className="text-sm font-black uppercase tracking-[0.18em]">
+                          Paso a Paso
+                        </h4>
+                      </div>
+
+                      {/* Botón discreto para reiniciar checklist táctil */}
+                      <div className="sm:w-40 flex justify-center sm:justify-end no-print">
+                        <button
+                          onClick={() => resetRecipeSteps(selectedRecipe.productId)}
+                          className="px-3 py-1.5 rounded-xl bg-[#EFE9DF] hover:bg-[#E4DCCE] text-[#5B5449] text-[11px] font-bold flex items-center gap-1.5 border border-[#DDD3C3] transition-colors cursor-pointer"
+                        >
+                          <RotateCcw className="w-3 h-3" />
+                          <span>Reiniciar pasos</span>
+                        </button>
                       </div>
                     </div>
 
-                    {/* Acciones Rápidas */}
-                    <div className="flex items-center gap-2 self-start shrink-0">
-                      <button
-                        onClick={handleOpenEditModal}
-                        className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-black text-xs flex items-center gap-2 shadow-md hover:shadow-cyan-500/20 transition-all active:scale-95 cursor-pointer"
-                      >
-                        <Edit3 className="w-3.5 h-3.5" />
-                        <span>Editar Ficha / BOM</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* =================================================================== */}
-                  {/* BLOQUE 1: TABLA DE INSUMOS (BILL OF MATERIALS - BOM) */}
-                  {/* =================================================================== */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center">
-                          <Boxes className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <h4 className="font-black text-sm text-white">
-                            Desglose de Insumos (BOM Oficial)
-                          </h4>
-                          <span className="text-[11px] text-slate-400">
-                            Materia prima descontada en tiempo real por cada unidad cobrada en el POS
-                          </span>
-                        </div>
-                      </div>
-
-                      <span className="text-xs font-mono text-cyan-400 font-bold">
-                        {(selectedRecipe.ingredients || selectedRecipe.baseIngredients || []).length}{' '}
-                        insumos vinculados
-                      </span>
-                    </div>
-
-                    <div className="rounded-xl border border-slate-800 overflow-hidden bg-slate-950 shadow-inner">
-                      <table className="w-full text-left text-xs font-mono">
-                        <thead className="bg-slate-900 border-b border-slate-800 text-slate-400 uppercase text-[10px]">
-                          <tr>
-                            <th className="p-3">Insumo / Materia Prima</th>
-                            <th className="p-3 text-center">Descuento por Venta</th>
-                            <th className="p-3">Unidad</th>
-                            <th className="p-3">Stock Actual en Almacén</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-850">
-                          {(
-                            selectedRecipe.ingredients ||
-                            selectedRecipe.baseIngredients ||
-                            []
-                          ).map((ing) => {
-                            const invItem = inventory.find(
-                              (inv) => inv.id === ing.inventoryItemId
-                            );
-                            const status = invItem ? getItemStockStatus(invItem) : 'optimal';
-                            const percent = invItem
-                              ? Math.round((invItem.currentStock / invItem.maxCapacity) * 100)
-                              : 100;
-
-                            let statusBadge = (
-                              <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-                                ÓPTIMO
-                              </span>
-                            );
-
-                            if (!invItem) {
-                              statusBadge = (
-                                <span className="px-2 py-0.5 rounded text-[10px] font-bold text-slate-500 bg-slate-900">
-                                  NO VINCULADO
-                                </span>
-                              );
-                            } else if (status === 'critical') {
-                              statusBadge = (
-                                <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-rose-500/20 text-rose-400 border border-rose-500/40 animate-pulse">
-                                  CRÍTICO
-                                </span>
-                              );
-                            } else if (status === 'warning') {
-                              statusBadge = (
-                                <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                                  REORDENAR
-                                </span>
-                              );
-                            }
-
-                            return (
-                              <tr
-                                key={ing.ingredientId || ing.inventoryItemId}
-                                className="hover:bg-slate-900/60 transition-colors"
-                              >
-                                <td className="p-3 font-sans font-bold text-slate-200">
-                                  <div className="flex flex-col">
-                                    <span>{ing.name || ing.itemName}</span>
-                                    {invItem && (
-                                      <span className="text-[10px] font-mono text-slate-500">
-                                        Prov: {invItem.supplier}
-                                      </span>
-                                    )}
-                                  </div>
-                                </td>
-
-                                <td className="p-3 text-center">
-                                  <span className="font-mono font-black text-cyan-400 bg-cyan-950/60 px-2.5 py-1 rounded-lg border border-cyan-500/30">
-                                    -{ing.quantity} {ing.unit}
-                                  </span>
-                                </td>
-
-                                <td className="p-3 text-slate-400 uppercase font-mono">
-                                  {ing.unit}
-                                </td>
-
-                                <td className="p-3">
-                                  {invItem ? (
-                                    <div className="w-40">
-                                      <div className="flex items-center justify-between text-[11px] mb-1">
-                                        <span className="font-bold text-slate-300">
-                                          {invItem.unit === 'ml'
-                                            ? `${(invItem.currentStock / 1000).toFixed(2)} L`
-                                            : invItem.unit === 'g'
-                                              ? `${invItem.currentStock >= 1000
-                                                ? (invItem.currentStock / 1000).toFixed(2) +
-                                                ' kg'
-                                                : invItem.currentStock + ' g'
-                                              }`
-                                              : `${invItem.currentStock} ${invItem.unit}`}
-                                        </span>
-                                        <span className="text-slate-500">{percent}%</span>
-                                      </div>
-                                      <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
-                                        <div
-                                          className={`h-full rounded-full ${status === 'critical'
-                                            ? 'bg-rose-500'
-                                            : status === 'warning'
-                                              ? 'bg-amber-500'
-                                              : 'bg-emerald-500'
-                                            }`}
-                                          style={{ width: `${Math.min(100, Math.max(5, percent))}%` }}
-                                        />
-                                      </div>
-                                    </div>
-                                  ) : (
-                                    <span className="text-slate-500">N/D</span>
-                                  )}
-                                </td>
-
-                                <td className="p-3 text-center">{statusBadge}</td>
-
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  {/* =================================================================== */}
-                  {/* BLOQUE 2: MODO DE PREPARACIÓN PASO A PASO & PROTOCOLO */}
-                  {/* =================================================================== */}
-                  <div className="space-y-4 pt-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-                          <CheckCircle2 className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <h4 className="font-black text-sm text-white">
-                            Protocolo Estandarizado de Preparación (SOP)
-                          </h4>
-                          <span className="text-[11px] text-slate-400">
-                            Guía operativa paso a paso para el personal de cocina y barra
-                          </span>
-                        </div>
-                      </div>
-
-                      <button
-                        onClick={() => resetRecipeSteps(selectedRecipe.productId)}
-                        className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white text-[11px] font-bold flex items-center gap-1 border border-slate-700 transition-all cursor-pointer"
-                      >
-                        <RotateCcw className="w-3 h-3" />
-                        <span>Reiniciar Checklist</span>
-                      </button>
-                    </div>
-
-                    {/* Lista Interactiva de Pasos */}
-                    <div className="space-y-2.5">
+                    {/* Tarjetas horizontales numeradas (3 columnas en desktop) */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                       {selectedRecipe.preparationSteps.map((step, idx) => {
                         const isDone =
                           completedSteps[selectedRecipe.productId]?.[idx] || false;
 
                         return (
                           <div
-                            key={idx}
-                            onClick={() => toggleStepCompleted(selectedRecipe.productId, idx)}
-                            className={`p-3.5 rounded-xl border flex items-start gap-3.5 transition-all cursor-pointer select-none active:scale-[0.99] ${isDone
-                              ? 'bg-emerald-950/20 border-emerald-500/40 opacity-80'
-                              : 'bg-slate-950 border-slate-850 hover:border-slate-700 hover:bg-slate-900/60'
-                              }`}
+                            key={step.stepNumber ?? idx}
+                            onClick={() =>
+                              toggleStepCompleted(selectedRecipe.productId, idx)
+                            }
+                            className={`bg-white rounded-2xl border overflow-hidden flex flex-col cursor-pointer transition-all active:scale-[0.99] shadow-sm hover:shadow-md ${
+                              isDone
+                                ? 'border-[#4A6B3E] bg-[#F5F9F3] opacity-85'
+                                : 'border-[#EAE1D3]'
+                            }`}
                           >
-                            {/* Checkbox táctil / Número */}
-                            <div
-                              className={`w-7 h-7 rounded-lg shrink-0 flex items-center justify-center font-mono font-black text-xs transition-all ${isDone
-                                ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/30'
-                                : 'bg-slate-850 text-cyan-400 border border-slate-700'
+                            {/* Fotografía del proceso + Badge circular numerado terracota */}
+                            <div className="relative h-40 w-full bg-[#F2ECE1] overflow-hidden">
+                              <EditorialImage
+                                src={step.imageUrl || DEFAULT_STEP_IMAGE}
+                                alt={`Paso ${step.stepNumber || idx + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+
+                              <div
+                                className={`absolute top-3 left-3 w-9 h-9 rounded-full font-black text-sm flex items-center justify-center shadow-lg border-2 border-[#FAF6F0] transition-colors ${
+                                  isDone
+                                    ? 'bg-[#4A6B3E] text-[#FAF6F0]'
+                                    : 'bg-[#D96B43] text-white'
                                 }`}
-                            >
-                              {isDone ? <Check className="w-4 h-4 stroke-[3]" /> : idx + 1}
+                              >
+                                {isDone ? (
+                                  <Check className="w-4 h-4 stroke-[3]" />
+                                ) : (
+                                  step.stepNumber || idx + 1
+                                )}
+                              </div>
                             </div>
 
-                            <p
-                              className={`text-xs font-sans leading-relaxed pt-0.5 ${isDone
-                                ? 'line-through text-slate-400'
-                                : 'text-slate-200 font-medium'
+                            {/* Descripción corta y directa */}
+                            <div className="p-4 flex-1 flex items-start">
+                              <p
+                                className={`text-xs sm:text-[13px] leading-relaxed font-medium ${
+                                  isDone
+                                    ? 'line-through text-[#7B7468]'
+                                    : 'text-[#3A3731]'
                                 }`}
-                            >
-                              {step}
-                            </p>
+                              >
+                                {step.instruction}
+                              </p>
+                            </div>
                           </div>
                         );
                       })}
                     </div>
 
-                    {/* Card de Notas del Chef & Calidad */}
-                    <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs space-y-2 shadow-sm">
-                      <div className="flex items-center justify-between">
-                        <span className="font-black text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
-                          <Sparkles className="w-4 h-4 text-amber-400" />
-                          <span>Notas de Calidad, Emplatado & Alérgenos:</span>
-                        </span>
+                    {/* Nota editorial del Chef & Alérgenos */}
+                    {(selectedRecipe.chefNotes ||
+                      (selectedRecipe.allergens &&
+                        selectedRecipe.allergens.length > 0)) && (
+                      <div className="bg-[#F3ECE0] border border-[#E2D5C1] rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                        <div className="space-y-1 flex-1">
+                          <span className="text-[11px] font-black uppercase tracking-wider text-[#9A4C2E] flex items-center gap-1.5">
+                            <Sparkles className="w-3.5 h-3.5 text-[#D96B43]" />
+                            <span>Tip de Barra / Calidad</span>
+                          </span>
+                          <p className="text-xs text-[#4A4338] leading-relaxed font-medium">
+                            {selectedRecipe.chefNotes || selectedRecipe.preparationNotes}
+                          </p>
+                        </div>
 
-                        {selectedRecipe.allergens && selectedRecipe.allergens.length > 0 && (
-                          <div className="flex items-center gap-1 text-[10px] font-mono text-amber-200">
-                            <span className="font-bold">Alérgenos:</span>
-                            <span className="bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/30 font-bold">
-                              {selectedRecipe.allergens.join(', ')}
-                            </span>
-                          </div>
-                        )}
+                        {selectedRecipe.allergens &&
+                          selectedRecipe.allergens.length > 0 && (
+                            <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+                              <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A6F60] mr-1">
+                                Alérgenos:
+                              </span>
+                              {selectedRecipe.allergens.map((alg) => (
+                                <span
+                                  key={alg}
+                                  className="px-2.5 py-0.5 rounded-full bg-[#FBEAE3] text-[#A84824] border border-[#EBC6B6] text-[11px] font-bold"
+                                >
+                                  {alg}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                       </div>
+                    )}
+                  </section>
 
-                      <p className="text-slate-300 leading-relaxed font-sans">
-                        {selectedRecipe.chefNotes || selectedRecipe.preparationNotes}
-                      </p>
+                  {/* =============================================================== */}
+                  {/* BLOQUE 4: PIE DE FICHA Y ACCIONES RÁPIDAS DE POS                */}
+                  {/* =============================================================== */}
+                  <footer className="border-t border-[#E4DAC9] pt-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    {/* Barra inferior de metadatos / Hashtags */}
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {(selectedRecipe.tags || []).map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-3 py-1 rounded-full bg-[#EFE9DF] text-[#4A6B3E] border border-[#DDD3C3] text-xs font-bold"
+                        >
+                          {tag.startsWith('#') ? tag : `#${tag}`}
+                        </span>
+                      ))}
                     </div>
-                  </div>
+
+                    {/* Controles operativos integrados discretamente */}
+                    <div className="no-print flex flex-wrap items-center gap-2 shrink-0">
+                      <button
+                        onClick={handleOpenEditModal}
+                        className="px-3.5 py-2 rounded-xl bg-[#4A6B3E] hover:bg-[#3D5A32] text-[#FAF6F0] font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all active:scale-95 cursor-pointer"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>Editar BOM</span>
+                      </button>
+
+                      <button
+                        onClick={handlePrintRecipe}
+                        className="px-3.5 py-2 rounded-xl bg-white hover:bg-[#F3ECE0] text-[#3A3731] border border-[#DDD3C3] font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+                      >
+                        <Printer className="w-3.5 h-3.5" />
+                        <span>Imprimir Ficha</span>
+                      </button>
+
+                      <button
+                        onClick={() => setSelectedRecipeProductId('')}
+                        className="px-3.5 py-2 rounded-xl bg-[#EFE9DF] hover:bg-[#E4DCCE] text-[#5B5449] font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                        <span>Cerrar</span>
+                      </button>
+                    </div>
+                  </footer>
                 </div>
               ) : (
-                <div className="flex-1 flex flex-col items-center justify-center text-slate-500 gap-3">
-                  <BookOpen className="w-12 h-12 text-slate-700" />
-                  <p className="text-sm font-bold">
-                    Selecciona una receta a la izquierda para inspeccionar su ficha técnica y BOM
+                <div className="flex-1 flex flex-col items-center justify-center p-8 text-center gap-3 text-[#6E675C]">
+                  <div className="w-16 h-16 rounded-full bg-[#EFE9DF] border border-[#DFD5C5] flex items-center justify-center text-[#4A6B3E]">
+                    <BookOpen className="w-7 h-7" />
+                  </div>
+                  <h4
+                    style={{ fontFamily: "'Caveat', cursive" }}
+                    className="text-3xl font-bold text-[#4A6B3E]"
+                  >
+                    Selecciona una receta del catálogo
+                  </h4>
+                  <p className="text-xs max-w-md text-[#7A7164]">
+                    Elige cualquier platillo, toast, ensalada, jugo o smoothie a la izquierda para
+                    desplegar su ficha visual editorial y su desglose exacto de insumos BOM.
                   </p>
                 </div>
               )}
@@ -938,10 +1205,10 @@ export const InventoryScreen: React.FC = () => {
       )}
 
       {/* =========================================================================== */}
-      {/* MODAL DE EDICIÓN RÁPIDA DE RECETA / BOM (ESTADO LOCAL) */}
+      {/* MODAL DE EDICIÓN RÁPIDA DE RECETA / BOM (ESTADO LOCAL)                     */}
       {/* =========================================================================== */}
       {isEditModalOpen && editingRecipe && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="no-print fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
             {/* Header Modal */}
             <div className="flex items-center justify-between pb-4 border-b border-slate-800 shrink-0">
@@ -954,7 +1221,7 @@ export const InventoryScreen: React.FC = () => {
                     Editar Ficha Técnica: {editingRecipe.productName}
                   </h3>
                   <p className="text-xs text-slate-400">
-                    Ajuste de gramajes de insumos y pasos estandarizados de cocina
+                    Ajuste de gramajes BOM, atributos visuales y pasos estandarizados
                   </p>
                 </div>
               </div>
@@ -969,7 +1236,7 @@ export const InventoryScreen: React.FC = () => {
 
             {/* Modal Body */}
             <div className="flex-1 overflow-y-auto py-4 space-y-5 pr-1">
-              {/* Ajuste de Tiempo y Notas del Chef */}
+              {/* Ajuste de Tiempo, Tagline, Badge y Notas del Chef */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div>
                   <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
@@ -990,7 +1257,41 @@ export const InventoryScreen: React.FC = () => {
                   />
                 </div>
 
-                <div className="md:col-span-2">
+                <div>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                    Subtítulo (Tagline)
+                  </label>
+                  <input
+                    type="text"
+                    value={editingRecipe.tagline || ''}
+                    onChange={(e) =>
+                      setEditingRecipe({
+                        ...editingRecipe,
+                        tagline: e.target.value,
+                      })
+                    }
+                    className="w-full h-10 px-3 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:border-cyan-500 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                    Insignia Flotante
+                  </label>
+                  <input
+                    type="text"
+                    value={editingRecipe.badgeText || ''}
+                    onChange={(e) =>
+                      setEditingRecipe({
+                        ...editingRecipe,
+                        badgeText: e.target.value,
+                      })
+                    }
+                    className="w-full h-10 px-3 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:border-cyan-500 focus:outline-none"
+                  />
+                </div>
+
+                <div className="md:col-span-3">
                   <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
                     Notas de Presentación / Alérgenos
                   </label>
@@ -1103,13 +1404,18 @@ export const InventoryScreen: React.FC = () => {
                 <div className="space-y-2">
                   {editingRecipe.preparationSteps.map((step, idx) => (
                     <div
-                      key={idx}
+                      key={step.stepNumber ?? idx}
                       className="p-3 rounded-xl bg-slate-950 border border-slate-850 flex items-start gap-2.5"
                     >
-                      <span className="w-6 h-6 rounded bg-slate-900 text-cyan-400 font-mono font-bold text-xs flex items-center justify-center shrink-0">
-                        {idx + 1}
+                      <span className="w-6 h-6 rounded bg-slate-900 text-cyan-400 font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                        {step.stepNumber || idx + 1}
                       </span>
-                      <p className="flex-1 text-xs text-slate-300 font-sans">{step}</p>
+                      <input
+                        type="text"
+                        value={step.instruction}
+                        onChange={(e) => handleUpdateStepInstruction(idx, e.target.value)}
+                        className="flex-1 bg-transparent text-xs text-slate-200 font-sans focus:outline-none border-b border-transparent focus:border-cyan-500 pb-0.5"
+                      />
                       <button
                         onClick={() => handleRemoveStep(idx)}
                         className="text-slate-500 hover:text-rose-400 p-1 cursor-pointer"
