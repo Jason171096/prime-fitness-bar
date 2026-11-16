@@ -7,7 +7,6 @@ import {
   Boxes,
   User,
   Zap,
-  Tag,
   Receipt,
   Scale,
 } from 'lucide-react';
@@ -25,7 +24,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   activeView,
   onViewChange,
-  onOpenQuickLabel,
+  onOpenQuickLabel: _onOpenQuickLabel,
 }) => {
   const [currentTime, setCurrentTime] = useState<string>('');
   const [currentDate, setCurrentDate] = useState<string>('');
