@@ -66,15 +66,15 @@ export const CategoryTabs: React.FC = () => {
             key={cat.id}
             id={`category-tab-${cat.id}`}
             onClick={() => setActiveCategory(cat.id)}
-            className={`flex items-center gap-3.5 px-4.5 py-3 rounded-2xl min-h-[58px] transition-all text-left active:scale-[0.98] border shrink-0 ${isActive
-                ? 'bg-gradient-to-r from-emerald-600 via-emerald-500 to-lime-600 text-white border-emerald-400/60 shadow-lg shadow-emerald-500/25 ring-2 ring-emerald-400/30'
-                : 'bg-slate-900/90 text-slate-300 border-slate-800/90 hover:bg-slate-800/80 hover:border-slate-700'
+            className={`flex items-center gap-3.5 px-4.5 py-3 rounded-2xl min-h-[58px] transition-all text-left active:scale-[0.98] border shrink-0 cursor-pointer ${isActive
+                ? 'bg-[#4A6B3E] text-white border-[#4A6B3E] shadow-md shadow-[#4A6B3E]/25'
+                : 'bg-white text-stone-700 border-stone-200 hover:bg-stone-50 hover:border-stone-300 shadow-sm'
               }`}
           >
             <div
               className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isActive
                   ? 'bg-white/20 text-white'
-                  : 'bg-slate-800 text-emerald-400'
+                  : 'bg-[#FAF6F0] text-[#4A6B3E] border border-stone-200/70'
                 }`}
             >
               <Icon className="w-5 h-5" />
@@ -87,15 +87,15 @@ export const CategoryTabs: React.FC = () => {
                 </span>
                 <span
                   className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full ${isActive
-                      ? 'bg-black/25 text-white'
-                      : 'bg-slate-800 text-slate-400'
+                      ? 'bg-black/20 text-white'
+                      : 'bg-[#FAF6F0] text-stone-600'
                     }`}
                 >
                   {count}
                 </span>
               </div>
               <span
-                className={`text-[11px] ${isActive ? 'text-emerald-100 font-medium' : 'text-slate-400'
+                className={`text-[11px] ${isActive ? 'text-emerald-100 font-medium' : 'text-stone-500'
                   }`}
               >
                 {cat.sublabel}

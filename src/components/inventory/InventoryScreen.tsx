@@ -405,33 +405,33 @@ export const InventoryScreen: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-slate-950 p-3 sm:p-4 gap-3 sm:gap-4 overflow-hidden select-none">
+    <div className="flex-1 flex flex-col h-full bg-[#FAF6F0] text-stone-900 p-3 sm:p-4 gap-3 sm:gap-4 overflow-hidden select-none">
       {/* =========================================================================== */}
       {/* TOP INVENTORY TOOLBAR */}
       {/* =========================================================================== */}
-      <div className="no-print min-h-16 px-4 sm:px-5 py-2 rounded-2xl bg-slate-900 border border-slate-800 flex flex-wrap items-center justify-between gap-3 shrink-0 shadow-lg">
+      <div className="no-print min-h-16 px-4 sm:px-5 py-2 rounded-2xl bg-white border border-stone-200 flex flex-wrap items-center justify-between gap-3 shrink-0 shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-[#EBF1E8] text-[#4A6B3E] border border-[#D4E2CE] flex items-center justify-center shrink-0">
             <Boxes className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-sm sm:text-base font-black text-white tracking-tight">
+            <h2 className="text-sm sm:text-base font-black text-stone-900 tracking-tight">
               Control de Inventario & BOM (Recetario / Fichas Técnicas)
             </h2>
-            <p className="text-[11px] sm:text-xs text-slate-400">
+            <p className="text-[11px] sm:text-xs text-stone-500">
               Descuento automático en tiempo real por cada porción y gramo vendido
             </p>
           </div>
         </div>
 
         {/* View Switcher: Stock vs Recipe BOM */}
-        <div className="flex items-center gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
+        <div className="flex items-center gap-1.5 bg-[#FAF6F0] p-1.5 rounded-xl border border-stone-200">
           <button
             onClick={() => setActiveTab('stock')}
             className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-black transition-all flex items-center gap-2 cursor-pointer ${
               activeTab === 'stock'
-                ? 'bg-cyan-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-[#4A6B3E] text-white shadow-sm'
+                : 'text-stone-600 hover:text-stone-900 hover:bg-white/70'
             }`}
           >
             <Boxes className="w-4 h-4" />
@@ -442,8 +442,8 @@ export const InventoryScreen: React.FC = () => {
             onClick={() => setActiveTab('bom')}
             className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-black transition-all flex items-center gap-2 cursor-pointer ${
               activeTab === 'bom'
-                ? 'bg-cyan-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-[#4A6B3E] text-white shadow-sm'
+                : 'text-stone-600 hover:text-stone-900 hover:bg-white/70'
             }`}
           >
             <BookOpen className="w-4 h-4" />
@@ -460,13 +460,13 @@ export const InventoryScreen: React.FC = () => {
           {/* Subheader Filters */}
           <div className="flex items-center justify-between gap-3 shrink-0">
             <div className="relative max-w-sm flex-1">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
               <input
                 type="text"
                 value={searchStockQuery}
                 onChange={(e) => setSearchStockQuery(e.target.value)}
                 placeholder="Filtrar insumo, proveedor o materia prima..."
-                className="w-full h-10 pl-9 pr-4 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 font-medium"
+                className="w-full h-10 pl-9 pr-4 rounded-xl bg-white border border-stone-200 text-xs text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#4A6B3E] font-medium shadow-sm"
               />
             </div>
 
@@ -488,8 +488,8 @@ export const InventoryScreen: React.FC = () => {
                   onClick={() => setFilterStockCategory(cat.id)}
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                     filterStockCategory === cat.id
-                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                      : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                      ? 'bg-[#4A6B3E] text-white border border-[#4A6B3E] shadow-sm'
+                      : 'bg-white text-stone-600 hover:text-stone-900 border border-stone-200'
                   }`}
                 >
                   {cat.label}
@@ -505,16 +505,16 @@ export const InventoryScreen: React.FC = () => {
                 const status = getItemStockStatus(item);
                 const percent = Math.round((item.currentStock / item.maxCapacity) * 100);
 
-                let badgeColor = 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
+                let badgeColor = 'bg-emerald-50 text-emerald-700 border-emerald-200';
                 let badgeText = 'ÓPTIMO';
-                let progressColor = 'bg-emerald-500';
+                let progressColor = 'bg-emerald-600';
 
                 if (status === 'critical') {
-                  badgeColor = 'bg-rose-500/20 text-rose-400 border-rose-500/40 animate-pulse';
+                  badgeColor = 'bg-rose-50 text-rose-700 border-rose-200 animate-pulse';
                   badgeText = 'CRÍTICO (<15%)';
                   progressColor = 'bg-rose-500';
                 } else if (status === 'warning') {
-                  badgeColor = 'bg-amber-500/20 text-amber-400 border-amber-500/40';
+                  badgeColor = 'bg-amber-50 text-amber-700 border-amber-200';
                   badgeText = 'REORDENAR (<30%)';
                   progressColor = 'bg-amber-500';
                 }
@@ -522,11 +522,11 @@ export const InventoryScreen: React.FC = () => {
                 return (
                   <div
                     key={item.id}
-                    className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between shadow-lg relative overflow-hidden"
+                    className="p-4 rounded-2xl bg-white border border-stone-200 flex flex-col justify-between shadow-sm relative overflow-hidden"
                   >
                     <div>
                       <div className="flex items-start justify-between gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 truncate">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 truncate">
                           {item.supplier}
                         </span>
 
@@ -537,17 +537,17 @@ export const InventoryScreen: React.FC = () => {
                         </span>
                       </div>
 
-                      <h4 className="font-extrabold text-sm text-white mt-1 leading-snug line-clamp-2">
+                      <h4 className="font-extrabold text-sm text-stone-900 mt-1 leading-snug line-clamp-2">
                         {item.name}
                       </h4>
 
-                      <span className="text-[11px] text-slate-400 block mt-0.5 truncate">
+                      <span className="text-[11px] text-stone-500 block mt-0.5 truncate">
                         {item.containerInfo}
                       </span>
 
-                      <div className="mt-3 p-3 rounded-xl bg-slate-950 border border-slate-850">
+                      <div className="mt-3 p-3 rounded-xl bg-[#FAF6F0] border border-stone-200/80">
                         <div className="flex items-baseline justify-between">
-                          <span className="text-2xl font-black font-mono text-cyan-400 tracking-tight">
+                          <span className="text-2xl font-black font-mono text-[#4A6B3E] tracking-tight">
                             {item.unit === 'ml'
                               ? `${(item.currentStock / 1000).toFixed(2)} L`
                               : item.unit === 'g'
@@ -559,7 +559,7 @@ export const InventoryScreen: React.FC = () => {
                                 : `${item.currentStock} ${item.unit}`}
                           </span>
 
-                          <span className="text-xs font-bold text-slate-300 font-mono">
+                          <span className="text-xs font-bold text-stone-600 font-mono">
                             {item.portionsRemaining}{' '}
                             {item.unit === 'g'
                               ? 'porciones'
@@ -569,14 +569,14 @@ export const InventoryScreen: React.FC = () => {
                           </span>
                         </div>
 
-                        <div className="mt-2 w-full h-2 bg-slate-900 rounded-full overflow-hidden">
+                        <div className="mt-2 w-full h-2 bg-stone-200 rounded-full overflow-hidden">
                           <div
                             className={`h-full ${progressColor} transition-all duration-300 rounded-full`}
                             style={{ width: `${Math.min(100, Math.max(5, percent))}%` }}
                           />
                         </div>
 
-                        <div className="mt-1.5 flex justify-between text-[10px] font-mono text-slate-400">
+                        <div className="mt-1.5 flex justify-between text-[10px] font-mono text-stone-500">
                           <span>
                             Mín: {item.minThreshold} {item.unit}
                           </span>
@@ -598,21 +598,21 @@ export const InventoryScreen: React.FC = () => {
       {activeTab === 'bom' && (
         <div className="flex-1 flex flex-col overflow-hidden gap-3">
           {/* Subheader: Búsqueda y Filtros de Estación / Categoría */}
-          <div className="no-print flex flex-wrap items-center justify-between gap-2.5 shrink-0 bg-slate-900/70 p-2.5 rounded-2xl border border-slate-800">
+          <div className="no-print flex flex-wrap items-center justify-between gap-2.5 shrink-0 bg-white p-2.5 rounded-2xl border border-stone-200 shadow-sm">
             {/* Buscador de Receta o Insumo */}
             <div className="relative w-full sm:w-72 md:w-80">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
               <input
                 type="text"
                 value={searchRecipeQuery}
                 onChange={(e) => setSearchRecipeQuery(e.target.value)}
                 placeholder="Buscar platillo, jugo, smoothie o insumo..."
-                className="w-full h-9 pl-9 pr-8 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 font-medium"
+                className="w-full h-9 pl-9 pr-8 rounded-xl bg-[#FAF6F0] border border-stone-200 text-xs text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#4A6B3E] font-medium"
               />
               {searchRecipeQuery && (
                 <button
                   onClick={() => setSearchRecipeQuery('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white cursor-pointer"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-800 cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -632,8 +632,8 @@ export const InventoryScreen: React.FC = () => {
                   onClick={() => setFilterStation(st.id)}
                   className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all shrink-0 cursor-pointer ${
                     filterStation === st.id
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                      : 'text-slate-400 hover:text-slate-200 bg-slate-950/60 border border-slate-800/60'
+                      ? 'bg-[#EBF1E8] text-[#3E5C33] border border-[#C5D8BC]'
+                      : 'text-stone-600 hover:text-stone-900 bg-[#FAF6F0] border border-stone-200'
                   }`}
                 >
                   {st.label}
@@ -657,8 +657,8 @@ export const InventoryScreen: React.FC = () => {
                   onClick={() => setFilterCategory(c.id)}
                   className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all shrink-0 cursor-pointer ${
                     filterCategory === c.id
-                      ? 'bg-slate-800 text-white border border-slate-700'
-                      : 'text-slate-500 hover:text-slate-300'
+                      ? 'bg-[#4A6B3E] text-white border border-[#4A6B3E]'
+                      : 'text-stone-500 hover:text-stone-900'
                   }`}
                 >
                   {c.label}
@@ -673,12 +673,12 @@ export const InventoryScreen: React.FC = () => {
             {/* COLUMNA IZQUIERDA: LISTA MAESTRO DE RECETAS                         */}
             {/* =================================================================== */}
             <div
-              className={`no-print w-full lg:w-80 xl:w-96 bg-slate-900/90 rounded-2xl border border-slate-800 p-3 flex-col gap-2 overflow-y-auto shrink-0 shadow-lg ${
+              className={`no-print w-full lg:w-80 xl:w-96 bg-white rounded-2xl border border-stone-200 p-3 flex-col gap-2 overflow-y-auto shrink-0 shadow-sm ${
                 selectedRecipe ? 'hidden lg:flex' : 'flex flex-1 lg:flex-initial'
               }`}
             >
               <div className="flex items-center justify-between px-2 py-1">
-                <span className="text-xs font-black uppercase tracking-wider text-slate-400">
+                <span className="text-xs font-black uppercase tracking-wider text-stone-500">
                   Catálogo de Recetas ({filteredRecipes.length})
                 </span>
               </div>
@@ -712,12 +712,12 @@ export const InventoryScreen: React.FC = () => {
                       onClick={() => setSelectedRecipeProductId(rec.productId)}
                       className={`p-3 rounded-xl border text-left transition-all active:scale-[0.98] cursor-pointer relative overflow-hidden flex items-center gap-3 ${
                         isSelected
-                          ? 'bg-cyan-950/40 border-cyan-400 ring-1 ring-cyan-500/40 shadow-md'
-                          : 'bg-slate-950 border-slate-850 hover:border-slate-700 hover:bg-slate-900/70'
+                          ? 'bg-[#EBF1E8] border-[#4A6B3E] ring-1 ring-[#4A6B3E]/30 shadow-sm'
+                          : 'bg-[#FAF6F0]/70 border-stone-200 hover:border-stone-300 hover:bg-[#FAF6F0]'
                       }`}
                     >
                       {/* Miniatura Editorial */}
-                      <div className="w-14 h-14 rounded-xl overflow-hidden border border-slate-800 bg-slate-900 shrink-0">
+                      <div className="w-14 h-14 rounded-xl overflow-hidden border border-stone-200 bg-white shrink-0">
                         <EditorialImage
                           src={rec.heroImageUrl}
                           alt={rec.productName}
@@ -749,7 +749,7 @@ export const InventoryScreen: React.FC = () => {
                                 ? 'bg-rose-500 animate-pulse'
                                 : stockStatus === 'warning'
                                   ? 'bg-amber-400'
-                                  : 'bg-emerald-400'
+                                  : 'bg-emerald-500'
                             }`}
                           />
                         </div>
@@ -757,21 +757,21 @@ export const InventoryScreen: React.FC = () => {
                         {/* Nombre del Producto */}
                         <span
                           className={`font-black text-sm leading-snug line-clamp-1 ${
-                            isSelected ? 'text-cyan-300' : 'text-slate-100'
+                            isSelected ? 'text-[#3E5C33]' : 'text-stone-900'
                           }`}
                         >
                           {rec.productName}
                         </span>
 
                         {/* Metadatos inferiores */}
-                        <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                        <div className="flex items-center justify-between text-[11px] text-stone-500 font-mono">
                           <span className="flex items-center gap-1">
-                            <Boxes className="w-3 h-3 text-slate-500" />
+                            <Boxes className="w-3 h-3 text-stone-400" />
                             <span>{ingredientsCount} insumos</span>
                           </span>
 
-                          <span className="flex items-center gap-1 text-slate-300 font-bold">
-                            <Clock className="w-3 h-3 text-cyan-400" />
+                          <span className="flex items-center gap-1 text-stone-700 font-bold">
+                            <Clock className="w-3 h-3 text-[#4A6B3E]" />
                             <span>{rec.prepTimeMinutes} min</span>
                           </span>
                         </div>

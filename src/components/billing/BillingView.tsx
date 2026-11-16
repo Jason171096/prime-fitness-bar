@@ -117,7 +117,7 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure })
     : { calories: 0, protein: 0, carbs: 0, fat: 0 };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-slate-950 text-slate-100 overflow-hidden select-none">
+    <div className="flex-1 flex flex-col h-full bg-[#FAF6F0] text-stone-900 overflow-hidden select-none">
       {/* Barra de Estadísticas y KPI de Caja (Touch 56px) */}
       <section aria-label="Resumen de Cobro y Métricas" className="h-14 px-6 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between shrink-0 shadow-sm">
         <div className="flex items-center gap-6">

@@ -39,18 +39,18 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
   const totalItemsCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <aside className="w-[420px] bg-slate-900/95 border-l border-slate-800 flex flex-col h-full shrink-0 select-none shadow-2xl">
+    <aside className="w-[420px] bg-white border-l border-stone-200 flex flex-col h-full shrink-0 select-none shadow-lg">
       {/* Cart Top Bar */}
-      <div className="h-16 px-5 border-b border-slate-800 flex items-center justify-between shrink-0 bg-slate-950/60">
+      <div className="h-16 px-5 border-b border-stone-200 flex items-center justify-between shrink-0 bg-[#FAF6F0]">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
+          <div className="w-9 h-9 rounded-xl bg-[#EBF1E8] border border-[#D4E2CE] text-[#4A6B3E] flex items-center justify-center">
             <ShoppingBag className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-sm font-black uppercase tracking-wider text-white">
+            <h2 className="text-sm font-black uppercase tracking-wider text-stone-900">
               Comanda Activa
             </h2>
-            <span className="text-xs text-slate-400 font-mono">
+            <span className="text-xs text-stone-500 font-mono">
               {totalItemsCount} {totalItemsCount === 1 ? 'producto' : 'productos'}
             </span>
           </div>
@@ -59,7 +59,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
         {cart.length > 0 && (
           <button
             onClick={clearCart}
-            className="text-xs text-rose-400 hover:text-rose-300 font-bold px-2.5 py-1.5 rounded-lg hover:bg-rose-500/10 transition-all flex items-center gap-1"
+            className="text-xs text-rose-600 hover:text-rose-700 font-bold px-2.5 py-1.5 rounded-lg hover:bg-rose-50 transition-all flex items-center gap-1 cursor-pointer"
           >
             <Trash2 className="w-3.5 h-3.5" />
             Limpiar
@@ -68,25 +68,25 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
       </div>
 
       {/* Linked Gym Member Quick Box */}
-      <div className="p-3 bg-slate-950/40 border-b border-slate-800/80">
+      <div className="p-3 bg-[#FAF6F0]/60 border-b border-stone-200">
         {selectedMember ? (
-          <div className="flex items-center justify-between p-2.5 rounded-xl bg-emerald-950/30 border border-emerald-600/30">
+          <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#EBF1E8] border border-[#D4E2CE]">
             <div className="flex items-center gap-2.5">
               <img
                 src={selectedMember.avatar}
                 alt={selectedMember.fullName}
-                className="w-9 h-9 rounded-full object-cover border border-emerald-400/40"
+                className="w-9 h-9 rounded-full object-cover border border-[#4A6B3E]/40"
               />
               <div className="text-left">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-black text-slate-100 leading-tight">
+                  <span className="text-xs font-black text-stone-900 leading-tight">
                     {selectedMember.fullName}
                   </span>
-                  <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-bold">
+                  <span className="text-[10px] px-1.5 py-0.2 rounded bg-white text-[#4A6B3E] font-bold border border-[#D4E2CE]">
                     {selectedMember.memberNumber}
                   </span>
                 </div>
-                <div className="text-[11px] text-emerald-400 font-mono font-bold">
+                <div className="text-[11px] text-[#3E5C33] font-mono font-bold">
                   Saldo: ${selectedMember.balance.toFixed(2)}
                 </div>
               </div>
@@ -94,7 +94,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
 
             <button
               onClick={() => setSelectedMember(null)}
-              className="text-xs text-slate-400 hover:text-rose-400 px-2 py-1 font-semibold"
+              className="text-xs text-stone-500 hover:text-rose-600 px-2 py-1 font-semibold cursor-pointer"
               title="Desvincular socio"
             >
               Cambiar
@@ -103,19 +103,19 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
         ) : (
           <div className="space-y-2">
             <div className="relative">
-              <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <User className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={orderCustomerName}
                 onChange={(e) => setOrderCustomerName(e.target.value)}
                 placeholder="Nombre del cliente..."
-                className="w-full h-9 pl-9 pr-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-semibold"
+                className="w-full h-9 pl-9 pr-3 rounded-xl bg-white border border-stone-200 text-xs text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#4A6B3E] font-semibold"
               />
             </div>
 
             <button
               onClick={openCheckout}
-              className="w-full py-1.5 px-3 rounded-lg bg-slate-900/60 border border-dashed border-slate-700 hover:border-emerald-500/50 text-slate-400 hover:text-emerald-300 flex items-center justify-between text-[11px] font-medium transition-all group"
+              className="w-full py-1.5 px-3 rounded-lg bg-white border border-dashed border-stone-300 hover:border-[#4A6B3E] text-stone-600 hover:text-[#4A6B3E] flex items-center justify-between text-[11px] font-medium transition-all group cursor-pointer"
             >
               <span className="flex items-center gap-1.5">
                 <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
@@ -295,23 +295,23 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
       </div>
 
       {/* Cart Summary & Huge Checkout Trigger */}
-      <div className="p-4 bg-slate-950 border-t border-slate-800 shrink-0 space-y-3">
+      <div className="p-4 bg-[#FAF6F0] border-t border-stone-200 shrink-0 space-y-3">
         <div className="space-y-1.5 text-xs">
-          <div className="flex justify-between text-slate-400">
+          <div className="flex justify-between text-stone-500">
             <span>Subtotal comanda</span>
-            <span className="font-mono font-bold text-slate-200">
+            <span className="font-mono font-bold text-stone-800">
               ${subtotal.toFixed(2)}
             </span>
           </div>
-          <div className="flex justify-between text-slate-400">
+          <div className="flex justify-between text-stone-500">
             <span>Impuestos (IVA Incluido)</span>
-            <span className="font-mono text-slate-300">$0.00</span>
+            <span className="font-mono text-stone-600">$0.00</span>
           </div>
-          <div className="flex justify-between items-baseline pt-2 border-t border-slate-800 text-slate-100">
+          <div className="flex justify-between items-baseline pt-2 border-t border-stone-200 text-stone-900">
             <span className="text-sm font-black uppercase tracking-wider">
               TOTAL A COBRAR
             </span>
-            <span className="text-2xl font-black font-mono text-emerald-400 tracking-tight">
+            <span className="text-2xl font-black font-mono text-[#4A6B3E] tracking-tight">
               ${subtotal.toFixed(2)}
             </span>
           </div>
@@ -339,15 +339,15 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
                 onNavigateToBilling();
               }
             }}
-            className="w-full h-14 rounded-2xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-40 disabled:pointer-events-none text-white font-black text-sm shadow-xl shadow-emerald-500/20 flex items-center justify-between px-5 transition-all active:scale-[0.98] ring-2 ring-emerald-400/40"
+            className="w-full h-14 rounded-2xl bg-[#4A6B3E] hover:bg-[#3D5A32] disabled:opacity-40 disabled:pointer-events-none text-white font-black text-sm shadow-md shadow-[#4A6B3E]/25 flex items-center justify-between px-5 transition-all active:scale-[0.98] cursor-pointer"
           >
             <div className="flex items-center gap-2.5">
-              <Receipt className="w-5 h-5 text-emerald-200" />
+              <Receipt className="w-5 h-5 text-emerald-100" />
               <div className="text-left">
                 <span className="tracking-wide uppercase text-xs font-black block">
                   Enviar a Caja (Cobro)
                 </span>
-                <span className="text-[10px] text-emerald-100/80 font-normal">
+                <span className="text-[10px] text-emerald-100/90 font-normal">
                   Crea comanda en estado pendiente
                 </span>
               </div>
@@ -355,7 +355,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
 
             <div className="flex items-center gap-2">
               <span className="font-mono text-base font-black">${subtotal.toFixed(2)}</span>
-              <Send className="w-4 h-4 text-emerald-200" />
+              <Send className="w-4 h-4 text-emerald-100" />
             </div>
           </button>
 
@@ -364,9 +364,9 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
             id="btn-open-checkout"
             disabled={cart.length === 0}
             onClick={openCheckout}
-            className="w-full h-11 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-30 disabled:pointer-events-none text-slate-300 hover:text-white font-bold text-xs border border-slate-800 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+            className="w-full h-11 rounded-xl bg-white hover:bg-stone-100 disabled:opacity-30 disabled:pointer-events-none text-stone-700 hover:text-stone-900 font-bold text-xs border border-stone-200 flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
           >
-            <CreditCard className="w-4 h-4 text-emerald-400" />
+            <CreditCard className="w-4 h-4 text-[#4A6B3E]" />
             <span>Cobro Inmediato en este Terminal (${subtotal.toFixed(2)})</span>
           </button>
         </div>

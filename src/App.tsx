@@ -92,7 +92,7 @@ export function App() {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-slate-950 text-slate-100 overflow-hidden font-sans">
+    <div className="h-screen w-screen flex flex-col bg-[#FAF6F0] text-stone-900 overflow-hidden font-sans">
       {/* Universal POS Header */}
       <Header
         activeView={activeView}

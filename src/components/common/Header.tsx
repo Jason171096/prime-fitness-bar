@@ -63,39 +63,39 @@ export const Header: React.FC<HeaderProps> = ({
   }, []);
 
   return (
-    <header className="h-18 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 flex items-center justify-between shrink-0 shadow-lg select-none">
+    <header className="no-print h-18 bg-white/95 backdrop-blur-md border-b border-stone-200/90 px-4 flex items-center justify-between shrink-0 shadow-sm select-none">
       {/* Brand & Bar Station */}
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-lime-500 p-0.5 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-          <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-            <Zap className="w-6 h-6 text-emerald-400 fill-emerald-400/30" />
+        <div className="w-12 h-12 rounded-xl bg-[#4A6B3E] p-0.5 flex items-center justify-center shadow-md shadow-[#4A6B3E]/20">
+          <div className="w-full h-full bg-[#FAF6F0] rounded-[10px] flex items-center justify-center">
+            <Zap className="w-6 h-6 text-[#4A6B3E] fill-[#4A6B3E]/20" />
           </div>
         </div>
 
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-extrabold tracking-tight text-white font-mono flex items-center gap-1.5">
-              PRIME<span className="text-emerald-400">FITNESS</span>
-              <span className="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-sans font-semibold">
+            <h1 className="text-xl font-extrabold tracking-tight text-stone-900 font-mono flex items-center gap-1.5">
+              PRIME<span className="text-[#4A6B3E]">FITNESS</span>
+              <span className="text-xs px-2 py-0.5 rounded bg-[#EBF1E8] text-[#3E5C33] border border-[#D4E2CE] font-sans font-semibold">
                 BAR POS
               </span>
             </h1>
           </div>
-          <p className="text-xs text-slate-400 flex items-center gap-1.5 font-medium">
-            <Flame className="w-3.5 h-3.5 text-amber-400" />
+          <p className="text-xs text-stone-500 flex items-center gap-1.5 font-medium">
+            <Flame className="w-3.5 h-3.5 text-[#D96B43]" />
             Smoothies, Bowls & Suplementación Deportiva
           </p>
         </div>
       </div>
 
       {/* Main Mode Navigation (Large touch buttons min-h 48px) */}
-      <nav className="flex items-center gap-2 bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800/80 shadow-inner">
+      <nav className="flex items-center gap-1.5 bg-[#FAF6F0] p-1.5 rounded-2xl border border-stone-200/80 shadow-inner">
         <button
           id="nav-pos-btn"
           onClick={() => onViewChange('pos')}
-          className={`flex items-center gap-2.5 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[125px] justify-center ${activeView === 'pos'
-            ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-600/30 ring-1 ring-emerald-400/50'
-            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+          className={`flex items-center gap-2.5 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[125px] justify-center cursor-pointer ${activeView === 'pos'
+            ? 'bg-[#4A6B3E] text-white shadow-md shadow-[#4A6B3E]/25'
+            : 'text-stone-600 hover:text-stone-900 hover:bg-white/80'
             }`}
         >
           <LayoutGrid className="w-5 h-5" />
@@ -105,15 +105,15 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           id="nav-billing-btn"
           onClick={() => onViewChange('billing')}
-          className={`flex items-center gap-2 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[145px] justify-center relative ${activeView === 'billing'
-            ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-600/30 ring-1 ring-emerald-400/50'
-            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+          className={`flex items-center gap-2 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[145px] justify-center relative cursor-pointer ${activeView === 'billing'
+            ? 'bg-[#4A6B3E] text-white shadow-md shadow-[#4A6B3E]/25'
+            : 'text-stone-600 hover:text-stone-900 hover:bg-white/80'
             }`}
         >
           <Receipt className="w-5 h-5" />
           <span>Caja / Cobro</span>
           {pendingBillingCount > 0 && (
-            <span className="ml-1 px-2 py-0.5 text-xs font-black rounded-full bg-emerald-400 text-slate-950 font-mono shadow-md animate-pulse">
+            <span className="ml-1 px-2 py-0.5 text-xs font-black rounded-full bg-[#D96B43] text-white font-mono shadow-sm animate-pulse">
               {pendingBillingCount}
             </span>
           )}
@@ -122,9 +122,9 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           id="nav-closure-btn"
           onClick={() => onViewChange('closure')}
-          className={`flex items-center gap-2 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[145px] justify-center ${activeView === 'closure'
-            ? 'bg-gradient-to-r from-teal-600 to-emerald-500 text-white shadow-lg shadow-teal-600/30 ring-1 ring-emerald-400/50'
-            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+          className={`flex items-center gap-2 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[145px] justify-center cursor-pointer ${activeView === 'closure'
+            ? 'bg-[#4A6B3E] text-white shadow-md shadow-[#4A6B3E]/25'
+            : 'text-stone-600 hover:text-stone-900 hover:bg-white/80'
             }`}
         >
           <Scale className="w-5 h-5" />
@@ -152,15 +152,15 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           id="nav-inv-btn"
           onClick={() => onViewChange('inventory')}
-          className={`flex items-center gap-2 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[135px] justify-center relative ${activeView === 'inventory'
-            ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-600/30 ring-1 ring-cyan-400/50'
-            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+          className={`flex items-center gap-2 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[135px] justify-center relative cursor-pointer ${activeView === 'inventory'
+            ? 'bg-[#4A6B3E] text-white shadow-md shadow-[#4A6B3E]/25'
+            : 'text-stone-600 hover:text-stone-900 hover:bg-white/80'
             }`}
         >
           <Boxes className="w-5 h-5" />
           <span>Inventario</span>
           {lowStockCount > 0 && (
-            <span className="ml-1 px-2 py-0.5 text-xs font-black rounded-full bg-amber-500 text-slate-950 font-mono shadow-md">
+            <span className="ml-1 px-2 py-0.5 text-xs font-black rounded-full bg-amber-400 text-stone-950 font-mono shadow-sm">
               {lowStockCount} !
             </span>
           )}
@@ -168,53 +168,43 @@ export const Header: React.FC<HeaderProps> = ({
       </nav>
 
       {/* Right Controls: Thermal Printer Status, Cashier, Live Clock */}
-      <div className="flex items-center gap-3">
-        {onOpenQuickLabel && (
-          <button
-            onClick={onOpenQuickLabel}
-            className="hidden lg:flex items-center gap-2 px-3.5 h-11 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-slate-300 text-xs font-semibold active:scale-95 transition-all"
-            title="Vista rápida de etiqueta térmica adhesiva"
-          >
-            <Tag className="w-4 h-4 text-emerald-400" />
-            <span>Simulador Etiqueta</span>
-          </button>
-        )}
+      <div className="flex items-center gap-2.5">
 
         {/* Printer Status Badge */}
-        <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800">
-          <Printer className="w-4 h-4 text-emerald-400" />
+        <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#FAF6F0] border border-stone-200">
+          <Printer className="w-4 h-4 text-emerald-700" />
           <div className="flex flex-col text-left">
-            <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">
+            <span className="text-[10px] text-stone-500 uppercase tracking-wider font-semibold">
               Epson TM-L90
             </span>
-            <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping inline-block" />
+            <span className="text-xs font-bold text-emerald-700 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-ping inline-block" />
               TÉRMICA ONLINE
             </span>
           </div>
         </div>
 
         {/* Cashier Info */}
-        <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800">
-          <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
+        <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#FAF6F0] border border-stone-200">
+          <div className="w-7 h-7 rounded-lg bg-[#EBF1E8] text-[#4A6B3E] flex items-center justify-center font-bold text-xs">
             <User className="w-4 h-4" />
           </div>
           <div className="flex flex-col text-left">
-            <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">
+            <span className="text-[10px] text-stone-500 uppercase tracking-wider font-semibold">
               Cajero en Turno
             </span>
-            <span className="text-xs font-bold text-slate-200">Marcos Vega</span>
+            <span className="text-xs font-bold text-stone-800">Marcos Vega</span>
           </div>
         </div>
 
         {/* Live Digital Clock */}
-        <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-950/40 border border-emerald-800/40 text-emerald-300">
-          <Clock className="w-4 h-4 text-emerald-400" />
+        <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#EBF1E8] border border-[#D4E2CE] text-[#3E5C33]">
+          <Clock className="w-4 h-4 text-[#4A6B3E]" />
           <div className="flex flex-col text-right">
             <span className="text-xs font-bold font-mono tracking-wider">
               {currentTime || '--:--:--'}
             </span>
-            <span className="text-[10px] text-emerald-400/80 uppercase font-semibold">
+            <span className="text-[10px] text-[#4A6B3E] uppercase font-semibold">
               {currentDate}
             </span>
           </div>

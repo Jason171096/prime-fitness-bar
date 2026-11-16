@@ -22,22 +22,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <div
       onClick={handleClick}
-      className="group relative bg-slate-900/90 rounded-2xl border border-slate-800 hover:border-emerald-500/50 flex flex-col overflow-hidden transition-all duration-200 active:scale-[0.98] cursor-pointer shadow-lg hover:shadow-emerald-500/10 min-h-[290px] select-none"
+      className="group relative bg-white rounded-2xl border border-stone-200 hover:border-[#4A6B3E]/60 flex flex-col overflow-hidden transition-all duration-200 active:scale-[0.98] cursor-pointer shadow-sm hover:shadow-md min-h-[290px] select-none"
     >
       {/* Product Image Header */}
-      <div className="relative h-36 w-full overflow-hidden bg-slate-950">
+      <div className="relative h-36 w-full overflow-hidden bg-[#FAF6F0]">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
 
         {/* Price Tag Overlay */}
         <div className="absolute bottom-2.5 right-2.5 z-10">
-          <div className="px-3 py-1 rounded-xl bg-slate-950/90 backdrop-blur-md border border-slate-700/80 text-white font-mono font-extrabold text-base shadow-lg flex items-center gap-0.5">
-            <span className="text-emerald-400 text-xs font-sans font-bold">$</span>
+          <div className="px-3 py-1 rounded-xl bg-white/95 backdrop-blur-md border border-stone-200 text-stone-900 font-mono font-extrabold text-base shadow-md flex items-center gap-0.5">
+            <span className="text-[#4A6B3E] text-xs font-sans font-bold">$</span>
             {product.basePrice.toFixed(2)}
           </div>
         </div>
@@ -46,27 +46,27 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       {/* Card Body */}
       <div className="p-3.5 flex-1 flex flex-col justify-between">
         <div>
-          <h3 className="font-bold text-slate-100 text-base leading-snug group-hover:text-emerald-400 transition-colors line-clamp-1">
+          <h3 className="font-bold text-stone-900 text-base leading-snug group-hover:text-[#4A6B3E] transition-colors line-clamp-1">
             {product.name}
           </h3>
-          <p className="text-xs text-slate-400 line-clamp-2 mt-1 leading-relaxed">
+          <p className="text-xs text-stone-500 line-clamp-2 mt-1 leading-relaxed">
             {product.description}
           </p>
         </div>
 
         {/* Macro Pill & Tags */}
-        <div className="mt-3 pt-2.5 border-t border-slate-800/80 flex flex-col gap-2">
+        <div className="mt-3 pt-2.5 border-t border-stone-100 flex flex-col gap-2">
 
           {/* Action Touch Trigger */}
           <button
-            className={`w-full h-11 rounded-xl font-bold text-xs tracking-wide flex items-center justify-center gap-2 transition-all mt-1 active:scale-95 shadow-md ${product.isCustomizable
-              ? 'bg-slate-800 hover:bg-emerald-600/90 text-slate-200 hover:text-white border border-slate-700 hover:border-emerald-500'
-              : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/20'
+            className={`w-full h-11 rounded-xl font-bold text-xs tracking-wide flex items-center justify-center gap-2 transition-all mt-1 active:scale-95 shadow-sm cursor-pointer ${product.isCustomizable
+              ? 'bg-[#FAF6F0] hover:bg-[#4A6B3E] text-stone-800 hover:text-white border border-stone-200 hover:border-[#4A6B3E]'
+              : 'bg-[#4A6B3E] hover:bg-[#3D5A32] text-white'
               }`}
           >
             {product.isCustomizable ? (
               <>
-                <SlidersHorizontal className="w-4 h-4 text-emerald-400 group-hover:text-white" />
+                <SlidersHorizontal className="w-4 h-4 text-[#4A6B3E] group-hover:text-white" />
                 <span>Configurar Modificadores</span>
               </>
             ) : (

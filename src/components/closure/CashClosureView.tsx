@@ -89,32 +89,32 @@ export const CashClosureView: React.FC<CashClosureViewProps> = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-slate-950 text-slate-100 overflow-hidden select-none font-sans">
+    <div className="flex-1 flex flex-col h-full bg-[#FAF6F0] text-stone-900 overflow-hidden select-none font-sans">
       {/* =========================================================================
           BARRA DE ESTADO SUPERIOR DEL TURNO ACTIVO (Touch-friendly 56px)
          ========================================================================= */}
       <section
         aria-label="Encabezado del Turno Activo"
-        className="h-14 px-6 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between shrink-0 shadow-sm"
+        className="h-14 px-6 bg-white border-b border-stone-200 flex items-center justify-between shrink-0 shadow-sm"
       >
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2.5">
             <span
-              className={`w-3 h-3 rounded-full ${isShiftOpen ? 'bg-emerald-400 animate-pulse shadow-lg shadow-emerald-500/50' : 'bg-rose-500'
+              className={`w-3 h-3 rounded-full ${isShiftOpen ? 'bg-emerald-500 animate-pulse shadow-sm' : 'bg-rose-500'
                 }`}
             />
-            <h1 className="text-xs font-black uppercase tracking-wider text-slate-200">
+            <h1 className="text-xs font-black uppercase tracking-wider text-stone-800">
               CIERRE DE CAJA & BALANCE DE TURNO
             </h1>
           </div>
 
-          <div className="h-4 w-px bg-slate-800" />
+          <div className="h-4 w-px bg-stone-200" />
 
           {/* Hora de Apertura */}
-          <div className="hidden xl:flex items-center gap-2 text-xs text-slate-400">
-            <Clock className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="hidden xl:flex items-center gap-2 text-xs text-stone-500">
+            <Clock className="w-3.5 h-3.5 text-[#4A6B3E]" />
             <span>
-              Apertura: <strong className="text-slate-200 font-mono">{currentShift?.openedAt || '--'}</strong>
+              Apertura: <strong className="text-stone-800 font-mono">{currentShift?.openedAt || '--'}</strong>
             </span>
           </div>
         </div>
