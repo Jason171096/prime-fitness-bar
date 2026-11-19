@@ -44,7 +44,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-stone-900">
+              <h2 className="text-base font-bold text-stone-900 tracking-tight">
                 Comanda Activa
               </h2>
               <span className="px-2 py-0.5 rounded-full text-[11px] font-bold font-mono bg-[#4A6B3E]/15 text-[#4A6B3E]">

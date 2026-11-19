@@ -19,8 +19,6 @@ import {
   XCircle,
   RefreshCw,
   X,
-  Scale,
-  Clock,
   Inbox,
 } from 'lucide-react';
 import { useBilling } from '../../hooks/useBilling';
@@ -33,7 +31,7 @@ interface BillingViewProps {
   onNavigateToClosure?: () => void;
 }
 
-export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure }) => {
+export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure: _onNavigateToClosure }) => {
   const {
     filteredPendingOrders,
     selectedOrderId,
@@ -48,9 +46,6 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure })
     resetFilters,
     openPaymentModal,
     cancelOrder,
-    getOrderElapsedSeconds,
-    getOrderUrgency,
-    formatElapsedTime,
   } = useBilling();
 
   const showToast = usePOSStore((s) => s.showToast);
@@ -119,22 +114,22 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure })
   // Calcular macros totales de la comanda seleccionada
   const orderTotalMacros = selectedOrder
     ? selectedOrder.items.reduce(
-        (acc, item) => {
-          if (item.customization?.calculatedMacros) {
-            acc.calories += item.customization.calculatedMacros.calories * item.quantity;
-            acc.protein += item.customization.calculatedMacros.protein * item.quantity;
-            acc.carbs += item.customization.calculatedMacros.carbs * item.quantity;
-            acc.fat += item.customization.calculatedMacros.fat * item.quantity;
-          } else {
-            acc.calories += item.product.baseMacros.calories * item.quantity;
-            acc.protein += item.product.baseMacros.protein * item.quantity;
-            acc.carbs += item.product.baseMacros.carbs * item.quantity;
-            acc.fat += item.product.baseMacros.fat * item.quantity;
-          }
-          return acc;
-        },
-        { calories: 0, protein: 0, carbs: 0, fat: 0 }
-      )
+      (acc, item) => {
+        if (item.customization?.calculatedMacros) {
+          acc.calories += item.customization.calculatedMacros.calories * item.quantity;
+          acc.protein += item.customization.calculatedMacros.protein * item.quantity;
+          acc.carbs += item.customization.calculatedMacros.carbs * item.quantity;
+          acc.fat += item.customization.calculatedMacros.fat * item.quantity;
+        } else {
+          acc.calories += item.product.baseMacros.calories * item.quantity;
+          acc.protein += item.product.baseMacros.protein * item.quantity;
+          acc.carbs += item.product.baseMacros.carbs * item.quantity;
+          acc.fat += item.product.baseMacros.fat * item.quantity;
+        }
+        return acc;
+      },
+      { calories: 0, protein: 0, carbs: 0, fat: 0 }
+    )
     : { calories: 0, protein: 0, carbs: 0, fat: 0 };
 
   return (
@@ -175,16 +170,6 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure })
             </span>
           </div>
 
-          {onNavigateToClosure && (
-            <button
-              onClick={onNavigateToClosure}
-              className="flex items-center gap-1.5 px-3.5 h-10 rounded-xl bg-[#FAF6F0] hover:bg-stone-200/70 text-stone-800 border border-stone-300 text-xs font-bold active:scale-95 transition-all cursor-pointer"
-              title="Ir al Arqueo y Cierre de Turno"
-            >
-              <Scale className="w-4 h-4 text-[#4A6B3E]" />
-              <span>Arqueo de Turno</span>
-            </button>
-          )}
         </div>
       </section>
 
@@ -233,11 +218,10 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure })
                     key={tab.id}
                     type="button"
                     onClick={() => setTypeFilter(tab.id)}
-                    className={`h-10 px-2.5 rounded-xl text-xs transition-all cursor-pointer truncate ${
-                      isActive
-                        ? 'bg-[#4A6B3E] text-white font-semibold shadow-sm'
-                        : 'bg-white border border-stone-200 text-stone-700 hover:bg-stone-50 font-medium'
-                    }`}
+                    className={`h-10 px-2.5 rounded-xl text-xs transition-all cursor-pointer truncate ${isActive
+                      ? 'bg-[#4A6B3E] text-white font-semibold shadow-sm'
+                      : 'bg-white border border-stone-200 text-stone-700 hover:bg-stone-50 font-medium'
+                      }`}
                   >
                     {tab.label}
                   </button>
@@ -274,25 +258,15 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure })
             ) : (
               filteredPendingOrders.map((order) => {
                 const isSelected = selectedOrderId === order.id;
-                const urgency = getOrderUrgency(order);
-                const elapsedText = formatElapsedTime(getOrderElapsedSeconds(order));
-
-                const urgencyBadgeClass =
-                  urgency === 'urgent'
-                    ? 'bg-red-50 text-red-700 border-red-200'
-                    : urgency === 'warning'
-                      ? 'bg-amber-50 text-amber-800 border-amber-200'
-                      : 'bg-emerald-50 text-emerald-700 border-emerald-200';
 
                 return (
                   <div
                     key={order.id}
                     onClick={() => setSelectedOrderId(order.id)}
-                    className={`rounded-2xl p-4 transition-all cursor-pointer flex flex-col gap-3 ${
-                      isSelected
-                        ? 'bg-white border-2 border-[#4A6B3E] ring-4 ring-[#4A6B3E]/10 shadow-md'
-                        : 'bg-white border border-stone-200 hover:border-[#4A6B3E]/60 shadow-sm'
-                    }`}
+                    className={`rounded-2xl p-4 transition-all cursor-pointer flex flex-col gap-3 ${isSelected
+                      ? 'bg-white border-2 border-[#4A6B3E] ring-4 ring-[#4A6B3E]/10 shadow-md'
+                      : 'bg-white border border-stone-200 hover:border-[#4A6B3E]/60 shadow-sm'
+                      }`}
                   >
                     {/* Cabecera de la Tarjeta: #ID, Tipo y Semáforo de Tiempo */}
                     <div className="flex items-center justify-between gap-2">
@@ -304,13 +278,6 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure })
                           {order.orderType === 'takeaway' ? '🛍️ Para llevar' : '🥤 En barra'}
                         </span>
                       </div>
-
-                      <span
-                        className={`text-[11px] px-2 py-0.5 rounded-full font-mono font-bold border flex items-center gap-1 ${urgencyBadgeClass}`}
-                      >
-                        <Clock className="w-3 h-3" />
-                        {elapsedText}
-                      </span>
                     </div>
 
                     {/* Cliente e Información de Membresía */}
@@ -446,7 +413,6 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure })
                   <div className="divide-y divide-stone-100 border border-stone-200 rounded-xl bg-white overflow-hidden">
                     {selectedOrder.items.map((item) => {
                       const c = item.customization;
-                      const itemMacros = c?.calculatedMacros || item.product.baseMacros;
 
                       return (
                         <div key={item.cartItemId} className="p-4 flex flex-col gap-2">
@@ -490,18 +456,6 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure })
                                   </div>
                                 )}
 
-                                {/* Pill discreta de macros por ítem */}
-                                <div className="mt-2 inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-[#FAF6F0] text-stone-700 text-[11px] font-mono border border-stone-200/80">
-                                  <span>{itemMacros.calories * item.quantity} kcal</span>
-                                  <span>·</span>
-                                  <span className="font-bold text-[#4A6B3E]">
-                                    {itemMacros.protein * item.quantity}g P
-                                  </span>
-                                  <span>·</span>
-                                  <span>{itemMacros.carbs * item.quantity}g C</span>
-                                  <span>·</span>
-                                  <span>{itemMacros.fat * item.quantity}g G</span>
-                                </div>
                               </div>
                             </div>
 

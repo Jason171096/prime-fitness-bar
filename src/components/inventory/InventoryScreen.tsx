@@ -214,32 +214,7 @@ export const InventoryScreen: React.FC = () => {
   // ===========================================================================
   // HELPERS DE ESTADO Y ESTACIONES
   // ===========================================================================
-  const getStationBadge = (station: RecipeStation) => {
-    switch (station) {
-      case 'Cocina Caliente / Plancha':
-        return {
-          bg: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
-          dot: 'bg-amber-400',
-          icon: Flame,
-          label: 'Cocina Caliente',
-        };
-      case 'Barra Fría / Ensaladas':
-        return {
-          bg: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
-          dot: 'bg-emerald-400',
-          icon: Salad,
-          label: 'Barra Fría',
-        };
-      case 'Barra de Smoothies y Jugos':
-      default:
-        return {
-          bg: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
-          dot: 'bg-cyan-400',
-          icon: Zap,
-          label: 'Barra de Bebidas',
-        };
-    }
-  };
+
 
   const getRecipeIngredientsStatus = (recipe: RecipeBOM) => {
     const ingredients = recipe.ingredients || recipe.baseIngredients || [];
@@ -415,7 +390,7 @@ export const InventoryScreen: React.FC = () => {
             <Boxes className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-sm sm:text-base font-black text-stone-900 tracking-tight">
+            <h2 className="text-base font-bold text-stone-900 tracking-tight">
               Control de Inventario & BOM (Recetario / Fichas Técnicas)
             </h2>
             <p className="text-[11px] sm:text-xs text-stone-500">
@@ -428,11 +403,10 @@ export const InventoryScreen: React.FC = () => {
         <div className="flex items-center gap-1.5 bg-[#FAF6F0] p-1.5 rounded-xl border border-stone-200">
           <button
             onClick={() => setActiveTab('stock')}
-            className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-black transition-all flex items-center gap-2 cursor-pointer ${
-              activeTab === 'stock'
-                ? 'bg-[#4A6B3E] text-white shadow-sm'
-                : 'text-stone-600 hover:text-stone-900 hover:bg-white/70'
-            }`}
+            className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-black transition-all flex items-center gap-2 cursor-pointer ${activeTab === 'stock'
+              ? 'bg-[#4A6B3E] text-white shadow-sm'
+              : 'text-stone-600 hover:text-stone-900 hover:bg-white/70'
+              }`}
           >
             <Boxes className="w-4 h-4" />
             <span>Stock Insumos ({inventory.length})</span>
@@ -440,11 +414,10 @@ export const InventoryScreen: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('bom')}
-            className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-black transition-all flex items-center gap-2 cursor-pointer ${
-              activeTab === 'bom'
-                ? 'bg-[#4A6B3E] text-white shadow-sm'
-                : 'text-stone-600 hover:text-stone-900 hover:bg-white/70'
-            }`}
+            className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-black transition-all flex items-center gap-2 cursor-pointer ${activeTab === 'bom'
+              ? 'bg-[#4A6B3E] text-white shadow-sm'
+              : 'text-stone-600 hover:text-stone-900 hover:bg-white/70'
+              }`}
           >
             <BookOpen className="w-4 h-4" />
             <span>Recetario & BOM ({recipes.length})</span>
@@ -486,11 +459,10 @@ export const InventoryScreen: React.FC = () => {
                 <button
                   key={cat.id}
                   onClick={() => setFilterStockCategory(cat.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
-                    filterStockCategory === cat.id
-                      ? 'bg-[#4A6B3E] text-white border border-[#4A6B3E] shadow-sm'
-                      : 'bg-white text-stone-600 hover:text-stone-900 border border-stone-200'
-                  }`}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${filterStockCategory === cat.id
+                    ? 'bg-[#4A6B3E] text-white border border-[#4A6B3E] shadow-sm'
+                    : 'bg-white text-stone-600 hover:text-stone-900 border border-stone-200'
+                    }`}
                 >
                   {cat.label}
                 </button>
@@ -551,11 +523,10 @@ export const InventoryScreen: React.FC = () => {
                             {item.unit === 'ml'
                               ? `${(item.currentStock / 1000).toFixed(2)} L`
                               : item.unit === 'g'
-                                ? `${
-                                    item.currentStock >= 1000
-                                      ? (item.currentStock / 1000).toFixed(2) + ' kg'
-                                      : item.currentStock + ' g'
-                                  }`
+                                ? `${item.currentStock >= 1000
+                                  ? (item.currentStock / 1000).toFixed(2) + ' kg'
+                                  : item.currentStock + ' g'
+                                }`
                                 : `${item.currentStock} ${item.unit}`}
                           </span>
 
@@ -620,7 +591,7 @@ export const InventoryScreen: React.FC = () => {
             </div>
 
             {/* Filtro rápido de Estación */}
-            <div className="flex items-center gap-1 overflow-x-auto">
+            {/* <div className="flex items-center gap-1 overflow-x-auto">
               {[
                 { id: 'all', label: 'Todas las estaciones' },
                 { id: 'Cocina Caliente / Plancha', label: 'Cocina Caliente' },
@@ -639,7 +610,7 @@ export const InventoryScreen: React.FC = () => {
                   {st.label}
                 </button>
               ))}
-            </div>
+            </div> */}
 
             {/* Chips de Categorías */}
             <div className="flex items-center gap-1 overflow-x-auto">
@@ -655,11 +626,10 @@ export const InventoryScreen: React.FC = () => {
                 <button
                   key={c.id}
                   onClick={() => setFilterCategory(c.id)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all shrink-0 cursor-pointer ${
-                    filterCategory === c.id
-                      ? 'bg-[#4A6B3E] text-white border border-[#4A6B3E]'
-                      : 'text-stone-500 hover:text-stone-900'
-                  }`}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all shrink-0 cursor-pointer ${filterCategory === c.id
+                    ? 'bg-[#4A6B3E] text-white border border-[#4A6B3E]'
+                    : 'text-stone-500 hover:text-stone-900'
+                    }`}
                 >
                   {c.label}
                 </button>
@@ -673,9 +643,8 @@ export const InventoryScreen: React.FC = () => {
             {/* COLUMNA IZQUIERDA: LISTA MAESTRO DE RECETAS                         */}
             {/* =================================================================== */}
             <div
-              className={`no-print w-full lg:w-80 xl:w-96 bg-white rounded-2xl border border-stone-200 p-3 flex-col gap-2 overflow-y-auto shrink-0 shadow-sm ${
-                selectedRecipe ? 'hidden lg:flex' : 'flex flex-1 lg:flex-initial'
-              }`}
+              className={`no-print w-full lg:w-80 xl:w-96 bg-white rounded-2xl border border-stone-200 p-3 flex-col gap-2 overflow-y-auto shrink-0 shadow-sm ${selectedRecipe ? 'hidden lg:flex' : 'flex flex-1 lg:flex-initial'
+                }`}
             >
               <div className="flex items-center justify-between px-2 py-1">
                 <span className="text-xs font-black uppercase tracking-wider text-stone-500">
@@ -701,20 +670,17 @@ export const InventoryScreen: React.FC = () => {
               ) : (
                 filteredRecipes.map((rec) => {
                   const isSelected = selectedRecipe?.productId === rec.productId;
-                  const stationInfo = getStationBadge(rec.station);
                   const stockStatus = getRecipeIngredientsStatus(rec);
-                  const StationIcon = stationInfo.icon;
                   const ingredientsCount = (rec.ingredients || rec.baseIngredients || []).length;
 
                   return (
                     <button
                       key={rec.productId}
                       onClick={() => setSelectedRecipeProductId(rec.productId)}
-                      className={`p-3 rounded-xl border text-left transition-all active:scale-[0.98] cursor-pointer relative overflow-hidden flex items-center gap-3 ${
-                        isSelected
-                          ? 'bg-[#EBF1E8] border-[#4A6B3E] ring-1 ring-[#4A6B3E]/30 shadow-sm'
-                          : 'bg-[#FAF6F0]/70 border-stone-200 hover:border-stone-300 hover:bg-[#FAF6F0]'
-                      }`}
+                      className={`p-3 rounded-xl border text-left transition-all active:scale-[0.98] cursor-pointer relative overflow-hidden flex items-center gap-3 ${isSelected
+                        ? 'bg-[#EBF1E8] border-[#4A6B3E] ring-1 ring-[#4A6B3E]/30 shadow-sm'
+                        : 'bg-[#FAF6F0]/70 border-stone-200 hover:border-stone-300 hover:bg-[#FAF6F0]'
+                        }`}
                     >
                       {/* Miniatura Editorial */}
                       <div className="w-14 h-14 rounded-xl overflow-hidden border border-stone-200 bg-white shrink-0">
@@ -728,12 +694,7 @@ export const InventoryScreen: React.FC = () => {
                       <div className="flex-1 min-w-0 flex flex-col gap-1.5">
                         {/* Cabecera de la tarjeta */}
                         <div className="flex items-center justify-between gap-2">
-                          <span
-                            className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider border flex items-center gap-1 ${stationInfo.bg}`}
-                          >
-                            <StationIcon className="w-3 h-3" />
-                            <span>{stationInfo.label}</span>
-                          </span>
+
 
                           {/* Indicador discreto de salud de inventario */}
                           <span
@@ -744,21 +705,19 @@ export const InventoryScreen: React.FC = () => {
                                   ? 'Insumo con stock bajo'
                                   : 'Todos los insumos disponibles'
                             }
-                            className={`w-2.5 h-2.5 rounded-full shrink-0 ${
-                              stockStatus === 'critical'
-                                ? 'bg-rose-500 animate-pulse'
-                                : stockStatus === 'warning'
-                                  ? 'bg-amber-400'
-                                  : 'bg-emerald-500'
-                            }`}
+                            className={`w-2.5 h-2.5 rounded-full shrink-0 ${stockStatus === 'critical'
+                              ? 'bg-rose-500 animate-pulse'
+                              : stockStatus === 'warning'
+                                ? 'bg-amber-400'
+                                : 'bg-emerald-500'
+                              }`}
                           />
                         </div>
 
                         {/* Nombre del Producto */}
                         <span
-                          className={`font-black text-sm leading-snug line-clamp-1 ${
-                            isSelected ? 'text-[#3E5C33]' : 'text-stone-900'
-                          }`}
+                          className={`font-black text-sm leading-snug line-clamp-1 ${isSelected ? 'text-[#3E5C33]' : 'text-stone-900'
+                            }`}
                         >
                           {rec.productName}
                         </span>
@@ -786,11 +745,10 @@ export const InventoryScreen: React.FC = () => {
             {/* COLUMNA DERECHA: FICHA DE RECETA EDITORIAL / INFOGRAFÍA CULINARIA   */}
             {/* =================================================================== */}
             <div
-              className={`flex-1 overflow-y-auto rounded-3xl print-recipe-sheet ${
-                selectedRecipe
-                  ? 'bg-[#FAF6F0] text-[#2B2A27] border border-[#E6DDD0] shadow-2xl'
-                  : 'hidden lg:flex bg-[#FAF6F0]/95 text-[#2B2A27] border border-[#E6DDD0]'
-              }`}
+              className={`flex-1 overflow-y-auto rounded-3xl print-recipe-sheet ${selectedRecipe
+                ? 'bg-[#FAF6F0] text-[#2B2A27] border border-[#E6DDD0] shadow-2xl'
+                : 'hidden lg:flex bg-[#FAF6F0]/95 text-[#2B2A27] border border-[#E6DDD0]'
+                }`}
             >
               {selectedRecipe ? (
                 <div className="max-w-5xl mx-auto p-5 sm:p-8 lg:p-10 space-y-10">
@@ -1057,11 +1015,10 @@ export const InventoryScreen: React.FC = () => {
                             onClick={() =>
                               toggleStepCompleted(selectedRecipe.productId, idx)
                             }
-                            className={`bg-white rounded-2xl border overflow-hidden flex flex-col cursor-pointer transition-all active:scale-[0.99] shadow-sm hover:shadow-md ${
-                              isDone
-                                ? 'border-[#4A6B3E] bg-[#F5F9F3] opacity-85'
-                                : 'border-[#EAE1D3]'
-                            }`}
+                            className={`bg-white rounded-2xl border overflow-hidden flex flex-col cursor-pointer transition-all active:scale-[0.99] shadow-sm hover:shadow-md ${isDone
+                              ? 'border-[#4A6B3E] bg-[#F5F9F3] opacity-85'
+                              : 'border-[#EAE1D3]'
+                              }`}
                           >
                             {/* Fotografía del proceso + Badge circular numerado terracota */}
                             <div className="relative h-40 w-full bg-[#F2ECE1] overflow-hidden">
@@ -1072,11 +1029,10 @@ export const InventoryScreen: React.FC = () => {
                               />
 
                               <div
-                                className={`absolute top-3 left-3 w-9 h-9 rounded-full font-black text-sm flex items-center justify-center shadow-lg border-2 border-[#FAF6F0] transition-colors ${
-                                  isDone
-                                    ? 'bg-[#4A6B3E] text-[#FAF6F0]'
-                                    : 'bg-[#D96B43] text-white'
-                                }`}
+                                className={`absolute top-3 left-3 w-9 h-9 rounded-full font-black text-sm flex items-center justify-center shadow-lg border-2 border-[#FAF6F0] transition-colors ${isDone
+                                  ? 'bg-[#4A6B3E] text-[#FAF6F0]'
+                                  : 'bg-[#D96B43] text-white'
+                                  }`}
                               >
                                 {isDone ? (
                                   <Check className="w-4 h-4 stroke-[3]" />
@@ -1089,11 +1045,10 @@ export const InventoryScreen: React.FC = () => {
                             {/* Descripción corta y directa */}
                             <div className="p-4 flex-1 flex items-start">
                               <p
-                                className={`text-xs sm:text-[13px] leading-relaxed font-medium ${
-                                  isDone
-                                    ? 'line-through text-[#7B7468]'
-                                    : 'text-[#3A3731]'
-                                }`}
+                                className={`text-xs sm:text-[13px] leading-relaxed font-medium ${isDone
+                                  ? 'line-through text-[#7B7468]'
+                                  : 'text-[#3A3731]'
+                                  }`}
                               >
                                 {step.instruction}
                               </p>
@@ -1107,35 +1062,35 @@ export const InventoryScreen: React.FC = () => {
                     {(selectedRecipe.chefNotes ||
                       (selectedRecipe.allergens &&
                         selectedRecipe.allergens.length > 0)) && (
-                      <div className="bg-[#F3ECE0] border border-[#E2D5C1] rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
-                        <div className="space-y-1 flex-1">
-                          <span className="text-[11px] font-black uppercase tracking-wider text-[#9A4C2E] flex items-center gap-1.5">
-                            <Sparkles className="w-3.5 h-3.5 text-[#D96B43]" />
-                            <span>Tip de Barra / Calidad</span>
-                          </span>
-                          <p className="text-xs text-[#4A4338] leading-relaxed font-medium">
-                            {selectedRecipe.chefNotes || selectedRecipe.preparationNotes}
-                          </p>
-                        </div>
+                        <div className="bg-[#F3ECE0] border border-[#E2D5C1] rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                          <div className="space-y-1 flex-1">
+                            <span className="text-[11px] font-black uppercase tracking-wider text-[#9A4C2E] flex items-center gap-1.5">
+                              <Sparkles className="w-3.5 h-3.5 text-[#D96B43]" />
+                              <span>Tip de Barra / Calidad</span>
+                            </span>
+                            <p className="text-xs text-[#4A4338] leading-relaxed font-medium">
+                              {selectedRecipe.chefNotes || selectedRecipe.preparationNotes}
+                            </p>
+                          </div>
 
-                        {selectedRecipe.allergens &&
-                          selectedRecipe.allergens.length > 0 && (
-                            <div className="flex flex-wrap items-center gap-1.5 shrink-0">
-                              <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A6F60] mr-1">
-                                Alérgenos:
-                              </span>
-                              {selectedRecipe.allergens.map((alg) => (
-                                <span
-                                  key={alg}
-                                  className="px-2.5 py-0.5 rounded-full bg-[#FBEAE3] text-[#A84824] border border-[#EBC6B6] text-[11px] font-bold"
-                                >
-                                  {alg}
+                          {selectedRecipe.allergens &&
+                            selectedRecipe.allergens.length > 0 && (
+                              <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A6F60] mr-1">
+                                  Alérgenos:
                                 </span>
-                              ))}
-                            </div>
-                          )}
-                      </div>
-                    )}
+                                {selectedRecipe.allergens.map((alg) => (
+                                  <span
+                                    key={alg}
+                                    className="px-2.5 py-0.5 rounded-full bg-[#FBEAE3] text-[#A84824] border border-[#EBC6B6] text-[11px] font-bold"
+                                  >
+                                    {alg}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                        </div>
+                      )}
                   </section>
 
                   {/* =============================================================== */}

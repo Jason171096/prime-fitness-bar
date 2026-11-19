@@ -75,9 +75,9 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-extrabold tracking-tight text-stone-900 font-mono flex items-center gap-1.5">
               PRIME<span className="text-[#4A6B3E]">FITNESS</span>
-              <span className="text-xs px-2 py-0.5 rounded bg-[#EBF1E8] text-[#3E5C33] border border-[#D4E2CE] font-sans font-semibold">
+              {/* <span className="text-xs px-2 py-0.5 rounded bg-[#EBF1E8] text-[#3E5C33] border border-[#D4E2CE] font-sans font-semibold">
                 BAR POS
-              </span>
+              </span> */}
             </h1>
           </div>
           <p className="text-xs text-stone-500 flex items-center gap-1.5 font-medium">
