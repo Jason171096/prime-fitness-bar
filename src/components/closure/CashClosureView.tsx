@@ -104,8 +104,8 @@ export const CashClosureView: React.FC<CashClosureViewProps> = () => {
             </h1>
             <span
               className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border flex items-center gap-1.5 ${isShiftOpen
-                  ? 'bg-[#4A6B3E]/15 text-[#4A6B3E] border-[#4A6B3E]/25'
-                  : 'bg-red-50 text-red-700 border-red-200'
+                ? 'bg-[#4A6B3E]/15 text-[#4A6B3E] border-[#4A6B3E]/25'
+                : 'bg-red-50 text-red-700 border-red-200'
                 }`}
             >
               <span
@@ -365,8 +365,8 @@ export const CashClosureView: React.FC<CashClosureViewProps> = () => {
               type="button"
               onClick={() => setPaymentFilter('all')}
               className={`px-3 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${paymentFilter === 'all'
-                  ? 'bg-[#4A6B3E] text-white font-semibold shadow-sm'
-                  : 'bg-[#FAF6F0] text-stone-700 border border-stone-200 hover:bg-stone-200/70 font-medium'
+                ? 'bg-[#4A6B3E] text-white font-semibold shadow-sm'
+                : 'bg-[#FAF6F0] text-stone-700 border border-stone-200 hover:bg-stone-200/70 font-medium'
                 }`}
             >
               Todos ({financialSummary.totalOrdersCount})
@@ -376,8 +376,8 @@ export const CashClosureView: React.FC<CashClosureViewProps> = () => {
               type="button"
               onClick={() => setPaymentFilter('cash')}
               className={`px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition-all cursor-pointer ${paymentFilter === 'cash'
-                  ? 'bg-[#4A6B3E] text-white font-semibold shadow-sm'
-                  : 'bg-[#FAF6F0] text-stone-700 border border-stone-200 hover:bg-stone-200/70 font-medium'
+                ? 'bg-[#4A6B3E] text-white font-semibold shadow-sm'
+                : 'bg-[#FAF6F0] text-stone-700 border border-stone-200 hover:bg-stone-200/70 font-medium'
                 }`}
             >
               <DollarSign className="w-3 h-3" />
@@ -388,8 +388,8 @@ export const CashClosureView: React.FC<CashClosureViewProps> = () => {
               type="button"
               onClick={() => setPaymentFilter('card')}
               className={`px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition-all cursor-pointer ${paymentFilter === 'card'
-                  ? 'bg-[#4A6B3E] text-white font-semibold shadow-sm'
-                  : 'bg-[#FAF6F0] text-stone-700 border border-stone-200 hover:bg-stone-200/70 font-medium'
+                ? 'bg-[#4A6B3E] text-white font-semibold shadow-sm'
+                : 'bg-[#FAF6F0] text-stone-700 border border-stone-200 hover:bg-stone-200/70 font-medium'
                 }`}
             >
               <CreditCard className="w-3 h-3" />
@@ -400,8 +400,8 @@ export const CashClosureView: React.FC<CashClosureViewProps> = () => {
               type="button"
               onClick={() => setPaymentFilter('gym_account')}
               className={`px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition-all cursor-pointer ${paymentFilter === 'gym_account'
-                  ? 'bg-[#4A6B3E] text-white font-semibold shadow-sm'
-                  : 'bg-[#FAF6F0] text-stone-700 border border-stone-200 hover:bg-stone-200/70 font-medium'
+                ? 'bg-[#4A6B3E] text-white font-semibold shadow-sm'
+                : 'bg-[#FAF6F0] text-stone-700 border border-stone-200 hover:bg-stone-200/70 font-medium'
                 }`}
             >
               <Building2 className="w-3 h-3" />
@@ -442,8 +442,8 @@ export const CashClosureView: React.FC<CashClosureViewProps> = () => {
                     key={tx.id}
                     onClick={() => toggleExpandTx(tx.id)}
                     className={`rounded-xl border transition-all cursor-pointer ${isExpanded
-                        ? 'bg-[#FAF6F0]/70 border-[#4A6B3E] shadow-sm'
-                        : 'bg-white hover:bg-[#FAF6F0]/50 border-stone-200'
+                      ? 'bg-[#FAF6F0]/70 border-[#4A6B3E] shadow-sm'
+                      : 'bg-white hover:bg-[#FAF6F0]/50 border-stone-200'
                       }`}
                   >
                     {/* Fila Principal de la Transacción */}
@@ -535,9 +535,6 @@ export const CashClosureView: React.FC<CashClosureViewProps> = () => {
               className="text-xs font-bold text-stone-700 mb-1.5 flex items-center justify-between"
             >
               <span>Observaciones e Incidencias del Turno:</span>
-              <span className="text-[10px] text-stone-500 font-normal">
-                Notas para el reporte contable
-              </span>
             </label>
             <textarea
               id="closure-notes"
