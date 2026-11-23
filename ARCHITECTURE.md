@@ -174,18 +174,18 @@ prime-fitness-bar/
 - `src/components/pos/OrderSuccessModal.tsx`: Modal de confirmación tras `completePayment`, muestra resumen del cobro y acciones para previsualizar etiqueta o iniciar una nueva venta.
 
 #### Módulo Caja / Cobro (`src/components/billing/`)
-- `src/components/billing/BillingView.tsx`: Vista operativa de doble panel para caja: bandeja filtrable de comandas pendientes (izquierda) y desglose nutricional/productos con pre-cuenta, cajón y anulación (derecha).
+- `src/components/billing/BillingView.tsx`: Vista operativa de doble panel para caja (bandeja filtrable de comandas pendientes a la izquierda y desglose nutricional/productos con pre-cuenta, cajón y anulación a la derecha), con sub-header editorial unificado (`px-6 py-3 bg-white border-b border-stone-200`) debajo de `Header.tsx`.
 - `src/components/billing/PaymentModal.tsx`: Modal avanzado de liquidación con propinas sugeridas/libres, teclado numérico táctil para efectivo, código de autorización TPV, débito a monedero de socio, cobro mixto (`split`) y switches de hardware.
 
 #### Módulo Cierre de Caja / Arqueo (`src/components/closure/`)
-- `src/components/closure/CashClosureView.tsx`: Vista de cierre de turno con KPIs por método de pago, balance neto teórico, efectivo en gaveta, feed auditable de ventas, notas de cierre e historial de reportes.
+- `src/components/closure/CashClosureView.tsx`: Vista de cierre de turno con sub-header editorial unificado (`px-6 py-3 bg-white border-b border-stone-200`, icono `Scale` en `w-10 h-10`, estado del turno y controles de movimiento/cajón/corte), KPIs por método de pago, balance neto teórico, efectivo en gaveta, feed auditable de ventas, notas de cierre e historial de reportes.
 - `src/components/closure/CashMovementModal.tsx`: Modal táctil para registrar entradas (`cash_in`) o retiros (`cash_drop`) extraordinarios de efectivo con autorización y validación contra efectivo esperado.
 - `src/components/closure/ConfirmCloseModal.tsx`: Modal de confirmación previa al Corte Z que resume las cifras del turno y advierte el bloqueo definitivo de la sesión.
 - `src/components/closure/ClosureReceiptModal.tsx`: Previsualizador de ticket térmico de 80mm para reportes Corte Z / Corte X con consolidado financiero, productos vendidos, movimientos y firmas.
 - `src/components/closure/OpenShiftModal.tsx`: Modal de apertura de un nuevo turno con captura de fondo inicial (`initialCashFloat`), cajero responsable y notas.
 
 #### Módulo Inventario & Recetario BOM (`src/components/inventory/`)
-- `src/components/inventory/InventoryScreen.tsx`: Pantalla con dos pestañas: monitor de stock físico por insumo con umbrales (`optimal`/`warning`/`critical`) y recetario editorial visual BOM con checklist táctil y modal de edición de ingredientes/pasos.
+- `src/components/inventory/InventoryScreen.tsx`: Pantalla con sub-header editorial unificado (`px-6 py-3 bg-white border-b border-stone-200`, icono `Boxes` en `w-10 h-10` y selector de pestañas) y dos vistas: monitor de stock físico por insumo con umbrales (`optimal`/`warning`/`critical`) y recetario editorial visual BOM con checklist táctil y modal de edición de ingredientes/pasos.
 
 #### Stores Zustand (`src/store/`)
 - `src/store/posStore.ts`: Estado del catálogo, carrito, personalizador (`CustomizerModal`), socios, checkout rápido, visor de etiquetas, toasts y contador global `currentOrderNumberCounter`.
@@ -1064,9 +1064,9 @@ Todas las vistas operativas (`pos`, `billing`, `closure`, `inventory`), barras d
 
 ### 6.3 Cobertura Verificada de Pantallas y Modales
 
-1. **Shell Global y Navegación:** `index.html`, `src/index.css`, `src/App.tsx`, `electron/main.cjs` (`backgroundColor: '#FAF6F0'`), `Header.tsx` (`bg-white border-b border-stone-200`, vista activa `#4A6B3E`, inactivas `#FAF6F0`) y `Toast.tsx`.
+1. **Shell Global y Navegación:** `index.html`, `src/index.css`, `src/App.tsx`, `electron/main.cjs` (`backgroundColor: '#FAF6F0'`), `Header.tsx` (`bg-white border-b border-stone-200`, vista activa `#4A6B3E`, inactivas `#FAF6F0`) y `Toast.tsx`. Los tres módulos secundarios con barra superior (`BillingView.tsx`, `CashClosureView.tsx` e `InventoryScreen.tsx`) comparten exactamente el mismo patrón de sub-header debajo de `Header.tsx` (`px-6 py-3 bg-white border-b border-stone-200 shadow-sm`, contenedor de icono `w-10 h-10 rounded-xl bg-[#4A6B3E]/10 border border-[#4A6B3E]/20 text-[#4A6B3E]`, título `text-base font-bold text-stone-900 tracking-tight` y subtítulo `text-xs text-stone-600`).
 2. **Módulo Toma Comandas (`src/components/pos/`):** `ProductCatalog.tsx`, `CategoryTabs.tsx`, `ProductCard.tsx`, `CartSidebar.tsx`, `CustomizerModal.tsx`, `CheckoutModal.tsx` y `OrderSuccessModal.tsx`.
-3. **Módulo Caja / Cobro (`src/components/billing/`):** `BillingView.tsx` (incluyendo modal de anulación) y `PaymentModal.tsx` (teclado numérico táctil en `bg-[#FAF6F0] hover:bg-stone-200/70`, selector de método activo en `bg-[#4A6B3E] text-white` y resumen en `bg-[#FAF6F0] border-stone-200`).
-4. **Módulo Cierre de Caja (`src/components/closure/`):** `CashClosureView.tsx` (incluyendo modal de historial), `CashMovementModal.tsx`, `ConfirmCloseModal.tsx`, `OpenShiftModal.tsx` y `ClosureReceiptModal.tsx` (conservando el ticket interno de 80 mm en blanco limpio estilo papel térmico con tipografía `stone-900`).
-5. **Módulo Inventario y Recetario BOM (`src/components/inventory/InventoryScreen.tsx`):** Pestaña *Stock Insumos*, pestaña *Recetario & BOM* (ficha editorial en `bg-white border-stone-200`) y modal de edición de receta BOM.
+3. **Módulo Caja / Cobro (`src/components/billing/`):** `BillingView.tsx` (sub-header unificado, bandeja/detalle e historial de anulación) y `PaymentModal.tsx` (teclado numérico táctil en `bg-[#FAF6F0] hover:bg-stone-200/70`, selector de método activo en `bg-[#4A6B3E] text-white` y resumen en `bg-[#FAF6F0] border-stone-200`).
+4. **Módulo Cierre de Caja (`src/components/closure/`):** `CashClosureView.tsx` (sub-header unificado con `Scale`, badge de estado de turno y controles operativos, además del modal de historial), `CashMovementModal.tsx`, `ConfirmCloseModal.tsx`, `OpenShiftModal.tsx` y `ClosureReceiptModal.tsx` (conservando el ticket interno de 80 mm en blanco limpio estilo papel térmico con tipografía `stone-900`).
+5. **Módulo Inventario y Recetario BOM (`src/components/inventory/InventoryScreen.tsx`):** Sub-header unificado con `Boxes` y selector *Stock Insumos* / *Recetario & BOM*, pestaña *Stock Insumos*, pestaña *Recetario & BOM* (ficha editorial en `bg-white border-stone-200`) y modal de edición de receta BOM.
 6. **Simulador de Etiquetas (`src/components/label/`):** `PrintSimulatorModal.tsx` (`bg-white` / `bg-[#FAF6F0]` / `bg-[#4A6B3E]`) y `StickerLabelPreview.tsx` (apariencia física de etiqueta térmica blanca de 58 mm con alto contraste `stone-900`).

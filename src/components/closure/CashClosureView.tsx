@@ -29,6 +29,7 @@ import {
   ChevronUp,
   TrendingUp,
   ShoppingBag,
+  Scale,
 } from 'lucide-react';
 import { useCashClosure } from '../../hooks/useCashClosure';
 import { CashMovementModal } from './CashMovementModal';
@@ -91,46 +92,44 @@ export const CashClosureView: React.FC<CashClosureViewProps> = () => {
   return (
     <div className="flex-1 flex flex-col h-full bg-[#FAF6F0] text-stone-900 overflow-hidden select-none font-sans">
       {/* =========================================================================
-          BARRA DE ESTADO SUPERIOR DEL TURNO ACTIVO (Touch-friendly 56px)
+          ENCABEZADO DEL MÓDULO DE CIERRE Y BALANCE DE TURNO
          ========================================================================= */}
       <section
         aria-label="Encabezado del Turno Activo"
-        className="h-14 px-6 bg-white border-b border-stone-200 flex items-center justify-between shrink-0 shadow-sm"
+        className="px-6 py-3 bg-white border-b border-stone-200 flex flex-wrap items-center justify-between gap-3 shrink-0 shadow-sm"
       >
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-base font-bold text-stone-900 tracking-tight">
-              Cierre de Caja & Balance de Turno
-            </h1>
-            <span
-              className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border flex items-center gap-1.5 ${isShiftOpen
-                ? 'bg-[#4A6B3E]/15 text-[#4A6B3E] border-[#4A6B3E]/25'
-                : 'bg-red-50 text-red-700 border-red-200'
-                }`}
-            >
-              <span
-                className={`w-2 h-2 rounded-full ${isShiftOpen ? 'bg-[#4A6B3E] animate-pulse' : 'bg-red-500'
-                  }`}
-              />
-              {isShiftOpen ? `Turno #${currentShift?.shiftNumber || 14} Activo` : 'Turno Cerrado'}
-            </span>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#4A6B3E]/10 border border-[#4A6B3E]/20 text-[#4A6B3E] flex items-center justify-center shrink-0">
+            <Scale className="w-5 h-5" />
           </div>
-
-          <div className="h-4 w-px bg-stone-200 hidden xl:block" />
-
-          {/* Hora de Apertura y Cajero */}
-          <div className="hidden xl:flex items-center gap-2 text-xs text-stone-600">
-            <Clock className="w-3.5 h-3.5 text-[#4A6B3E]" />
-            <span>
-              Apertura: <strong className="text-stone-900 font-mono">{currentShift?.openedAt || '--'}</strong>
-              {' · '}
-              Cajero: <strong className="text-stone-900">{currentShift?.cashierName || 'Marcos Vega'}</strong>
-            </span>
+          <div>
+            <div className="flex items-center gap-2.5">
+              <h2 className="text-base font-bold text-stone-900 tracking-tight">
+                Cierre de Caja & Balance de Turno
+              </h2>
+              <span
+                className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border flex items-center gap-1.5 ${isShiftOpen
+                  ? 'bg-[#4A6B3E]/10 text-[#4A6B3E] border-[#4A6B3E]/25'
+                  : 'bg-red-50 text-red-700 border-red-200'
+                  }`}
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${isShiftOpen ? 'bg-[#4A6B3E] animate-pulse' : 'bg-red-500'}`}
+                />
+                {isShiftOpen ? `Turno #${currentShift?.shiftNumber || 14} Activo` : 'Turno Cerrado'}
+              </span>
+            </div>
+            <p className="text-xs text-stone-600 flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-[#4A6B3E]" />
+              <span>
+                Apertura: <strong className="text-stone-900 font-mono">{currentShift?.openedAt || '--'}</strong>
+              </span>
+            </p>
           </div>
         </div>
 
         {/* Acciones Rápidas del Encabezado */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {/* Botón Registrar Movimiento Extraordinario */}
           {isShiftOpen && (
             <button
@@ -671,7 +670,7 @@ export const CashClosureView: React.FC<CashClosureViewProps> = () => {
                         </span>
                       </div>
                       <span className="text-[11px] text-stone-500">
-                        {rep.closedAt} · Cajero: {rep.cashierName}
+                        {rep.closedAt}
                       </span>
                     </div>
 
