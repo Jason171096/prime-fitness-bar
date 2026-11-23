@@ -101,7 +101,7 @@ export function App() {
       />
 
       {/* Main Dynamic Viewport */}
-      <main className="flex-1 flex overflow-hidden relative">
+      <main className="flex-1 flex overflow-hidden relative bg-[#FAF6F0]">
         {activeView === 'pos' && (
           <div className="flex-1 flex overflow-hidden">
             {/* Catalog Grid */}

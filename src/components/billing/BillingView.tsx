@@ -575,7 +575,7 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure: _
                   onClick={() => openPaymentModal(selectedOrder.id)}
                   className="min-h-[52px] px-7 py-3.5 rounded-xl bg-[#4A6B3E] hover:bg-[#3d5933] text-white font-semibold text-base tracking-wide shadow-md flex items-center justify-center gap-3 transition-all active:scale-[0.98] cursor-pointer"
                 >
-                  <CreditCard className="w-5 h-5 text-emerald-100" />
+                  <CreditCard className="w-5 h-5 text-white/90" />
                   <span>Liquidar Orden (${selectedOrder.total.toFixed(2)})</span>
                   <span className="hidden 2xl:inline text-xs opacity-80 font-mono px-2 py-0.5 rounded bg-black/15">
                     F12 / Táctil
@@ -606,14 +606,14 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure: _
       {/* Modal de Confirmación para Cancelar Comanda */}
       {cancelModalOrderId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/50 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-md bg-[#FAF6F0] border border-stone-200 rounded-2xl p-6 shadow-2xl space-y-4">
+          <div className="w-full max-w-md bg-white border border-stone-200 rounded-2xl p-6 shadow-2xl space-y-4">
             <div className="flex items-center gap-3 text-red-700">
               <div className="w-10 h-10 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center">
                 <XCircle className="w-6 h-6" />
               </div>
               <div>
                 <h3 className="font-extrabold text-base text-stone-900">Anular Comanda</h3>
-                <span className="text-xs text-stone-600">
+                <span className="text-xs text-stone-500">
                   Esta acción cancelará el pedido de forma definitiva
                 </span>
               </div>
@@ -626,7 +626,7 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure: _
               <select
                 value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
-                className="w-full h-11 px-3 rounded-xl bg-white border border-stone-300 text-xs text-stone-900 focus:outline-none focus:border-[#4A6B3E] font-medium"
+                className="w-full h-11 px-3 rounded-xl bg-[#FAF6F0] border border-stone-300 text-xs text-stone-900 focus:outline-none focus:bg-white focus:border-[#4A6B3E] font-medium"
               >
                 <option value="Cliente se retiró antes del cobro">
                   Cliente se retiró antes del cobro
@@ -644,13 +644,13 @@ export const BillingView: React.FC<BillingViewProps> = ({ onNavigateToClosure: _
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 onClick={() => setCancelModalOrderId(null)}
-                className="px-4 h-11 rounded-xl bg-white hover:bg-stone-100 text-stone-700 border border-stone-300 text-xs font-bold cursor-pointer"
+                className="px-4 h-11 rounded-xl bg-[#FAF6F0] hover:bg-stone-200/70 text-stone-700 border border-stone-200 text-xs font-bold cursor-pointer"
               >
                 Volver
               </button>
               <button
                 onClick={handleConfirmCancel}
-                className="px-5 h-11 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-md cursor-pointer"
+                className="px-5 h-11 rounded-xl bg-red-700 hover:bg-red-800 text-white text-xs font-bold shadow-md cursor-pointer"
               >
                 Confirmar Anulación
               </button>

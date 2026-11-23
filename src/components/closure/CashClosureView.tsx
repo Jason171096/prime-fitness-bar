@@ -636,21 +636,21 @@ export const CashClosureView: React.FC<CashClosureViewProps> = () => {
       {/* Modal 5: Historial de Turnos Cerrados */}
       {showHistoryModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/50 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-[#FAF6F0] border border-stone-200 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
-            <div className="px-6 py-4 border-b border-stone-200 flex items-center justify-between bg-white">
+          <div className="bg-white border border-stone-200 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div className="px-6 py-4 border-b border-stone-200 flex items-center justify-between bg-[#FAF6F0]">
               <div className="flex items-center gap-2.5">
                 <History className="w-5 h-5 text-[#4A6B3E]" />
                 <h2 className="text-base font-black text-stone-900">Historial de Turnos Cerrados</h2>
               </div>
               <button
                 onClick={() => setShowHistoryModal(false)}
-                className="p-1.5 text-stone-500 hover:text-stone-900 rounded-lg hover:bg-stone-100 cursor-pointer"
+                className="p-1.5 text-stone-500 hover:text-stone-900 rounded-lg hover:bg-stone-200/70 cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <div className="p-4 overflow-y-auto space-y-2 flex-1">
+            <div className="p-4 overflow-y-auto space-y-2 flex-1 bg-white">
               {closedReportsHistory.length === 0 ? (
                 <p className="text-center py-8 text-xs text-stone-500">
                   No hay turnos archivados aún.
@@ -659,7 +659,7 @@ export const CashClosureView: React.FC<CashClosureViewProps> = () => {
                 closedReportsHistory.map((rep) => (
                   <div
                     key={rep.id}
-                    className="p-3 bg-white border border-stone-200 rounded-xl flex items-center justify-between text-xs shadow-sm"
+                    className="p-3 bg-[#FAF6F0] border border-stone-200 rounded-xl flex items-center justify-between text-xs shadow-sm"
                   >
                     <div>
                       <div className="flex items-center gap-2">
@@ -687,7 +687,7 @@ export const CashClosureView: React.FC<CashClosureViewProps> = () => {
 
                       <button
                         onClick={() => printReport(rep)}
-                        className="p-2 rounded-lg bg-[#FAF6F0] hover:bg-stone-200 text-stone-700 border border-stone-200 cursor-pointer"
+                        className="p-2 rounded-lg bg-white hover:bg-stone-100 text-stone-700 border border-stone-200 cursor-pointer"
                         title="Reimprimir ticket térmico"
                       >
                         <Printer className="w-3.5 h-3.5 text-[#4A6B3E]" />
@@ -698,10 +698,10 @@ export const CashClosureView: React.FC<CashClosureViewProps> = () => {
               )}
             </div>
 
-            <div className="px-6 py-3 border-t border-stone-200 bg-white flex justify-end">
+            <div className="px-6 py-3 border-t border-stone-200 bg-[#FAF6F0] flex justify-end">
               <button
                 onClick={() => setShowHistoryModal(false)}
-                className="px-4 py-2 rounded-xl bg-[#FAF6F0] hover:bg-stone-200 text-xs font-bold text-stone-700 border border-stone-300 cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-white hover:bg-stone-100 text-xs font-bold text-stone-700 border border-stone-200 cursor-pointer"
               >
                 Cerrar
               </button>

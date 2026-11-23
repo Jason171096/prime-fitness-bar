@@ -29,8 +29,8 @@ function createMainWindow() {
     kiosk: isKioskMode, // Modo kiosco para terminales desatendidas o exclusivas
     fullscreen: isKioskMode,
     autoHideMenuBar: true, // Ocultar barra de menú nativa para evitar distracciones en caja
-    backgroundColor: '#0f172a', // Fondo idéntico al tema oscuro de la app
-    show: false, // Se muestra solo cuando el contenido está listo (evita parpadeo blanco)
+    backgroundColor: '#FAF6F0', // Fondo cálido idéntico al lienzo base de la app
+    show: false, // Se muestra solo cuando el contenido está listo (evita parpadeo inicial)
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true, // Aislamiento de contexto estricto

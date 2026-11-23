@@ -60,7 +60,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
         {cart.length > 0 && (
           <button
             onClick={clearCart}
-            className="text-xs text-stone-500 hover:text-red-600 font-bold px-2.5 py-1.5 rounded-lg hover:bg-red-50 transition-all flex items-center gap-1 cursor-pointer"
+            className="text-xs text-stone-500 hover:text-red-700 font-bold px-2.5 py-1.5 rounded-lg hover:bg-red-50 transition-all flex items-center gap-1 cursor-pointer"
           >
             <Trash2 className="w-3.5 h-3.5" />
             Limpiar
@@ -95,7 +95,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
 
             <button
               onClick={() => setSelectedMember(null)}
-              className="text-xs text-stone-500 hover:text-red-600 px-2 py-1 font-semibold cursor-pointer"
+              className="text-xs text-stone-500 hover:text-red-700 px-2 py-1 font-semibold cursor-pointer"
               title="Desvincular socio"
             >
               Cambiar
@@ -198,7 +198,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
                     <button
                       onClick={() => removeFromCart(item.cartItemId)}
                       title="Quitar ítem"
-                      className="p-1.5 rounded-lg bg-white border border-stone-300 hover:border-red-300 hover:bg-red-50 text-stone-500 hover:text-red-600 transition-all cursor-pointer"
+                      className="p-1.5 rounded-lg bg-white border border-stone-300 hover:border-red-200 hover:bg-red-50 text-stone-500 hover:text-red-700 transition-all cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -340,12 +340,12 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
             className="w-full min-h-[52px] rounded-xl bg-[#4A6B3E] hover:bg-[#3d5933] disabled:bg-stone-300 disabled:text-stone-500 disabled:pointer-events-none text-white font-semibold text-sm shadow-md flex items-center justify-between px-4 transition-all active:scale-[0.98] cursor-pointer"
           >
             <div className="flex items-center gap-2.5">
-              <Receipt className="w-5 h-5 text-emerald-100" />
+              <Receipt className="w-5 h-5 text-white/90" />
               <div className="text-left">
                 <span className="tracking-wide uppercase text-xs font-bold block">
                   Enviar a Caja (Cobro)
                 </span>
-                <span className="text-[10px] text-emerald-100/90 font-normal">
+                <span className="text-[10px] text-white/85 font-normal">
                   Crea comanda en estado pendiente
                 </span>
               </div>
@@ -353,7 +353,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onNavigateToBilling })
 
             <div className="flex items-center gap-2">
               <span className="font-mono text-base font-bold">${subtotal.toFixed(2)}</span>
-              <Send className="w-4 h-4 text-emerald-100" />
+              <Send className="w-4 h-4 text-white/90" />
             </div>
           </button>
 

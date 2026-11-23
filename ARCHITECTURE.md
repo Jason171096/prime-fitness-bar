@@ -1006,7 +1006,7 @@ La integración nativa con periféricos de punto de venta se implementa bajo una
 
 | Archivo | Rol y Configuración Clave |
 | :--- | :--- |
-| `electron/main.cjs` | **Proceso Principal:** Crea `BrowserWindow` (`1280×800`, mínimo `1024×768`, soporte kiosco por env `POS_KIOSK === 'true'`, `autoHideMenuBar: true`, `backgroundColor: '#0f172a'`). Activa `contextIsolation: true`, `nodeIntegration: false`, `sandbox: true` y `webSecurity: true`. Garantiza instancia única (`app.requestSingleInstanceLock()`), bloquea `window.open` (`setWindowOpenHandler`), restringe navegación externa (`will-navigate`) y registra los 4 canales `ipcMain.handle`. Carga `http://localhost:5173` (o `VITE_DEV_SERVER_URL`) en desarrollo y `../dist/index.html` en producción. |
+| `electron/main.cjs` | **Proceso Principal:** Crea `BrowserWindow` (`1280×800`, mínimo `1024×768`, soporte kiosco por env `POS_KIOSK === 'true'`, `autoHideMenuBar: true`, `backgroundColor: '#FAF6F0'`). Activa `contextIsolation: true`, `nodeIntegration: false`, `sandbox: true` y `webSecurity: true`. Garantiza instancia única (`app.requestSingleInstanceLock()`), bloquea `window.open` (`setWindowOpenHandler`), restringe navegación externa (`will-navigate`) y registra los 4 canales `ipcMain.handle`. Carga `http://localhost:5173` (o `VITE_DEV_SERVER_URL`) en desarrollo y `../dist/index.html` en producción. |
 | `electron/preload.cjs` | **Script Preload:** Importa `contextBridge` e `ipcRenderer` y expone `window.posHardware`. Valida presencia y tipo de `receiptData` y `labelData` antes de invocar IPC; nunca expone `ipcRenderer` directamente al renderer. |
 | `electron/hardware/printerService.cjs` | **Servicio de Impresión:** Usa `webContents.getPrintersAsync()` para listar dispositivos y crea ventanas `BrowserWindow({ show: false })` con datos HTML inline (`data:text/html;charset=utf-8,...`) llamando a `webContents.print({ silent: true, printBackground: true, deviceName, margins: { marginType: 'none' } })`. Genera plantillas HTML para tickets térmicos (`generateReceiptHtml`: `80mm` o `58mm`) y etiquetas adhesivas (`generateLabelHtml`: `58mm × 40mm`). Además exporta `sendRawZpl(zplCode, ip, port = 9100)` vía `node:net` (actualmente no enlazado a ningún canal IPC en `main.cjs`). |
 | `electron/hardware/cashDrawerService.cjs` | **Servicio de Cajón Portamonedas:** Define pulsos ESC/POS `DRAWER_PULSES.PIN_2` (`[0x1b, 0x70, 0x00, 0x19, 0xfa]`) y `PIN_5` (`[0x1b, 0x70, 0x01, 0x19, 0xfa]`). Envía el pulso por socket TCP raw al puerto `9100` si se provee `options.ip` (`openDrawerViaNetwork`), o escribe un archivo `.bin` temporal en `os.tmpdir()` y lo envía al spooler de Windows mediante PowerShell `Get-Content ... -AsByteStream -Raw \| Out-Printer` con fallback `cmd /c copy /b ... \\localhost\<printerName>` si se provee `options.printerName` (`openDrawerViaWindowsSpooler`). |
@@ -1036,3 +1036,34 @@ Además de los cuatro métodos asíncronos anteriores, `electron/preload.cjs` ex
   - **Consideraciones técnicas observadas en el código:**
     1. `cashDrawerService.cjs` (`openCashDrawer`) lanza un error si no recibe `options.ip` ni `options.printerName`; mientras `useHardware.ts` sí pasa `printerName: selectedReceiptPrinter || undefined`, las llamadas directas en `billingStore.ts`, `BillingView.tsx` y `useCashClosure.ts` invocan `window.posHardware.openCashDrawer()` sin argumentos.
     2. `StickerLabelPreview.tsx` (usado por `PrintSimulatorModal.tsx`) realiza actualmente una simulación visual local mediante `setTimeout` de 900 ms y no invoca a `useHardware.printCupLabel` ni a `window.posHardware.printLabel`.
+
+---
+
+## 6. Identidad Visual y Convenciones UI
+
+Todas las vistas operativas (`pos`, `billing`, `closure`, `inventory`), barras de navegación, notificaciones (`Toast`) y modales del sistema están unificados bajo una identidad visual **cálida y editorial** optimizada para terminales táctiles POS sobre Tailwind CSS v4 (`src/index.css`) y Electron (`electron/main.cjs`).
+
+### 6.1 Paleta Estándar Obligatoria
+
+| Rol Visual | Token / Valor | Uso en la Interfaz |
+| :--- | :--- | :--- |
+| **Lienzo Base** | `#FAF6F0` (`bg-[#FAF6F0]`, `--bg-app`) | Fondo global de la aplicación (`index.html`, `src/index.css`, `src/App.tsx`, `electron/main.cjs`), fondos de catálogos, áreas secundarias, cabeceras/pies de modales y botonera inactiva de navegación. |
+| **Superficies Elevadas** | `#FFFFFF` (`bg-white`) + `border-stone-200` (`shadow-sm`) | Barra superior (`Header.tsx`), tarjetas de productos, `CartSidebar.tsx`, paneles de detalle, tablas, ficha editorial BOM y cuerpo de todos los modales. |
+| **Color Primario de Marca y Acción** | `#4A6B3E` (`bg-[#4A6B3E]`, `hover:bg-[#3d5933]`, `text-[#4A6B3E]`, `bg-[#4A6B3E]/10`) | Botones primarios de cobro/confirmación, pestañas y selectores de pago activos, precios e indicadores destacados, barras de progreso de stock óptimo y badges de marca. |
+| **Tipografía y Neutros Cálidos** | Escala **`stone-*`** (`text-stone-900`, `text-stone-700`, `text-stone-500`) | Títulos y cifras clave (`stone-900`), texto de cuerpo y controles (`stone-700`), subtítulos y etiquetas auxiliares (`stone-500`). Queda prohibido el uso de escalas frías (`slate-*`, `gray-*`, `zinc-*`, `neutral-*`). |
+| **Acento Editorial Secundario** | `#D96B43` | Indicadores cálidos editoriales en badges de barra/recetario (`Header.tsx`, `CartSidebar.tsx`, `InventoryScreen.tsx`). |
+
+### 6.2 Estados Semánticos (Sobre Fondo Crema / Blanco)
+
+- **Éxito / Óptimo / Saldo suficiente:** `bg-emerald-50` · `text-emerald-700` · `border-emerald-200`
+- **Advertencia / Stock bajo / Pendiente:** `bg-amber-50` · `text-amber-800` · `border-amber-200`
+- **Crítico / Error / Cancelación / Retiro:** `bg-red-50` · `text-red-700` · `border-red-200`
+
+### 6.3 Cobertura Verificada de Pantallas y Modales
+
+1. **Shell Global y Navegación:** `index.html`, `src/index.css`, `src/App.tsx`, `electron/main.cjs` (`backgroundColor: '#FAF6F0'`), `Header.tsx` (`bg-white border-b border-stone-200`, vista activa `#4A6B3E`, inactivas `#FAF6F0`) y `Toast.tsx`.
+2. **Módulo Toma Comandas (`src/components/pos/`):** `ProductCatalog.tsx`, `CategoryTabs.tsx`, `ProductCard.tsx`, `CartSidebar.tsx`, `CustomizerModal.tsx`, `CheckoutModal.tsx` y `OrderSuccessModal.tsx`.
+3. **Módulo Caja / Cobro (`src/components/billing/`):** `BillingView.tsx` (incluyendo modal de anulación) y `PaymentModal.tsx` (teclado numérico táctil en `bg-[#FAF6F0] hover:bg-stone-200/70`, selector de método activo en `bg-[#4A6B3E] text-white` y resumen en `bg-[#FAF6F0] border-stone-200`).
+4. **Módulo Cierre de Caja (`src/components/closure/`):** `CashClosureView.tsx` (incluyendo modal de historial), `CashMovementModal.tsx`, `ConfirmCloseModal.tsx`, `OpenShiftModal.tsx` y `ClosureReceiptModal.tsx` (conservando el ticket interno de 80 mm en blanco limpio estilo papel térmico con tipografía `stone-900`).
+5. **Módulo Inventario y Recetario BOM (`src/components/inventory/InventoryScreen.tsx`):** Pestaña *Stock Insumos*, pestaña *Recetario & BOM* (ficha editorial en `bg-white border-stone-200`) y modal de edición de receta BOM.
+6. **Simulador de Etiquetas (`src/components/label/`):** `PrintSimulatorModal.tsx` (`bg-white` / `bg-[#FAF6F0]` / `bg-[#4A6B3E]`) y `StickerLabelPreview.tsx` (apariencia física de etiqueta térmica blanca de 58 mm con alto contraste `stone-900`).

@@ -710,22 +710,22 @@ export const MOCK_SHIFT_SALES: ShiftTransactionSummary[] = [
 export const CATEGORY_METADATA: Record<string, { label: string; color: string; border: string }> = {
   smoothies: {
     label: 'Batidos & Smoothies',
-    color: 'text-emerald-400 bg-emerald-500/10',
-    border: 'border-emerald-500/30',
+    color: 'text-[#4A6B3E] bg-[#4A6B3E]/10',
+    border: 'border-[#4A6B3E]/25',
   },
   bowls: {
     label: 'Bowls Proteicos',
-    color: 'text-amber-400 bg-amber-500/10',
-    border: 'border-amber-500/30',
+    color: 'text-amber-800 bg-amber-50',
+    border: 'border-amber-200',
   },
   salads: {
     label: 'Comida Fit & Ensaladas',
-    color: 'text-cyan-400 bg-cyan-500/10',
-    border: 'border-cyan-500/30',
+    color: 'text-emerald-700 bg-emerald-50',
+    border: 'border-emerald-200',
   },
   snacks: {
     label: 'Snacks & Suplementos',
-    color: 'text-violet-400 bg-violet-500/10',
-    border: 'border-violet-500/30',
+    color: 'text-stone-700 bg-stone-100',
+    border: 'border-stone-200',
   },
 };

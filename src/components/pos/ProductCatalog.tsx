@@ -76,7 +76,7 @@ export const ProductCatalog: React.FC = () => {
               className={`px-3 h-9 rounded-xl text-xs font-bold whitespace-nowrap transition-all active:scale-95 shrink-0 cursor-pointer ${
                 selectedTag === tag.id
                   ? 'bg-[#4A6B3E] text-white border border-[#4A6B3E] shadow-sm'
-                  : 'bg-white text-stone-600 hover:text-stone-900 border border-stone-200'
+                  : 'bg-white text-stone-700 hover:text-stone-900 border border-stone-200'
               }`}
             >
               {tag.label}
@@ -90,7 +90,7 @@ export const ProductCatalog: React.FC = () => {
         {filteredProducts.length === 0 ? (
           <div className="h-64 flex flex-col items-center justify-center text-center p-8 bg-white rounded-2xl border border-stone-200 shadow-sm">
             <Sparkles className="w-10 h-10 text-stone-400 mb-2" />
-            <h4 className="text-base font-bold text-stone-800">
+            <h4 className="text-base font-bold text-stone-900">
               No se encontraron productos
             </h4>
             <p className="text-xs text-stone-500 mt-1 max-w-sm">
@@ -101,7 +101,7 @@ export const ProductCatalog: React.FC = () => {
                 setSearchQuery('');
                 setSelectedTag('todos');
               }}
-              className="mt-4 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200"
+              className="mt-4 px-4 py-2 rounded-xl bg-[#4A6B3E] hover:bg-[#3d5933] text-xs font-bold text-white shadow-sm transition-all cursor-pointer"
             >
               Restablecer Filtros
             </button>

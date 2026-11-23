@@ -45,51 +45,50 @@ export const StickerLabelPreview: React.FC<StickerLabelPreviewProps> = ({
   return (
     <div className="flex flex-col items-center select-none">
       {/* Physical Thermal Printer Slot Simulation */}
-      <div className="w-[340px] h-3 bg-slate-800 rounded-t-lg border-t-2 border-slate-700 shadow-inner flex items-center justify-center">
-        <div className="w-48 h-1 bg-black rounded-full" />
+      <div className="w-[340px] h-3 bg-stone-800 rounded-t-lg border-t-2 border-stone-700 shadow-inner flex items-center justify-center">
+        <div className="w-48 h-1 bg-stone-950 rounded-full" />
       </div>
 
-      {/* The 58mm Thermal Adhesive Sticker Paper (White/Off-white thermal paper aesthetic) */}
+      {/* The 58mm Thermal Adhesive Sticker Paper (White thermal paper aesthetic with high-contrast dark text) */}
       <div
-        className={`w-[320px] bg-[#fafafa] text-slate-900 p-4 rounded-b-xl shadow-2xl border-x border-b border-slate-300 font-mono text-xs flex flex-col justify-between transition-all duration-300 ${
+        className={`w-[320px] bg-white text-stone-900 p-4 rounded-b-xl shadow-lg border-x border-b border-stone-300 font-mono text-xs flex flex-col justify-between transition-all duration-300 ${
           isPrinting ? 'animate-thermal-print' : ''
         }`}
         style={{
           minHeight: '380px',
-          boxShadow: '0 20px 30px -10px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(0,0,0,0.02)',
         }}
       >
         {/* Paper Top Jagged Cut / Header */}
-        <div className="border-b-2 border-dashed border-slate-400 pb-2.5 text-center">
-          <div className="flex items-center justify-between text-[10px] text-slate-600 font-bold uppercase tracking-wider">
+        <div className="border-b-2 border-dashed border-stone-400 pb-2.5 text-center">
+          <div className="flex items-center justify-between text-[10px] text-stone-500 font-bold uppercase tracking-wider">
             <span>PRIME FITNESS BAR</span>
             <span>58mm ESC/POS</span>
           </div>
 
           <div className="mt-1 flex items-center justify-between">
-            <span className="text-2xl font-black font-mono tracking-tight text-slate-950">
+            <span className="text-2xl font-black font-mono tracking-tight text-stone-950">
               #ORD-{orderNumber}
             </span>
-            <span className="text-[11px] font-bold text-slate-700 bg-slate-200 px-2 py-0.5 rounded">
+            <span className="text-[11px] font-bold text-stone-700 bg-stone-100 border border-stone-200 px-2 py-0.5 rounded">
               {timestamp}
             </span>
           </div>
 
-          <div className="text-left mt-1 text-[11px] font-bold text-slate-800 truncate">
+          <div className="text-left mt-1 text-[11px] font-bold text-stone-900 truncate">
             CLIENTE: <span className="uppercase">{effectiveCustomerName}</span>
           </div>
         </div>
 
         {/* Product Core Info */}
-        <div className="py-2.5 border-b border-slate-300">
+        <div className="py-2.5 border-b border-stone-300">
           <div className="flex items-baseline justify-between">
-            <h4 className="text-sm font-black uppercase tracking-tight text-slate-950">
+            <h4 className="text-sm font-black uppercase tracking-tight text-stone-950">
               {item.product.name}
             </h4>
           </div>
 
           {custom && (
-            <div className="text-[11px] font-black text-emerald-800 mt-0.5 uppercase flex items-center gap-1">
+            <div className="text-[11px] font-black text-[#4A6B3E] mt-0.5 uppercase flex items-center gap-1">
               <span>FORMATO: {custom.size.label}</span>
               <span>({custom.size.volumeLabel})</span>
             </div>
@@ -98,23 +97,23 @@ export const StickerLabelPreview: React.FC<StickerLabelPreviewProps> = ({
 
         {/* Recipe Checkbox Items for Blender Bar Operator */}
         <div className="py-2.5 space-y-1.5 flex-1 text-[11px]">
-          <div className="text-[10px] uppercase font-black tracking-wider text-slate-500 mb-1">
+          <div className="text-[10px] uppercase font-black tracking-wider text-stone-500 mb-1">
             VERIFICACIÓN DE INGREDIENTES:
           </div>
 
           {custom ? (
             <>
               {/* Liquid Base */}
-              <div className="flex items-start gap-1.5 text-slate-900 font-semibold">
-                <span className="w-3.5 h-3.5 rounded border border-slate-900 flex items-center justify-center shrink-0 mt-0.5">
+              <div className="flex items-start gap-1.5 text-stone-900 font-semibold">
+                <span className="w-3.5 h-3.5 rounded border border-stone-900 flex items-center justify-center shrink-0 mt-0.5">
                   <Check className="w-2.5 h-2.5 stroke-[3]" />
                 </span>
                 <span>BASE: {custom.liquidBase.shortName} (250ml)</span>
               </div>
 
               {/* Protein Scoops */}
-              <div className="flex items-start gap-1.5 text-slate-950 font-bold">
-                <span className="w-3.5 h-3.5 rounded border border-slate-900 flex items-center justify-center shrink-0 mt-0.5">
+              <div className="flex items-start gap-1.5 text-stone-950 font-bold">
+                <span className="w-3.5 h-3.5 rounded border border-stone-900 flex items-center justify-center shrink-0 mt-0.5">
                   <Check className="w-2.5 h-2.5 stroke-[3]" />
                 </span>
                 <span>
@@ -124,8 +123,8 @@ export const StickerLabelPreview: React.FC<StickerLabelPreviewProps> = ({
 
               {/* Extras & Functional Supplements */}
               {custom.extras.map((ex) => (
-                <div key={ex.id} className="flex items-start gap-1.5 text-slate-900 font-medium">
-                  <span className="w-3.5 h-3.5 rounded border border-slate-900 flex items-center justify-center shrink-0 mt-0.5">
+                <div key={ex.id} className="flex items-start gap-1.5 text-stone-900 font-medium">
+                  <span className="w-3.5 h-3.5 rounded border border-stone-900 flex items-center justify-center shrink-0 mt-0.5">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </span>
                   <span>SUPP: {ex.name}</span>
@@ -134,42 +133,42 @@ export const StickerLabelPreview: React.FC<StickerLabelPreviewProps> = ({
 
               {/* Special Note */}
               {custom.specialNotes && (
-                <div className="mt-1.5 p-1.5 bg-amber-100 rounded border border-amber-300 text-[10px] font-black text-amber-950">
+                <div className="mt-1.5 p-1.5 bg-amber-50 rounded border border-amber-200 text-[10px] font-black text-amber-800">
                   ⚠ NOTA: {custom.specialNotes}
                 </div>
               )}
             </>
           ) : (
-            <div className="text-slate-800 font-bold">
+            <div className="text-stone-900 font-bold">
               [✓] 1x Porción estándar (Listo para consumo)
             </div>
           )}
         </div>
 
         {/* Nutritional Sticker Badge */}
-        <div className="pt-2 border-t border-slate-300">
-          <div className="bg-slate-900 text-white p-2 rounded-lg text-center">
-            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+        <div className="pt-2 border-t border-stone-300">
+          <div className="bg-stone-900 text-white p-2 rounded-lg text-center">
+            <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">
               TABLA NUTRICIONAL CERTIFICADA
             </div>
-            <div className="text-sm font-black font-mono tracking-wide text-emerald-400 mt-0.5">
+            <div className="text-sm font-black font-mono tracking-wide text-emerald-300 mt-0.5">
               {macros.calories} KCAL · {macros.protein}g PROT
             </div>
-            <div className="text-[10px] font-mono text-slate-300 mt-0.5">
+            <div className="text-[10px] font-mono text-stone-300 mt-0.5">
               {macros.carbs}g CARBS · {macros.fat}g GRASAS
             </div>
           </div>
         </div>
 
         {/* Simulated Thermal Barcode & QR Stamp */}
-        <div className="pt-2 mt-2 border-t-2 border-dashed border-slate-400 flex items-center justify-between text-[10px] text-slate-500">
+        <div className="pt-2 mt-2 border-t-2 border-dashed border-stone-400 flex items-center justify-between text-[10px] text-stone-500">
           <div className="flex flex-col text-left">
-            <span className="font-bold tracking-widest font-mono">
+            <span className="font-bold tracking-widest font-mono text-stone-700">
               *PF-{orderNumber}-{Date.now().toString().slice(-4)}*
             </span>
             <span className="text-[9px]">BARRA PRINCIPAL #01</span>
           </div>
-          <div className="w-8 h-8 bg-slate-900 text-white rounded flex items-center justify-center">
+          <div className="w-8 h-8 bg-stone-900 text-white rounded flex items-center justify-center">
             <QrCode className="w-6 h-6 text-white" />
           </div>
         </div>
@@ -181,31 +180,31 @@ export const StickerLabelPreview: React.FC<StickerLabelPreviewProps> = ({
           <button
             onClick={handleSimulatePrint}
             disabled={isPrinting}
-            className={`px-6 h-12 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2.5 transition-all active:scale-95 shadow-lg ${
+            className={`px-6 h-12 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2.5 transition-all active:scale-95 shadow-md cursor-pointer ${
               justPrinted
-                ? 'bg-emerald-600 text-white shadow-emerald-600/30 ring-2 ring-emerald-400'
-                : 'bg-slate-800 hover:bg-slate-700 text-white border border-slate-700'
+                ? 'bg-emerald-700 text-white'
+                : 'bg-[#4A6B3E] hover:bg-[#3d5933] text-white'
             }`}
           >
             {isPrinting ? (
               <>
-                <Printer className="w-4 h-4 animate-bounce text-emerald-400" />
+                <Printer className="w-4 h-4 animate-bounce text-white" />
                 <span>Enviando a TM-L90 (ESC/POS)...</span>
               </>
             ) : justPrinted ? (
               <>
-                <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                <CheckCircle2 className="w-4 h-4 text-white" />
                 <span>¡Etiqueta Impresa!</span>
               </>
             ) : (
               <>
-                <Printer className="w-4 h-4 text-emerald-400" />
+                <Printer className="w-4 h-4 text-white" />
                 <span>Imprimir Etiqueta Adhesiva (58mm)</span>
               </>
             )}
           </button>
 
-          <span className="text-[11px] text-slate-400">
+          <span className="text-[11px] text-stone-500">
             Simula el servicio IPC de impresión de etiquetas para vaso
           </span>
         </div>

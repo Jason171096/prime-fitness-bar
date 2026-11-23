@@ -138,30 +138,30 @@ export function useBilling() {
     switch (urgency) {
       case 'urgent':
         return {
-          bg: 'bg-rose-500/15',
-          text: 'text-rose-400',
-          border: 'border-rose-500/40',
-          badge: 'bg-rose-500/20 text-rose-300 border-rose-500/50',
-          dot: 'bg-rose-500 animate-ping',
+          bg: 'bg-red-50',
+          text: 'text-red-700',
+          border: 'border-red-200',
+          badge: 'bg-red-50 text-red-700 border-red-200',
+          dot: 'bg-red-600 animate-ping',
           label: 'Urgente (>7 min)',
         };
       case 'warning':
         return {
-          bg: 'bg-amber-500/15',
-          text: 'text-amber-400',
-          border: 'border-amber-500/40',
-          badge: 'bg-amber-500/20 text-amber-300 border-amber-500/50',
-          dot: 'bg-amber-400',
+          bg: 'bg-amber-50',
+          text: 'text-amber-800',
+          border: 'border-amber-200',
+          badge: 'bg-amber-50 text-amber-800 border-amber-200',
+          dot: 'bg-amber-500',
           label: 'Alerta (3-7 min)',
         };
       case 'normal':
       default:
         return {
-          bg: 'bg-emerald-500/15',
-          text: 'text-emerald-400',
-          border: 'border-emerald-500/40',
-          badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50',
-          dot: 'bg-emerald-400',
+          bg: 'bg-emerald-50',
+          text: 'text-emerald-700',
+          border: 'border-emerald-200',
+          badge: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+          dot: 'bg-emerald-600',
           label: 'A tiempo (<3 min)',
         };
     }

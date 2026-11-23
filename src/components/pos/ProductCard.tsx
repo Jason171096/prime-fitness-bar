@@ -60,13 +60,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {/* Action Touch Trigger */}
           <button
             className={`w-full h-11 rounded-xl font-bold text-xs tracking-wide flex items-center justify-center gap-2 transition-all mt-1 active:scale-95 shadow-sm cursor-pointer ${product.isCustomizable
-              ? 'bg-[#FAF6F0] hover:bg-[#4A6B3E] text-stone-800 hover:text-white border border-stone-200 hover:border-[#4A6B3E]'
-              : 'bg-[#4A6B3E] hover:bg-[#3D5A32] text-white'
+              ? 'bg-[#FAF6F0] group-hover:bg-[#4A6B3E] text-stone-700 group-hover:text-white border border-stone-200 group-hover:border-[#4A6B3E]'
+              : 'bg-[#4A6B3E] hover:bg-[#3d5933] text-white'
               }`}
           >
             {product.isCustomizable ? (
               <>
-                <SlidersHorizontal className="w-4 h-4 text-[#4A6B3E] group-hover:text-white" />
+                <SlidersHorizontal className="w-4 h-4 text-[#4A6B3E] group-hover:text-white transition-colors" />
                 <span>Configurar Modificadores</span>
               </>
             ) : (

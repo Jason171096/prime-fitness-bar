@@ -851,7 +851,7 @@ export const CustomizerModal: React.FC<CustomizerModalProps> = ({
                       ))}
 
                       {customSpecialNotes && (
-                        <div className="mt-1 p-1.5 bg-amber-50 rounded border border-amber-300 text-[9px] font-black text-amber-950">
+                        <div className="mt-1 p-1.5 bg-amber-50 rounded border border-amber-200 text-[9px] font-black text-amber-800">
                           ⚠ NOTA: {customSpecialNotes}
                         </div>
                       )}
@@ -902,7 +902,7 @@ export const CustomizerModal: React.FC<CustomizerModalProps> = ({
                 className="w-full h-15 rounded-2xl bg-[#4A6B3E] hover:bg-[#3d5933] text-white font-semibold text-base shadow-md flex items-center justify-between px-5 transition-all active:scale-95 cursor-pointer"
               >
                 <div className="flex flex-col text-left">
-                  <span className="text-xs uppercase tracking-wider text-emerald-100 font-bold flex items-center gap-1.5">
+                  <span className="text-xs uppercase tracking-wider text-white font-bold flex items-center gap-1.5">
                     <span>Agregar al Pedido</span>
                     <span className="text-white/85 font-normal">({resolvedCustomerName})</span>
                   </span>

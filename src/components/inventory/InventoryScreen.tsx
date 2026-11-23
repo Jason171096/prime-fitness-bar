@@ -475,14 +475,14 @@ export const InventoryScreen: React.FC = () => {
 
                 let badgeColor = 'bg-emerald-50 text-emerald-700 border-emerald-200';
                 let badgeText = 'ÓPTIMO';
-                let progressColor = 'bg-emerald-600';
+                let progressColor = 'bg-[#4A6B3E]';
 
                 if (status === 'critical') {
-                  badgeColor = 'bg-rose-50 text-rose-700 border-rose-200 animate-pulse';
+                  badgeColor = 'bg-red-50 text-red-700 border-red-200 animate-pulse';
                   badgeText = 'CRÍTICO (<15%)';
-                  progressColor = 'bg-rose-500';
+                  progressColor = 'bg-red-600';
                 } else if (status === 'warning') {
-                  badgeColor = 'bg-amber-50 text-amber-700 border-amber-200';
+                  badgeColor = 'bg-amber-50 text-amber-800 border-amber-200';
                   badgeText = 'REORDENAR (<30%)';
                   progressColor = 'bg-amber-500';
                 }
@@ -649,8 +649,8 @@ export const InventoryScreen: React.FC = () => {
               </div>
 
               {filteredRecipes.length === 0 ? (
-                <div className="p-8 text-center text-slate-500 text-xs flex flex-col items-center gap-2">
-                  <Search className="w-6 h-6 text-slate-600" />
+                <div className="p-8 text-center text-stone-500 text-xs flex flex-col items-center gap-2">
+                  <Search className="w-6 h-6 text-stone-400" />
                   <span>No se encontraron recetas con los filtros seleccionados</span>
                   <button
                     onClick={() => {
@@ -658,7 +658,7 @@ export const InventoryScreen: React.FC = () => {
                       setFilterStation('all');
                       setFilterCategory('all');
                     }}
-                    className="text-cyan-400 underline mt-1 font-bold cursor-pointer"
+                    className="text-[#4A6B3E] hover:text-[#3d5933] underline mt-1 font-bold cursor-pointer"
                   >
                     Restablecer filtros
                   </button>
@@ -702,10 +702,10 @@ export const InventoryScreen: React.FC = () => {
                                   : 'Todos los insumos disponibles'
                             }
                             className={`w-2.5 h-2.5 rounded-full shrink-0 ${stockStatus === 'critical'
-                              ? 'bg-rose-500 animate-pulse'
+                              ? 'bg-red-600 animate-pulse'
                               : stockStatus === 'warning'
-                                ? 'bg-amber-400'
-                                : 'bg-emerald-500'
+                                ? 'bg-amber-500'
+                                : 'bg-emerald-600'
                               }`}
                           />
                         </div>
@@ -742,8 +742,8 @@ export const InventoryScreen: React.FC = () => {
             {/* =================================================================== */}
             <div
               className={`flex-1 overflow-y-auto rounded-3xl print-recipe-sheet ${selectedRecipe
-                ? 'bg-[#FAF6F0] text-[#2B2A27] border border-[#E6DDD0] shadow-2xl'
-                : 'hidden lg:flex bg-[#FAF6F0]/95 text-[#2B2A27] border border-[#E6DDD0]'
+                ? 'bg-white text-stone-900 border border-stone-200 shadow-sm'
+                : 'hidden lg:flex bg-white text-stone-900 border border-stone-200 shadow-sm'
                 }`}
             >
               {selectedRecipe ? (
@@ -896,10 +896,10 @@ export const InventoryScreen: React.FC = () => {
                         const dotClass = !invItem
                           ? 'bg-stone-400'
                           : status === 'critical'
-                            ? 'bg-rose-500 animate-pulse'
+                            ? 'bg-red-600 animate-pulse'
                             : status === 'warning'
                               ? 'bg-amber-500'
-                              : 'bg-emerald-500';
+                              : 'bg-emerald-600';
 
                         const statusLabel = !invItem
                           ? 'Sin vínculo'
@@ -1109,7 +1109,7 @@ export const InventoryScreen: React.FC = () => {
                     <div className="no-print flex flex-wrap items-center gap-2 shrink-0">
                       <button
                         onClick={handleOpenEditModal}
-                        className="px-3.5 py-2 rounded-xl bg-[#4A6B3E] hover:bg-[#3D5A32] text-[#FAF6F0] font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all active:scale-95 cursor-pointer"
+                        className="px-3.5 py-2 rounded-xl bg-[#4A6B3E] hover:bg-[#3d5933] text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all active:scale-95 cursor-pointer"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
                         <span>Editar BOM</span>
@@ -1117,15 +1117,15 @@ export const InventoryScreen: React.FC = () => {
 
                       <button
                         onClick={handlePrintRecipe}
-                        className="px-3.5 py-2 rounded-xl bg-white hover:bg-[#F3ECE0] text-[#3A3731] border border-[#DDD3C3] font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+                        className="px-3.5 py-2 rounded-xl bg-[#FAF6F0] hover:bg-stone-200/70 text-stone-800 border border-stone-200 font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
                       >
-                        <Printer className="w-3.5 h-3.5" />
+                        <Printer className="w-3.5 h-3.5 text-[#4A6B3E]" />
                         <span>Imprimir Ficha</span>
                       </button>
 
                       <button
                         onClick={() => setSelectedRecipeProductId('')}
-                        className="px-3.5 py-2 rounded-xl bg-[#EFE9DF] hover:bg-[#E4DCCE] text-[#5B5449] font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+                        className="px-3.5 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
                       >
                         <X className="w-3.5 h-3.5" />
                         <span>Cerrar</span>
@@ -1159,19 +1159,19 @@ export const InventoryScreen: React.FC = () => {
       {/* MODAL DE EDICIÓN RÁPIDA DE RECETA / BOM (ESTADO LOCAL)                     */}
       {/* =========================================================================== */}
       {isEditModalOpen && editingRecipe && (
-        <div className="no-print fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
+        <div className="no-print fixed inset-0 z-50 bg-stone-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-2xl bg-white border border-stone-200 rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
             {/* Header Modal */}
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800 shrink-0">
+            <div className="px-6 py-4 bg-[#FAF6F0] flex items-center justify-between border-b border-stone-200 shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-[#4A6B3E]/10 border border-[#4A6B3E]/20 text-[#4A6B3E] flex items-center justify-center">
                   <Edit3 className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-black text-white">
+                  <h3 className="text-base font-black text-stone-900">
                     Editar Ficha Técnica: {editingRecipe.productName}
                   </h3>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-stone-500">
                     Ajuste de gramajes BOM, atributos visuales y pasos estandarizados
                   </p>
                 </div>
@@ -1179,18 +1179,18 @@ export const InventoryScreen: React.FC = () => {
 
               <button
                 onClick={() => setIsEditModalOpen(false)}
-                className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors"
+                className="w-8 h-8 rounded-lg bg-white hover:bg-stone-100 border border-stone-200 text-stone-500 hover:text-stone-900 flex items-center justify-center cursor-pointer transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Modal Body */}
-            <div className="flex-1 overflow-y-auto py-4 space-y-5 pr-1">
+            <div className="flex-1 overflow-y-auto p-6 space-y-5 bg-white">
               {/* Ajuste de Tiempo, Tagline, Badge y Notas del Chef */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div>
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                  <label className="text-[11px] font-bold text-stone-500 uppercase tracking-wider block mb-1">
                     Tiempo de Prep. (min)
                   </label>
                   <input
@@ -1204,12 +1204,12 @@ export const InventoryScreen: React.FC = () => {
                         prepTimeMinutes: Math.max(1, parseInt(e.target.value) || 1),
                       })
                     }
-                    className="w-full h-10 px-3 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono font-bold text-sm focus:border-cyan-500 focus:outline-none"
+                    className="w-full h-10 px-3 rounded-xl bg-[#FAF6F0] border border-stone-300 text-stone-900 font-mono font-bold text-sm focus:bg-white focus:border-[#4A6B3E] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                  <label className="text-[11px] font-bold text-stone-500 uppercase tracking-wider block mb-1">
                     Subtítulo (Tagline)
                   </label>
                   <input
@@ -1221,12 +1221,12 @@ export const InventoryScreen: React.FC = () => {
                         tagline: e.target.value,
                       })
                     }
-                    className="w-full h-10 px-3 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:border-cyan-500 focus:outline-none"
+                    className="w-full h-10 px-3 rounded-xl bg-[#FAF6F0] border border-stone-300 text-stone-900 text-xs focus:bg-white focus:border-[#4A6B3E] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                  <label className="text-[11px] font-bold text-stone-500 uppercase tracking-wider block mb-1">
                     Insignia Flotante
                   </label>
                   <input
@@ -1238,12 +1238,12 @@ export const InventoryScreen: React.FC = () => {
                         badgeText: e.target.value,
                       })
                     }
-                    className="w-full h-10 px-3 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:border-cyan-500 focus:outline-none"
+                    className="w-full h-10 px-3 rounded-xl bg-[#FAF6F0] border border-stone-300 text-stone-900 text-xs focus:bg-white focus:border-[#4A6B3E] focus:outline-none"
                   />
                 </div>
 
                 <div className="md:col-span-3">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                  <label className="text-[11px] font-bold text-stone-500 uppercase tracking-wider block mb-1">
                     Notas de Presentación / Alérgenos
                   </label>
                   <input
@@ -1256,14 +1256,14 @@ export const InventoryScreen: React.FC = () => {
                       })
                     }
                     placeholder="Instrucciones especiales de servicio o alérgenos..."
-                    className="w-full h-10 px-3 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:border-cyan-500 focus:outline-none"
+                    className="w-full h-10 px-3 rounded-xl bg-[#FAF6F0] border border-stone-300 text-stone-900 placeholder:text-stone-400 text-xs focus:bg-white focus:border-[#4A6B3E] focus:outline-none"
                   />
                 </div>
               </div>
 
               {/* Lista de Insumos BOM Editables */}
               <div>
-                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                <label className="text-[11px] font-bold text-stone-500 uppercase tracking-wider block mb-2">
                   Insumos a Descontar por Orden Vendida (BOM)
                 </label>
 
@@ -1271,19 +1271,19 @@ export const InventoryScreen: React.FC = () => {
                   {(editingRecipe.ingredients || editingRecipe.baseIngredients).map((ing) => (
                     <div
                       key={ing.ingredientId}
-                      className="p-3 rounded-xl bg-slate-950 border border-slate-850 flex items-center justify-between gap-3"
+                      className="p-3 rounded-xl bg-[#FAF6F0] border border-stone-200 flex items-center justify-between gap-3"
                     >
                       <div className="flex-1">
-                        <span className="font-bold text-xs text-white block">
+                        <span className="font-bold text-xs text-stone-900 block">
                           {ing.name || ing.itemName}
                         </span>
-                        <span className="text-[10px] text-slate-500 font-mono">
+                        <span className="text-[10px] text-stone-500 font-mono">
                           ID: {ing.inventoryItemId}
                         </span>
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-slate-400">Cantidad:</span>
+                        <span className="text-xs text-stone-500">Cantidad:</span>
                         <input
                           type="number"
                           step="1"
@@ -1295,15 +1295,15 @@ export const InventoryScreen: React.FC = () => {
                               parseFloat(e.target.value)
                             )
                           }
-                          className="w-20 h-8 px-2 rounded-lg bg-slate-900 border border-slate-750 text-cyan-400 font-mono font-bold text-xs text-center focus:border-cyan-500 focus:outline-none"
+                          className="w-20 h-8 px-2 rounded-lg bg-white border border-stone-300 text-[#4A6B3E] font-mono font-bold text-xs text-center focus:border-[#4A6B3E] focus:outline-none"
                         />
-                        <span className="text-xs font-mono uppercase text-slate-400 w-8">
+                        <span className="text-xs font-mono uppercase text-stone-500 w-8">
                           {ing.unit}
                         </span>
 
                         <button
                           onClick={() => handleRemoveIngredient(ing.ingredientId)}
-                          className="w-8 h-8 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 flex items-center justify-center transition-colors cursor-pointer"
+                          className="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 flex items-center justify-center transition-colors cursor-pointer"
                           title="Eliminar insumo de la receta"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -1314,11 +1314,11 @@ export const InventoryScreen: React.FC = () => {
                 </div>
 
                 {/* Agregar Nuevo Insumo */}
-                <div className="mt-3 p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center gap-2">
+                <div className="mt-3 p-3 rounded-xl bg-[#FAF6F0] border border-stone-200 flex items-center gap-2">
                   <select
                     value={selectedNewInventoryId}
                     onChange={(e) => setSelectedNewInventoryId(e.target.value)}
-                    className="flex-1 h-9 px-3 rounded-lg bg-slate-900 border border-slate-750 text-xs text-white focus:outline-none focus:border-cyan-500"
+                    className="flex-1 h-9 px-3 rounded-lg bg-white border border-stone-300 text-xs text-stone-900 focus:outline-none focus:border-[#4A6B3E]"
                   >
                     {inventory.map((inv) => (
                       <option key={inv.id} value={inv.id}>
@@ -1333,12 +1333,12 @@ export const InventoryScreen: React.FC = () => {
                     value={newIngredientQty}
                     onChange={(e) => setNewIngredientQty(parseFloat(e.target.value) || 1)}
                     placeholder="Cantidad"
-                    className="w-20 h-9 px-2 rounded-lg bg-slate-900 border border-slate-750 text-cyan-400 font-mono font-bold text-xs text-center focus:outline-none focus:border-cyan-500"
+                    className="w-20 h-9 px-2 rounded-lg bg-white border border-stone-300 text-[#4A6B3E] font-mono font-bold text-xs text-center focus:outline-none focus:border-[#4A6B3E]"
                   />
 
                   <button
                     onClick={handleAddIngredient}
-                    className="h-9 px-3 rounded-lg bg-slate-800 hover:bg-cyan-700 text-white text-xs font-bold flex items-center gap-1 transition-all cursor-pointer"
+                    className="h-9 px-3 rounded-lg bg-[#4A6B3E] hover:bg-[#3d5933] text-white text-xs font-bold flex items-center gap-1 transition-all cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Añadir</span>
@@ -1348,7 +1348,7 @@ export const InventoryScreen: React.FC = () => {
 
               {/* Pasos de Preparación Editables */}
               <div>
-                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                <label className="text-[11px] font-bold text-stone-500 uppercase tracking-wider block mb-2">
                   Pasos de Preparación Estandarizados
                 </label>
 
@@ -1356,20 +1356,20 @@ export const InventoryScreen: React.FC = () => {
                   {editingRecipe.preparationSteps.map((step, idx) => (
                     <div
                       key={step.stepNumber ?? idx}
-                      className="p-3 rounded-xl bg-slate-950 border border-slate-850 flex items-start gap-2.5"
+                      className="p-3 rounded-xl bg-[#FAF6F0] border border-stone-200 flex items-start gap-2.5"
                     >
-                      <span className="w-6 h-6 rounded bg-slate-900 text-cyan-400 font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                      <span className="w-6 h-6 rounded bg-[#4A6B3E]/10 text-[#4A6B3E] border border-[#4A6B3E]/20 font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
                         {step.stepNumber || idx + 1}
                       </span>
                       <input
                         type="text"
                         value={step.instruction}
                         onChange={(e) => handleUpdateStepInstruction(idx, e.target.value)}
-                        className="flex-1 bg-transparent text-xs text-slate-200 font-sans focus:outline-none border-b border-transparent focus:border-cyan-500 pb-0.5"
+                        className="flex-1 bg-transparent text-xs text-stone-900 font-sans focus:outline-none border-b border-transparent focus:border-[#4A6B3E] pb-0.5"
                       />
                       <button
                         onClick={() => handleRemoveStep(idx)}
-                        className="text-slate-500 hover:text-rose-400 p-1 cursor-pointer"
+                        className="text-stone-400 hover:text-red-700 p-1 cursor-pointer transition-colors"
                         title="Eliminar paso"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -1391,11 +1391,11 @@ export const InventoryScreen: React.FC = () => {
                       }
                     }}
                     placeholder="Escribe un nuevo paso de preparación y presiona enter..."
-                    className="flex-1 h-9 px-3 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white focus:outline-none focus:border-cyan-500"
+                    className="flex-1 h-9 px-3 rounded-xl bg-[#FAF6F0] border border-stone-300 text-xs text-stone-900 placeholder:text-stone-400 focus:bg-white focus:outline-none focus:border-[#4A6B3E]"
                   />
                   <button
                     onClick={handleAddStep}
-                    className="h-9 px-3 rounded-xl bg-slate-800 hover:bg-cyan-700 text-white text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors"
+                    className="h-9 px-3 rounded-xl bg-[#4A6B3E] hover:bg-[#3d5933] text-white text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Agregar</span>
@@ -1405,16 +1405,16 @@ export const InventoryScreen: React.FC = () => {
             </div>
 
             {/* Footer Modal */}
-            <div className="pt-4 border-t border-slate-800 flex items-center justify-end gap-3 shrink-0">
+            <div className="px-6 py-4 bg-[#FAF6F0] border-t border-stone-200 flex items-center justify-end gap-3 shrink-0">
               <button
                 onClick={() => setIsEditModalOpen(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-stone-700 font-bold text-xs transition-colors cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleSaveRecipeChanges}
-                className="px-5 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-black text-xs flex items-center gap-2 shadow-lg shadow-cyan-600/20 transition-all active:scale-95 cursor-pointer"
+                className="px-5 py-2 rounded-xl bg-[#4A6B3E] hover:bg-[#3d5933] text-white font-black text-xs flex items-center gap-2 shadow-md transition-all active:scale-95 cursor-pointer"
               >
                 <Save className="w-4 h-4" />
                 <span>Guardar Cambios</span>

@@ -342,7 +342,7 @@ export function useCashClosure() {
           totalRevenue: data.totalRevenue,
           percentage: pct,
           itemsCount: data.itemsCount,
-          color: meta?.color || 'text-slate-400',
+          color: meta?.color || 'text-stone-500',
         };
       }
     );

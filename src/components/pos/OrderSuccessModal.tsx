@@ -20,33 +20,30 @@ export const OrderSuccessModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in select-none">
-      <div className="w-full max-w-lg bg-slate-900 border border-emerald-500/40 rounded-3xl shadow-2xl p-6 flex flex-col items-center text-center ring-2 ring-emerald-500/20 relative overflow-hidden">
-        {/* Glow ambient */}
-        <div className="absolute -top-12 -right-12 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/50 backdrop-blur-sm animate-fade-in select-none">
+      <div className="w-full max-w-lg bg-white border border-stone-200 rounded-3xl shadow-2xl p-6 flex flex-col items-center text-center relative overflow-hidden">
         {/* Success Icon */}
-        <div className="w-20 h-20 rounded-3xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-500/30 mb-4 animate-bounce">
+        <div className="w-20 h-20 rounded-3xl bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center shadow-sm mb-4">
           <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
         </div>
 
-        <span className="text-xs font-black uppercase tracking-widest text-emerald-400 bg-emerald-500/15 px-3 py-1 rounded-full border border-emerald-500/30">
+        <span className="text-xs font-black uppercase tracking-widest text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
           ¡COBRO COMPLETADO CON ÉXITO!
         </span>
 
-        <h3 className="text-3xl font-black font-mono text-white mt-2">
+        <h3 className="text-3xl font-black font-mono text-stone-900 mt-3">
           #ORD-{lastOrder.orderNumber}
         </h3>
 
-        <p className="text-sm text-slate-300 mt-1 font-medium">
-          Cliente: <strong className="text-white">{lastOrder.customerName}</strong>
+        <p className="text-sm text-stone-700 mt-1 font-medium">
+          Cliente: <strong className="text-stone-900">{lastOrder.customerName}</strong>
         </p>
 
         {/* Order Details Card */}
-        <div className="w-full mt-4 p-4 rounded-2xl bg-slate-950 border border-slate-800 text-xs space-y-2 text-left">
-          <div className="flex justify-between text-slate-400">
+        <div className="w-full mt-4 p-4 rounded-2xl bg-[#FAF6F0] border border-stone-200 text-xs space-y-2 text-left">
+          <div className="flex justify-between text-stone-500">
             <span>Método de Pago:</span>
-            <span className="font-bold text-slate-200 capitalize">
+            <span className="font-bold text-stone-900 capitalize">
               {lastOrder.paymentMethod === 'gym_account'
                 ? 'Cuenta Socio Gimnasio'
                 : lastOrder.paymentMethod === 'card'
@@ -55,17 +52,17 @@ export const OrderSuccessModal: React.FC = () => {
             </span>
           </div>
 
-          <div className="flex justify-between text-slate-400">
+          <div className="flex justify-between text-stone-500">
             <span>Total Cobrado:</span>
-            <span className="font-mono font-black text-emerald-400 text-sm">
+            <span className="font-mono font-black text-[#4A6B3E] text-sm">
               ${lastOrder.total.toFixed(2)}
             </span>
           </div>
 
           {lastOrder.cashChange !== undefined && lastOrder.cashChange > 0 && (
-            <div className="flex justify-between text-slate-400 pt-1 border-t border-slate-850">
-              <span className="text-amber-400 font-bold">Cambio / Vuelto Entregado:</span>
-              <span className="font-mono font-black text-amber-400 text-sm">
+            <div className="flex justify-between pt-2 border-t border-stone-200">
+              <span className="text-amber-800 font-bold">Cambio / Vuelto Entregado:</span>
+              <span className="font-mono font-black text-amber-800 text-sm">
                 ${lastOrder.cashChange.toFixed(2)}
               </span>
             </div>
@@ -77,7 +74,7 @@ export const OrderSuccessModal: React.FC = () => {
           {/* Print Label Action Button */}
           <button
             onClick={handlePrintLabel}
-            className="w-full h-13 rounded-2xl bg-gradient-to-r from-emerald-600 to-lime-600 hover:from-emerald-500 hover:to-lime-500 text-white font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2.5 transition-all active:scale-95 shadow-lg shadow-emerald-600/30 ring-2 ring-emerald-400/40"
+            className="w-full h-13 rounded-2xl bg-[#4A6B3E] hover:bg-[#3d5933] text-white font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2.5 transition-all active:scale-95 shadow-md cursor-pointer"
           >
             <Printer className="w-5 h-5" />
             <span>Imprimir Etiqueta Adhesiva para Vaso</span>
@@ -86,7 +83,7 @@ export const OrderSuccessModal: React.FC = () => {
           {/* Next Sale Button */}
           <button
             onClick={closeSuccessModal}
-            className="w-full h-11 rounded-xl bg-slate-950 hover:bg-slate-900 text-slate-400 hover:text-white text-xs font-bold transition-all"
+            className="w-full h-11 rounded-xl bg-[#FAF6F0] hover:bg-stone-200/70 text-stone-700 hover:text-stone-900 text-xs font-bold border border-stone-200 transition-all cursor-pointer"
           >
             Nueva Venta (Cerrar)
           </button>

@@ -87,7 +87,7 @@ export const CategoryTabs: React.FC = () => {
                 </span>
                 <span
                   className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full ${isActive
-                      ? 'bg-black/20 text-white'
+                      ? 'bg-white/20 text-white'
                       : 'bg-[#FAF6F0] text-stone-600'
                     }`}
                 >
@@ -95,7 +95,7 @@ export const CategoryTabs: React.FC = () => {
                 </span>
               </div>
               <span
-                className={`text-[11px] ${isActive ? 'text-emerald-100 font-medium' : 'text-stone-500'
+                className={`text-[11px] ${isActive ? 'text-white/85 font-medium' : 'text-stone-500'
                   }`}
               >
                 {cat.sublabel}

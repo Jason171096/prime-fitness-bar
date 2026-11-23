@@ -62,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
   }, []);
 
   return (
-    <header className="no-print h-18 bg-white/95 backdrop-blur-md border-b border-stone-200/90 px-4 flex items-center justify-between shrink-0 shadow-sm select-none">
+    <header className="no-print h-18 bg-white border-b border-stone-200 px-4 flex items-center justify-between shrink-0 shadow-sm select-none">
       {/* Brand & Bar Station */}
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-xl bg-[#4A6B3E] p-0.5 flex items-center justify-center shadow-md shadow-[#4A6B3E]/20">
@@ -75,7 +75,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-extrabold tracking-tight text-stone-900 font-mono flex items-center gap-1.5">
               PRIME<span className="text-[#4A6B3E]">FITNESS</span>
-              {/* <span className="text-xs px-2 py-0.5 rounded bg-[#EBF1E8] text-[#3E5C33] border border-[#D4E2CE] font-sans font-semibold">
+              {/* <span className="text-xs px-2 py-0.5 rounded bg-[#4A6B3E]/10 text-[#4A6B3E] border border-[#4A6B3E]/20 font-sans font-semibold">
                 BAR POS
               </span> */}
             </h1>
@@ -94,7 +94,7 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={() => onViewChange('pos')}
           className={`flex items-center gap-2.5 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[125px] justify-center cursor-pointer ${activeView === 'pos'
             ? 'bg-[#4A6B3E] text-white shadow-md shadow-[#4A6B3E]/25'
-            : 'text-stone-600 hover:text-stone-900 hover:bg-white/80'
+            : 'bg-[#FAF6F0] text-stone-700 hover:bg-stone-200/70'
             }`}
         >
           <LayoutGrid className="w-5 h-5" />
@@ -106,7 +106,7 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={() => onViewChange('billing')}
           className={`flex items-center gap-2 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[145px] justify-center relative cursor-pointer ${activeView === 'billing'
             ? 'bg-[#4A6B3E] text-white shadow-md shadow-[#4A6B3E]/25'
-            : 'text-stone-600 hover:text-stone-900 hover:bg-white/80'
+            : 'bg-[#FAF6F0] text-stone-700 hover:bg-stone-200/70'
             }`}
         >
           <Receipt className="w-5 h-5" />
@@ -123,7 +123,7 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={() => onViewChange('closure')}
           className={`flex items-center gap-2 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[145px] justify-center cursor-pointer ${activeView === 'closure'
             ? 'bg-[#4A6B3E] text-white shadow-md shadow-[#4A6B3E]/25'
-            : 'text-stone-600 hover:text-stone-900 hover:bg-white/80'
+            : 'bg-[#FAF6F0] text-stone-700 hover:bg-stone-200/70'
             }`}
         >
           <Scale className="w-5 h-5" />
@@ -135,13 +135,13 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={() => onViewChange('inventory')}
           className={`flex items-center gap-2 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[135px] justify-center relative cursor-pointer ${activeView === 'inventory'
             ? 'bg-[#4A6B3E] text-white shadow-md shadow-[#4A6B3E]/25'
-            : 'text-stone-600 hover:text-stone-900 hover:bg-white/80'
+            : 'bg-[#FAF6F0] text-stone-700 hover:bg-stone-200/70'
             }`}
         >
           <Boxes className="w-5 h-5" />
           <span>Inventario</span>
           {lowStockCount > 0 && (
-            <span className="ml-1 px-2 py-0.5 text-xs font-black rounded-full bg-amber-400 text-stone-950 font-mono shadow-sm">
+            <span className="ml-1 px-2 py-0.5 text-xs font-black rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-mono shadow-sm">
               {lowStockCount} !
             </span>
           )}
@@ -167,22 +167,22 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Cashier Info */}
         <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#FAF6F0] border border-stone-200">
-          <div className="w-7 h-7 rounded-lg bg-[#EBF1E8] text-[#4A6B3E] flex items-center justify-center font-bold text-xs">
+          <div className="w-7 h-7 rounded-lg bg-[#4A6B3E]/10 text-[#4A6B3E] flex items-center justify-center font-bold text-xs">
             <User className="w-4 h-4" />
           </div>
           <div className="flex flex-col text-left">
             <span className="text-[10px] text-stone-500 uppercase tracking-wider font-semibold">
               Cajero en Turno
             </span>
-            <span className="text-xs font-bold text-stone-800">Marcos Vega</span>
+            <span className="text-xs font-bold text-stone-900">Marcos Vega</span>
           </div>
         </div>
 
         {/* Live Digital Clock */}
-        <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#EBF1E8] border border-[#D4E2CE] text-[#3E5C33]">
+        <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#4A6B3E]/10 border border-[#4A6B3E]/25 text-[#4A6B3E]">
           <Clock className="w-4 h-4 text-[#4A6B3E]" />
           <div className="flex flex-col text-right">
-            <span className="text-xs font-bold font-mono tracking-wider">
+            <span className="text-xs font-bold font-mono tracking-wider text-stone-900">
               {currentTime || '--:--:--'}
             </span>
             <span className="text-[10px] text-[#4A6B3E] uppercase font-semibold">
