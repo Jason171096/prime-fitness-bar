@@ -292,7 +292,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1510693206972-df098062cb71?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Esponjoso • Proteico • Ligero',
     badgeText: '¡Ideal para definición!',
-    tags: ['#DesayunoFit', '#36gProteína', '#CocinaCaliente', '#340Kcal'],
     allergens: ['Huevo', 'Lácteos'],
     chefNotes:
       '340 kcal | 36g Proteína. Verificar que el queso panela quede templado en el centro sin fundirse por completo. Hash brown dorado a 200°C en air-fryer.',
@@ -348,7 +347,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Cremoso • Keto • Energético',
     badgeText: '¡Favorito Bulk & Keto!',
-    tags: ['#KetoFriendly', '#VolumenLimpio', '#CocinaCaliente', '#640Kcal'],
     allergens: ['Huevo', 'Lácteos', 'Cerdo'],
     chefNotes:
       '640 kcal | 34g Proteína | 44g Grasas saludables. Ideal para fase de volumen pesado o dieta Cetogénica (Keto).',
@@ -404,7 +402,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1494597564530-871f2b93ac55?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Colorido • Balanceado • Jugoso',
     badgeText: '¡Clásico de fuerza!',
-    tags: ['#DesayunoBalanceado', '#35gProteína', '#CocinaCaliente', '#490Kcal'],
     allergens: ['Huevo', 'Lácteos', 'Cerdo'],
     chefNotes:
       '490 kcal | 35g Proteína. Corte fino en brunoise de pimientos y caramelizado rápido para mantener crocancia y dulzor natural.',
@@ -455,7 +452,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Versátil • Artesanal • Reconfortante',
     badgeText: '¡A tu elección!',
-    tags: ['#DesayunoClásico', '#PreWorkout', '#MasaMadre', '#410Kcal'],
     allergens: ['Huevo', 'Gluten', 'Lácteos'],
     chefNotes:
       '410 kcal | 24g Proteína. Verificar siempre la especificación de la comanda: Estrellados tiernos, Revueltos cremosos, Divorciados o A la Mexicana.',
@@ -500,7 +496,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Potente • Completo • Proteico',
     badgeText: '¡Full Power Matutino!',
-    tags: ['#FullPower', '#42gProteína', '#Hipertrofia', '#720Kcal'],
     allergens: ['Huevo', 'Gluten', 'Lácteos', 'Cerdo/Pavo'],
     chefNotes:
       '720 kcal | 42g Proteína. Máxima potencia matutina. Coordinar tiempos para que salchichas, tocino, huevos y hash brown salgan humeantes al mismo instante.',
@@ -550,7 +545,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Crocante • Tatemado • Proteico',
     badgeText: '¡Top Post-Entreno!',
-    tags: ['#ChilaquilesFit', '#42gProteína', '#Horneados', '#540Kcal'],
     allergens: ['Lácteos'],
     chefNotes:
       '540 kcal | 42g Proteína. Los totopos horneados deben envolverse en salsa hirviendo solo 30-40 seg para preservar textura crocante y evitar que se ablanden.',
@@ -597,7 +591,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1599974579688-8dbdd335c77f?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Ahumado • Crujiente • Recuperador',
     badgeText: '¡Recarga de glucógeno!',
-    tags: ['#GuajilloFit', '#43gProteína', '#PostWorkout', '#550Kcal'],
     allergens: ['Lácteos'],
     chefNotes:
       '550 kcal | 43g Proteína. Salsa roja tatemada con notas ahumadas de guajillo. Carga de glucógeno y aminoácidos óptima para recuperación post-workout.',
@@ -644,7 +637,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1615870216519-2f9fa575fa5c?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Gratinado • Cremoso • Intenso',
     badgeText: '¡Favorito de Atletas!',
-    tags: ['#SuizosFit', '#48gProteína', '#Gratinado', '#650Kcal'],
     allergens: ['Lácteos'],
     chefNotes:
       '650 kcal | 48g Proteína. Gratinado en salamandra a 230°C. Servir siempre en plato base protector térmico y alertar al personal de sala sobre plato caliente.',
@@ -693,7 +685,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1761027101409-fa96d88349c7?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Crujiente • Cremoso • Fresco',
     badgeText: '¡Top Ventas Mañanas!',
-    tags: ['#AvocadoToast', '#MasaMadre', '#Omega3', '#420Kcal'],
     allergens: ['Huevo', 'Gluten', 'Sésamo'],
     chefNotes:
       '420 kcal | 22g Proteína | 23g Grasas saludables. El huevo pochado debe presentar yema líquida sedosa que napa el aguacate al primer corte. Control estricto de agua a 85°C.',
@@ -739,7 +730,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1484723091739-30a097e8f929?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Dulce • Ligero • Energético',
     badgeText: '¡Ideal Pre-Entreno!',
-    tags: ['#PreWorkout', '#PanEzequiel', '#EnergíaLimpia', '#380Kcal'],
     allergens: ['Gluten', 'Lácteos'],
     chefNotes:
       '380 kcal | 24g Proteína | 52g Carbohidratos limpios. Combinación ideal de caseína de lenta digestión y fructosa natural para recarga muscular pre-entreno.',
@@ -784,7 +774,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Antioxidante • Proteico • Crocante',
     badgeText: '¡Boost Hipertrofia!',
-    tags: ['#PeanutButter', '#Berries', '#28gProteína', '#460Kcal'],
     allergens: ['Cacahuate', 'Gluten', 'Lácteos'],
     chefNotes:
       '460 kcal | 28g Proteína | Alta densidad energética y polifenoles antioxidantes para recuperación muscular en fases de hipertrofia.',
@@ -830,7 +819,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Delicado • Cítrico • Omega-3',
     badgeText: '¡Rico en Omega-3!',
-    tags: ['#SalmónNoruego', '#Omega3', '#31gProteína', '#390Kcal'],
     allergens: ['Pescado', 'Lácteos', 'Gluten'],
     chefNotes:
       '390 kcal | 31g Proteína | Ácidos grasos Omega-3 EPA y DHA de alto valor biológico. Mantener salmón ahumado a 3°C hasta el montaje.',
@@ -879,7 +867,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Fresco • Magro • Aromático',
     badgeText: '¡Clean Bulk 48g Prot!',
-    tags: ['#CleanBulk', '#48gProteína', '#QuinoaFit', '#490Kcal'],
     allergens: [],
     chefNotes:
       '490 kcal | 48g Proteína magra. Pechuga sellada al dente (74°C interna) cortada en fajitas calientes sobre la base fría de hojas orgánicas.',
@@ -926,7 +913,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Sellado • Ligero • Low-Carb',
     badgeText: '¡46g Proteína Pura!',
-    tags: ['#AtúnTataki', '#LowCarb', '#Definición', '#460Kcal'],
     allergens: ['Pescado', 'Sésamo', 'Soya'],
     chefNotes:
       '460 kcal | 46g Proteína | Bajo en carbohidratos. Atún en término sellado tataki (costra crocante de sésamo y corazón rojo frío/tibio). Corte de 8mm con cuchillo afilado.',
@@ -973,7 +959,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Vegano • Crocante • Prebiótico',
     badgeText: '¡100% Plant-Based!',
-    tags: ['#PlantBased', '#VeganoFit', '#FibraPrebiótica', '#440Kcal'],
     allergens: ['Soya', 'Sésamo'],
     chefNotes:
       '440 kcal | 29g Proteína 100% plant-based | Alta en fibra prebiótica. Tofu extra firme dorado con costra crujiente de levadura nutricional y tamari.',
@@ -1019,7 +1004,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Estructurado • Keto • Proteico',
     badgeText: '¡44g Proteína Cobb!',
-    tags: ['#CobbAtlética', '#44gProteína', '#KetoFriendly', '#470Kcal'],
     allergens: ['Huevo', 'Lácteos'],
     chefNotes:
       '470 kcal | 44g Proteína | Estilo Cobb tradicional en franjas geométricas paralelas. Huevos duros cocidos a 9 minutos exactos para yema cremosa.',
@@ -1070,7 +1054,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1610970881699-44a5587cabec?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Alcalino • Fresco • Depurativo',
     badgeText: '¡Prensado en Frío 45 RPM!',
-    tags: ['#ColdPressed', '#DetoxVerde', '#CeroAzúcar', '#95Kcal'],
     allergens: ['Apio'],
     chefNotes:
       '95 kcal | Cero azúcar agregada. Prensado en frío a 45 RPM para preservar enzimas y clorofila viva. Servir en vaso de 16oz con hielo roca.',
@@ -1116,7 +1099,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Vasodilatador • Vibrante • Pre-Entreno',
     badgeText: '¡Nitric Pump Natural!',
-    tags: ['#ÓxidoNítrico', '#PreWorkoutNatural', '#Antioxidante', '#130Kcal'],
     allergens: [],
     chefNotes:
       '130 kcal | Nitratos naturales precursores de Óxido Nítrico para vasodilatación y bombeo muscular intenso pre-workout.',
@@ -1161,7 +1143,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Dorado • Antiinflamatorio • Tropical',
     badgeText: '¡Recuperación Articular!',
-    tags: ['#InmuneGold', '#Bromelina', '#Antiinflamatorio', '#120Kcal'],
     allergens: [],
     chefNotes:
       '120 kcal | Altísima concentración de bromelina de piña madura y gingerol para desinflamación articular y recuperación.',
@@ -1206,7 +1187,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Isotónico • Refrescante • Mineral',
     badgeText: '¡Hidratación Intra-Entreno!',
-    tags: ['#LCitrulina', '#Electrolitos', '#IntraWorkout', '#110Kcal'],
     allergens: [],
     chefNotes:
       '110 kcal | L-Citrulina natural procedente de la pulpa y corteza blanca de la sandía, con agua de coco y sal rosa para reposición electrolítica perfecta.',
@@ -1255,7 +1235,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Cremoso • Anabólico • Intenso',
     badgeText: '¡Top Ventas #1!',
-    tags: ['#TopVentas', '#38gProteína', '#PostWorkout', '#460Kcal'],
     allergens: ['Lácteos', 'Cacahuate', 'Frutos secos (Almendra)'],
     chefNotes:
       '460 kcal | 38g Proteína. Top ventas #1. Textura cremosa ultra densa tipo milkshake. Licuar proteína al final a baja velocidad para no espumar.',
@@ -1301,7 +1280,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1638176066666-ffb2f013c7dd?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Esmeralda • Energético • Limpio',
     badgeText: '¡Energía Matcha Uji!',
-    tags: ['#MatchaCeremonial', '#30gProteína', '#EnergíaLimpia', '#290Kcal'],
     allergens: ['Lácteos', 'Frutos secos (Almendra)'],
     chefNotes:
       '290 kcal | 30g Proteína. Té Matcha grado ceremonial aporta L-teanina y cafeína limpia sostenida sin picos de ansiedad ni caídas bruscas.',
@@ -1348,7 +1326,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1502741224143-90386d7f8c82?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Antioxidante • Recuperador • Puro',
     badgeText: '¡+5g Creatina Creapure®!',
-    tags: ['#Creatina5g', '#32gProteína', '#PostEntreno', '#285Kcal'],
     allergens: ['Lácteos'],
     chefNotes:
       '285 kcal | 32g Proteína | 5g Creatina Creapure®. La combinación de frutos rojos ricos en antocianinas y creatina acelera la resíntesis de fosfocreatina muscular.',
@@ -1394,7 +1371,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1553530979-7ee52a2670c4?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Explosivo • Granizado • Enfocado',
     badgeText: '¡Tomar 25 min pre-rutina!',
-    tags: ['#PreWorkout', '#BCAA5g', '#PumpVascular', '#225Kcal'],
     allergens: ['Lácteos'],
     chefNotes:
       '225 kcal | 28g Proteína | 10g C4 Nitro + 5g BCAA. Advertir al atleta sobre la sensación de hormigueo (parestesia inofensiva) generada por la beta-alanina.',
@@ -1440,7 +1416,6 @@ export const MOCK_RECIPES: RecipeBOM[] = [
       'https://images.unsplash.com/photo-1577805947697-89e18249d767?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Aterciopelado • Vegano • Saciedad',
     badgeText: '¡Cero Lactosa • 31g Prot!',
-    tags: ['#VeganoFit', '#SaltedCaramel', '#CeroLactosa', '#390Kcal'],
     allergens: ['Gluten (Avena si no certificada)'],
     chefNotes:
       '390 kcal | 31g Proteína 100% Plant-Based | Aislado de proteína vegetal de guisante y arroz fermentado sabor caramelo salado. Cero lactosa.',

@@ -13,7 +13,6 @@ import {
   Sparkles,
   Check,
   RotateCcw,
-  Printer,
   ChevronLeft,
   Utensils,
 } from 'lucide-react';
@@ -250,14 +249,6 @@ export const InventoryScreen: React.FC = () => {
       [productId]: {},
     }));
     showToast('Pasos de preparación reiniciados', 'info');
-  };
-
-  const handlePrintRecipe = () => {
-    if (!selectedRecipe) return;
-    showToast(`Preparando ficha de cocina: ${selectedRecipe.productName}`, 'info');
-    setTimeout(() => {
-      window.print();
-    }, 150);
   };
 
   // ===========================================================================
@@ -1092,19 +1083,7 @@ export const InventoryScreen: React.FC = () => {
                   {/* =============================================================== */}
                   {/* BLOQUE 4: PIE DE FICHA Y ACCIONES RÁPIDAS DE POS                */}
                   {/* =============================================================== */}
-                  <footer className="border-t border-[#E4DAC9] pt-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                    {/* Barra inferior de metadatos / Hashtags */}
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      {(selectedRecipe.tags || []).map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-3 py-1 rounded-full bg-[#EFE9DF] text-[#4A6B3E] border border-[#DDD3C3] text-xs font-bold"
-                        >
-                          {tag.startsWith('#') ? tag : `#${tag}`}
-                        </span>
-                      ))}
-                    </div>
-
+                  <footer className="border-t border-[#E4DAC9] pt-5 flex flex-col lg:flex-row lg:items-center justify-end gap-4">
                     {/* Controles operativos integrados discretamente */}
                     <div className="no-print flex flex-wrap items-center gap-2 shrink-0">
                       <button
@@ -1113,14 +1092,6 @@ export const InventoryScreen: React.FC = () => {
                       >
                         <Edit3 className="w-3.5 h-3.5" />
                         <span>Editar BOM</span>
-                      </button>
-
-                      <button
-                        onClick={handlePrintRecipe}
-                        className="px-3.5 py-2 rounded-xl bg-[#FAF6F0] hover:bg-stone-200/70 text-stone-800 border border-stone-200 font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
-                      >
-                        <Printer className="w-3.5 h-3.5 text-[#4A6B3E]" />
-                        <span>Imprimir Ficha</span>
                       </button>
 
                       <button

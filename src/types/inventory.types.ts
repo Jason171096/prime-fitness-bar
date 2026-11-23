@@ -61,7 +61,6 @@ export interface RecipeBOM {
   heroImageUrl: string;
   tagline: string;
   badgeText: string;
-  tags: string[];
   ingredients: BOMIngredient[];
   baseIngredients: BOMIngredient[]; // Retrocompatibilidad para useInventoryStore
   preparationSteps: PreparationStep[];

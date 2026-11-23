@@ -185,7 +185,7 @@ prime-fitness-bar/
 - `src/components/closure/OpenShiftModal.tsx`: Modal de apertura de un nuevo turno con captura de fondo inicial (`initialCashFloat`), cajero responsable y notas.
 
 #### Módulo Inventario & Recetario BOM (`src/components/inventory/`)
-- `src/components/inventory/InventoryScreen.tsx`: Pantalla con dos pestañas: monitor de stock físico por insumo con umbrales (`optimal`/`warning`/`critical`) y recetario editorial visual BOM con checklist táctil, impresión y modal de edición de ingredientes/pasos.
+- `src/components/inventory/InventoryScreen.tsx`: Pantalla con dos pestañas: monitor de stock físico por insumo con umbrales (`optimal`/`warning`/`critical`) y recetario editorial visual BOM con checklist táctil y modal de edición de ingredientes/pasos.
 
 #### Stores Zustand (`src/store/`)
 - `src/store/posStore.ts`: Estado del catálogo, carrito, personalizador (`CustomizerModal`), socios, checkout rápido, visor de etiquetas, toasts y contador global `currentOrderNumberCounter`.
@@ -504,7 +504,6 @@ export interface RecipeBOM {
   heroImageUrl: string;
   tagline: string;
   badgeText: string;
-  tags: string[];
   ingredients: BOMIngredient[];
   baseIngredients: BOMIngredient[];
   preparationSteps: PreparationStep[];
@@ -962,7 +961,7 @@ sequenceDiagram
    - Inserta un `DeductionLog` al inicio de `deductionLogs` conservando los últimos 50 registros.
    - **Alertas y edición de BOM en `InventoryScreen.tsx`:**
      - `getItemStockStatus(item)` clasifica en `'critical'` (si `currentStock <= minThreshold` o `currentStock / maxCapacity < 0.20`), `'warning'` (`<= 0.35`) u `'optimal'`. `Header.tsx` usa esta misma función para mostrar el badge de alertas de stock bajo.
-     - En la pestaña **"Recetario & BOM"**, `InventoryScreen` muestra cada ingrediente de la receta con el stock en vivo del inventario, permite marcar pasos completados localmente en pantalla, imprimir la ficha técnica con `window.print()` y modificar gramajes/ingredientes/pasos mediante `updateRecipe(editingRecipe)` en `useInventoryStore`.
+     - En la pestaña **"Recetario & BOM"**, `InventoryScreen` muestra cada ingrediente de la receta con el stock en vivo del inventario, permite marcar pasos completados localmente en pantalla y modificar gramajes/ingredientes/pasos mediante `updateRecipe(editingRecipe)` en `useInventoryStore`.
 
 ---
 
