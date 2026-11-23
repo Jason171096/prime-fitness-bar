@@ -15,8 +15,6 @@ La interfaz principal (`src/App.tsx` y `src/components/common/Header.tsx`) artic
 3. **Cierre / Arqueo (`closure`)**: Resumen financiero del turno, movimientos extraordinarios de efectivo, auditoría de ventas y emisión de Cortes X / Z.
 4. **Inventario (`inventory`)**: Monitor de stock por insumos (gramos, ml, piezas, unidades) y recetario editorial con desglose Bill of Materials (**BOM**).
 
-> **Nota arquitectónica sobre KDS (`kds`):** Existen tipos (`src/types/kds.types.ts`) y store reactivo (`src/store/kdsStore.ts`) activos que reciben automáticamente las comandas cobradas (`addOrderToKDS`), aunque el botón `#nav-kds-btn` en `Header.tsx` se encuentra comentado y `src/App.tsx` no renderiza actualmente una vista dedicada para `activeView === 'kds'`.
-
 ### Versiones Reales Detectadas en `package.json`
 
 | Categoría | Paquete / Tecnología | Versión en `package.json` | Uso real en el proyecto |
@@ -28,7 +26,7 @@ La interfaz principal (`src/App.tsx` y `src/components/common/Header.tsx`) artic
 | **Plugin Vite React** | `@vitejs/plugin-react` | `^6.1.1` | Compilación JSX / Fast Refresh |
 | **Estilos CSS** | `tailwindcss` | `^4.3.3` | Framework CSS v4 (`@import "tailwindcss";` en `src/index.css`) |
 | **Integración Tailwind** | `@tailwindcss/vite` | `^4.3.3` | Plugin oficial de Tailwind v4 para Vite |
-| **Estado Global** | `zustand` | `^5.0.15` | Gestión reactiva en 5 stores de dominio (`pos`, `billing`, `closure`, `inventory`, `kds`) |
+| **Estado Global** | `zustand` | `^5.0.15` | Gestión reactiva en 4 stores de dominio (`pos`, `billing`, `closure`, `inventory`) |
 | **Iconografía** | `lucide-react` | `^1.55.0` | Iconos vectoriales en toda la interfaz |
 | **Runtime Escritorio** | `electron` | `^34.2.0` | Contenedor nativo de escritorio, aislamiento IPC y acceso a spooler/TCP |
 | **Empaquetador** | `electron-builder` | `^25.1.8` | Generación de instalador `nsis` y binario `portable` x64 en `release/` |
@@ -128,14 +126,12 @@ prime-fitness-bar/
     │   ├── billingStore.ts
     │   ├── closureStore.ts
     │   ├── inventoryStore.ts
-    │   ├── kdsStore.ts
     │   └── posStore.ts
     └── types/
         ├── billing.ts
         ├── closure.ts
         ├── electron.d.ts
         ├── inventory.types.ts
-        ├── kds.types.ts
         └── pos.types.ts
 ```
 
@@ -175,7 +171,7 @@ prime-fitness-bar/
 - `src/components/pos/CustomizerModal.tsx`: Constructor de bebidas personalizables en 6 pasos (tamaño, base líquida, proteína/scoops, extras BOM, notas y `customerName` para el vaso) con cálculo de macros y vista previa de sticker en tiempo real.
 - `src/components/pos/CartSidebar.tsx`: Panel lateral derecho de comanda activa con socio vinculado, edición/duplicación de ítems, totales y botones para enviar a caja o cobrar inmediatamente.
 - `src/components/pos/CheckoutModal.tsx`: Modal de cobro directo en terminal POS con soporte para tarjeta, efectivo (cálculo de cambio) y cuenta de socio de gimnasio.
-- `src/components/pos/OrderSuccessModal.tsx`: Modal de confirmación tras `completePayment`, muestra resumen del cobro y botones para previsualizar etiqueta o navegar al KDS.
+- `src/components/pos/OrderSuccessModal.tsx`: Modal de confirmación tras `completePayment`, muestra resumen del cobro y acciones para previsualizar etiqueta o iniciar una nueva venta.
 
 #### Módulo Caja / Cobro (`src/components/billing/`)
 - `src/components/billing/BillingView.tsx`: Vista operativa de doble panel para caja: bandeja filtrable de comandas pendientes (izquierda) y desglose nutricional/productos con pre-cuenta, cajón y anulación (derecha).
@@ -193,10 +189,9 @@ prime-fitness-bar/
 
 #### Stores Zustand (`src/store/`)
 - `src/store/posStore.ts`: Estado del catálogo, carrito, personalizador (`CustomizerModal`), socios, checkout rápido, visor de etiquetas, toasts y contador global `currentOrderNumberCounter`.
-- `src/store/billingStore.ts`: Estado de la cola de comandas pendientes/pagadas/canceladas, filtros de caja, reloj de urgencia y orquestación asíncrona `settlePayment` (socios + inventario + KDS + Electron IPC).
+- `src/store/billingStore.ts`: Estado de la cola de comandas pendientes/pagadas/canceladas, filtros de caja, reloj de urgencia y orquestación asíncrona `settlePayment` (socios + inventario + Electron IPC).
 - `src/store/closureStore.ts`: Estado del turno activo (`CashShift`), denominaciones, movimientos de efectivo e historial de cierres, persistidos en `localStorage`.
 - `src/store/inventoryStore.ts`: Inventario de insumos, catálogo mutable de recetas BOM, bitácora `deductionLogs` y algoritmo de descuento automático `deductStockForOrder`.
-- `src/store/kdsStore.ts`: Cola de preparación KDS (`KDSOrder[]`), transición de estados (`pending` → `blending` → `ready` → `delivered`), marca de etiqueta impresa y cronómetros.
 
 #### Hooks Personalizados (`src/hooks/`)
 - `src/hooks/useBilling.ts`: Encapsula suscripciones a `useBillingStore`, timer de 1 segundo para tiempos de espera, filtrado reactivo y métricas agregadas (`stats`) de bandeja.
@@ -218,7 +213,6 @@ prime-fitness-bar/
 - `src/types/billing.ts`: Tipos del módulo de caja: `BillingOrder`, `PaymentTransaction`, `SplitPaymentDetail` y payloads de liquidación/filtros.
 - `src/types/closure.ts`: Tipos de cierre de caja: `CashShift`, `CashMovement`, `ShiftFinancialSummary`, `CashClosureReport` y `CashClosureReceiptPayload`.
 - `src/types/inventory.types.ts`: Tipos de inventario y BOM: `InventoryItem`, `RecipeBOM`, `BOMIngredient`, `PreparationStep`.
-- `src/types/kds.types.ts`: Tipos del tablero de barra/cocina: `KDSColumnStatus` y `KDSOrder`.
 - `src/types/electron.d.ts`: Contratos TypeScript para el puente IPC y declaración global `Window.posHardware`.
 
 ---
@@ -357,7 +351,7 @@ export interface Order {
   paymentMethod: PaymentMethod;
   cashReceived?: number;
   cashChange?: number;
-  status: 'pending' | 'blending' | 'ready' | 'delivered';
+  status: 'pending' | 'ready' | 'delivered';
   cashierName: string;
   labelPrinted: boolean;
   startTimeStamp: number;
@@ -533,21 +527,7 @@ interface DeductionLog {
 }
 ```
 
-### 3.4 Dominio KDS (`src/types/kds.types.ts`)
-
-```ts
-import type { Order } from './pos.types';
-
-export type KDSColumnStatus = 'pending' | 'blending' | 'ready';
-
-export interface KDSOrder extends Order {
-  elapsedSeconds: number;
-  blenderStation?: string;
-  priorityAlert?: 'normal' | 'warning' | 'urgent';
-}
-```
-
-### 3.5 Dominio Cierre de Caja (`src/types/closure.ts`)
+### 3.4 Dominio Cierre de Caja (`src/types/closure.ts`)
 
 ```ts
 export type ShiftStatus = 'open' | 'closed';
@@ -740,7 +720,7 @@ export interface CashClosureReceiptPayload {
 }
 ```
 
-### 3.6 Contratos de Hardware Electron (`src/types/electron.d.ts`)
+### 3.5 Contratos de Hardware Electron (`src/types/electron.d.ts`)
 
 ```ts
 export interface PrinterDevice {
@@ -821,18 +801,16 @@ export interface POSHardwareAPI {
 
 ## 4. Flujo de Datos y Gestión de Estado
 
-La aplicación centraliza el estado operativo en **cinco stores independientes de Zustand** (`usePOSStore`, `useBillingStore`, `useClosureStore`, `useInventoryStore`, `useKDSStore`), comunicándose entre sí mediante llamadas directas con `.getState()` / `.setState()` y suscripciones en componentes y hooks.
+La aplicación centraliza el estado operativo en **cuatro stores independientes de Zustand** (`usePOSStore`, `useBillingStore`, `useClosureStore`, `useInventoryStore`), comunicándose entre sí mediante llamadas directas con `.getState()` / `.setState()` y suscripciones en componentes y hooks.
 
 ```mermaid
 flowchart LR
     UI_POS["POS: ProductCatalog / CustomizerModal / CartSidebar"] --> posStore["usePOSStore"]
     posStore -- "createPendingOrder" --> billingStore["useBillingStore"]
     posStore -- "completePayment (directo)" --> invStore["useInventoryStore"]
-    posStore -- "completePayment (directo)" --> kdsStore["useKDSStore"]
 
     UI_BILL["BillingView / PaymentModal"] --> useBilling["useBilling()"] --> billingStore
     billingStore -- "settlePayment: deductStockForOrder" --> invStore
-    billingStore -- "settlePayment: addOrderToKDS" --> kdsStore
     billingStore -- "settlePayment: balance socio" --> posStore
     billingStore -- "IPC Hardware" --> Electron["window.posHardware"]
 
@@ -927,9 +905,8 @@ Existen **dos flujos operativos** implementados en el repositorio para liquidar 
    - Verifica que `targetOrder.status === 'pending_payment'`.
    - Si participa `gym_account` (pago completo o fracción en `split`), verifica el saldo actualizado en `usePOSStore.members` y descuenta el monto actualizando `usePOSStore.setState({ members })`, guardando `memberBalanceBefore` y `memberBalanceAfter` en la transacción.
    - Crea el registro `PaymentTransaction`, actualiza el `BillingOrder` en `orders` con `status: 'paid'`, `tipAmount`, `total: totalWithTip` y `transaction`, selecciona la siguiente orden pendiente y cierra `PaymentModal`.
-   - Construye `posOrderBridge: Order` y ejecuta en cascada:
+   - Construye `posOrderBridge: Order` y ejecuta:
      - `useInventoryStore.getState().deductStockForOrder(posOrderBridge)`
-     - `useKDSStore.getState().addOrderToKDS(posOrderBridge)`
    - Dispara periféricos si aplica:
      - Cajón portamonedas (`window.posHardware.openCashDrawer()`) si `openDrawer !== false` y hubo efectivo (`method === 'cash'` o un `split` con `'cash'`).
      - Ticket térmico (`window.posHardware.printReceipt(receiptPayload)`) si `printReceipt !== false`.
@@ -938,19 +915,18 @@ Existen **dos flujos operativos** implementados en el repositorio para liquidar 
 - Desde `CartSidebar`, el botón **Cobro Inmediato en este Terminal** abre `CheckoutModal.tsx` (soporta `card`, `cash` y `gym_account`, además de editar `orderCustomerName` o elegir `selectedMember`).
 - Al confirmar, `usePOSStore.completePayment(method, cashAmount)`:
   1. Valida y descuenta saldo del socio en `members` si `method === 'gym_account'`.
-  2. Construye la entidad `Order`, llama directamente a `useInventoryStore.getState().deductStockForOrder(order)` y `useKDSStore.getState().addOrderToKDS(order)`.
+  2. Construye la entidad `Order` y llama directamente a `useInventoryStore.getState().deductStockForOrder(order)`.
   3. Limpia `cart`, `selectedMember` y `orderCustomerName`, incrementa `currentOrderNumberCounter`, guarda `lastOrder` y abre `OrderSuccessModal`.
 - **Diferencia arquitectónica observada en el código:** A diferencia de `billingStore.settlePayment`, `posStore.completePayment` no inserta un `BillingOrder` en `useBillingStore` (por lo que estas ventas rápidas no se reflejan en el cálculo de `useCashClosure` basado en `billingOrders`) ni invoca automáticamente `window.posHardware` para ticket o cajón (el hook `useHardware.ts` provee `processCheckoutHardware`, pero no está conectado en `CheckoutModal` ni `OrderSuccessModal`, limitándose `OrderSuccessModal` a abrir `PrintSimulatorModal`).
 
 ---
 
-### 4.3 Flujo 3: Envío a Barra/Cocina (KDS) y Descuento de Inventario / Recetario (BOM)
+### 4.3 Flujo 3: Descuento de Inventario y Recetario (BOM)
 
 ```mermaid
 sequenceDiagram
     participant Checkout as posStore / billingStore
     participant Inv as useInventoryStore
-    participant KDS as useKDSStore
     participant Screen as InventoryScreen
 
     Checkout->>Inv: deductStockForOrder(order)
@@ -971,21 +947,10 @@ sequenceDiagram
         end
     end
     Inv->>Inv: Registra DeductionLog (top 50) y recalcula portionsRemaining
-    Checkout->>KDS: addOrderToKDS(order)
-    KDS->>KDS: Crea KDSOrder (elapsedSeconds=0, status='pending')
     Screen-->>Inv: Lee inventory, recipes, getItemStockStatus y updateRecipe
 ```
 
-1. **Despacho al tablero KDS (`src/store/kdsStore.ts`):**
-   - `addOrderToKDS(order)` convierte el `Order` en un `KDSOrder` con `startTimeStamp: Date.now()`, `elapsedSeconds: 0` y `blenderStation: 'Licuadora Asignada'`, anteponiéndolo en `orders`.
-   - `useKDSStore` implementa la máquina de estados operativa:
-     - `advanceOrderStatus(orderId)`: `'pending'` → `'blending'` (asigna `'Vitamix #1 (En Marcha)'`) → `'ready'` → `'delivered'`.
-     - `regressOrderStatus(orderId)`: `'ready'` → `'blending'` → `'pending'`.
-     - `markLabelPrinted(orderId)`: marca `labelPrinted = true`.
-     - `tickTimers()`: actualiza `elapsedSeconds` para todas las órdenes que no están en `'delivered'`.
-   - Como se indicó en la Sección 1, `useKDSStore` ya recibe en tiempo real todas las órdenes cobradas desde ambos flujos, aunque actualmente no existe componente de vista KDS montado en `App.tsx`.
-
-2. **Descuento automático en Inventario / BOM (`src/store/inventoryStore.ts`):**
+1. **Descuento automático en Inventario / BOM (`src/store/inventoryStore.ts`):**
    - `deductStockForOrder(order)` clona `inventory` y recorre cada `item` de `order.items`:
      - **Paso 1 (Receta BOM base):** Busca una receta en `recipes` (inicializada con `MOCK_RECIPES` de `mockRecipes.ts`) donde `r.productId === item.product.id`. Si existe, itera `recipe.ingredients || recipe.baseIngredients` y resta `ing.quantity * item.quantity` al `InventoryItem` coincidente (`inv.id === ing.inventoryItemId`).
      - **Paso 2 (Modificadores personalizados):** Si `item.customization` está presente:

@@ -125,7 +125,7 @@ export interface Order {
   paymentMethod: PaymentMethod;
   cashReceived?: number;
   cashChange?: number;
-  status: 'pending' | 'blending' | 'ready' | 'delivered';
+  status: 'pending' | 'ready' | 'delivered';
   cashierName: string;
   labelPrinted: boolean;
   startTimeStamp: number;

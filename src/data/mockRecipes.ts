@@ -454,7 +454,7 @@ export const MOCK_RECIPES: RecipeBOM[] = [
     heroImageUrl:
       'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=1000&q=85',
     tagline: 'Versátil • Artesanal • Reconfortante',
-    badgeText: '¡A tu elección en KDS!',
+    badgeText: '¡A tu elección!',
     tags: ['#DesayunoClásico', '#PreWorkout', '#MasaMadre', '#410Kcal'],
     allergens: ['Huevo', 'Gluten', 'Lácteos'],
     chefNotes:

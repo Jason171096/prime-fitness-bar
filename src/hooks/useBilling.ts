@@ -4,7 +4,7 @@
  * - Filtrado en tiempo real por número de orden, cliente y membresía.
  * - Monitoreo y formateo reactivo del tiempo transcurrido (Verde <3m, Ámbar 3-7m, Rojo >7m).
  * - Estadísticas en vivo de la bandeja de órdenes.
- * - Despacho de pagos a hardware (cajón portamonedas e impresora) y sincronización con KDS.
+ * - Despacho de pagos a hardware (cajón portamonedas e impresora).
  */
 
 import { useEffect, useMemo, useCallback } from 'react';

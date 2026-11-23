@@ -1,7 +1,7 @@
 /**
  * @file billingStore.ts
  * @description Store de Zustand para la gestión reactiva de comandas pendientes de cobro,
- * filtros táctiles, modal de checkout y despacho hacia hardware nativo y KDS.
+ * filtros táctiles, modal de checkout, descuento de inventario y despacho hacia hardware nativo.
  */
 
 import { create } from 'zustand';
@@ -18,7 +18,6 @@ import type {
 import type { CartItem, GymMember, Order } from '../types/pos.types';
 import type { ReceiptDataPayload } from '../types/electron';
 import { INITIAL_BILLING_ORDERS } from '../data/mockBillingOrders';
-import { useKDSStore } from './kdsStore';
 import { useInventoryStore } from './inventoryStore';
 import { usePOSStore } from './posStore';
 
@@ -332,10 +331,7 @@ export const useBillingStore = create<BillingStoreState>((set, get) => ({
 
     useInventoryStore.getState().deductStockForOrder(posOrderBridge);
 
-    // 2. Despachar comanda liquidada al KDS de licuadoras / preparación
-    useKDSStore.getState().addOrderToKDS(posOrderBridge);
-
-    // 3. Integración con Hardware Físico Local (Electron IPC)
+    // 2. Integración con Hardware Físico Local (Electron IPC)
     const isCashInvolved =
       payload.method === 'cash' ||
       (payload.method === 'split' && payload.splits?.some((s) => s.method === 'cash'));
@@ -418,7 +414,7 @@ export const useBillingStore = create<BillingStoreState>((set, get) => ({
 
     // Notificación de éxito
     posStore.showToast(
-      `¡Comanda #${targetOrder.orderNumber} liquidada con éxito y enviada al KDS!`,
+      `¡Comanda #${targetOrder.orderNumber} liquidada con éxito!`,
       'success'
     );
 

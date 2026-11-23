@@ -5,9 +5,6 @@ import {
   Search,
   BookOpen,
   Clock,
-  Flame,
-  Salad,
-  Zap,
   Edit3,
   Trash2,
   Save,
@@ -23,7 +20,6 @@ import {
 import { useInventoryStore } from '../../store/inventoryStore';
 import type {
   RecipeBOM,
-  RecipeStation,
   BOMIngredient,
   PreparationStep,
 } from '../../types/inventory.types';

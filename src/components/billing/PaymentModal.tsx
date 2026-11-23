@@ -943,12 +943,12 @@ export const PaymentModal: React.FC = () => {
             {isProcessing ? (
               <>
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                <span>PROCESANDO HARDWARE & KDS...</span>
+                <span>PROCESANDO COBRO Y HARDWARE...</span>
               </>
             ) : (
               <>
                 <Receipt className="w-5 h-5 text-emerald-200" />
-                <span>CONFIRMAR COBRO & ENVIAR AL KDS (${grandTotal.toFixed(2)})</span>
+                <span>CONFIRMAR COBRO (${grandTotal.toFixed(2)})</span>
                 <ArrowRight className="w-5 h-5" />
               </>
             )}

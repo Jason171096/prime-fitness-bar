@@ -451,7 +451,7 @@ export const CheckoutModal: React.FC = () => {
             className="px-8 h-13 rounded-2xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-lime-600 hover:from-emerald-500 hover:to-lime-500 disabled:opacity-40 disabled:pointer-events-none text-white font-black text-sm shadow-xl shadow-emerald-500/25 flex items-center gap-3 transition-all active:scale-95 ring-2 ring-emerald-400/40"
           >
             <Receipt className="w-5 h-5" />
-            <span>CONFIRMAR PAGO & ENVIAR AL KDS (${total.toFixed(2)})</span>
+            <span>CONFIRMAR PAGO (${total.toFixed(2)})</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>

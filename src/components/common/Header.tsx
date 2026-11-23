@@ -13,7 +13,7 @@ import {
 import { useInventoryStore } from '../../store/inventoryStore';
 import { useBillingStore } from '../../store/billingStore';
 
-export type AppViewMode = 'pos' | 'billing' | 'closure' | 'kds' | 'inventory';
+export type AppViewMode = 'pos' | 'billing' | 'closure' | 'inventory';
 
 interface HeaderProps {
   activeView: AppViewMode;
@@ -129,24 +129,6 @@ export const Header: React.FC<HeaderProps> = ({
           <Scale className="w-5 h-5" />
           <span>Cierre / Arqueo</span>
         </button>
-
-        {/* <button
-          id="nav-kds-btn"
-          onClick={() => onViewChange('kds')}
-          className={`flex items-center gap-2 px-4 h-12 rounded-xl text-sm font-bold tracking-wide transition-all active:scale-95 min-w-[145px] justify-center relative ${
-            activeView === 'kds'
-              ? 'bg-gradient-to-r from-amber-600 to-amber-500 text-white shadow-lg shadow-amber-600/30 ring-1 ring-amber-400/50'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-          }`}
-        >
-          <ChefHat className="w-5 h-5" />
-          <span>KDS Licuadoras</span>
-          {activeKDICount > 0 && (
-            <span className="ml-1 px-2 py-0.5 text-xs font-black rounded-full bg-amber-500 text-slate-950 font-mono shadow-md">
-              {activeKDICount}
-            </span>
-          )}
-        </button> */}
 
         <button
           id="nav-inv-btn"

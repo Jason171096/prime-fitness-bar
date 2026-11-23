@@ -126,7 +126,7 @@ export function App() {
       <CustomizerModal />
       <CheckoutModal />
       <PrintSimulatorModal />
-      <OrderSuccessModal onNavigateToKDS={() => setActiveView('kds')} />
+      <OrderSuccessModal />
       <Toast />
     </div>
   );

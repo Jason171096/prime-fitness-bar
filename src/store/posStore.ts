@@ -16,7 +16,6 @@ import type {
 import { SIZE_OPTIONS, LIQUID_BASES, PROTEIN_OPTIONS, EXTRA_OPTIONS } from '../data/mockModifiers';
 import { MOCK_MEMBERS } from '../data/mockMembers';
 import { useInventoryStore } from './inventoryStore';
-import { useKDSStore } from './kdsStore';
 
 interface ToastInfo {
   message: string;
@@ -545,10 +544,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
     // 1. Deduct Stock in inventory
     useInventoryStore.getState().deductStockForOrder(order);
 
-    // 2. Dispatch to KDS Board
-    useKDSStore.getState().addOrderToKDS(order);
-
-    // 3. Update POS store state
+    // 2. Update POS store state
     set({
       cart: [],
       currentOrderNumberCounter: orderNumber + 1,
@@ -559,7 +555,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
       orderCustomerName: '',
     });
 
-    get().showToast(`¡Pedido #${orderNumber} cobrado y enviado al KDS!`, 'success');
+    get().showToast(`¡Pedido #${orderNumber} cobrado con éxito!`, 'success');
     return order;
   },
 }));

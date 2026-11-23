@@ -2,18 +2,10 @@ import React from 'react';
 import {
   CheckCircle2,
   Printer,
-  ChevronRight,
-  ChefHat,
 } from 'lucide-react';
 import { usePOSStore } from '../../store/posStore';
 
-interface OrderSuccessModalProps {
-  onNavigateToKDS: () => void;
-}
-
-export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({
-  onNavigateToKDS,
-}) => {
+export const OrderSuccessModal: React.FC = () => {
   const isSuccessModalOpen = usePOSStore((s) => s.isSuccessModalOpen);
   const lastOrder = usePOSStore((s) => s.lastOrder);
   const closeSuccessModal = usePOSStore((s) => s.closeSuccessModal);
@@ -78,13 +70,6 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({
               </span>
             </div>
           )}
-
-          <div className="flex justify-between text-slate-400 pt-1 border-t border-slate-850">
-            <span>Destino de Preparación:</span>
-            <span className="text-emerald-400 font-bold">
-              Despachado a pantalla KDS Licuadoras
-            </span>
-          </div>
         </div>
 
         {/* Actions */}
@@ -96,19 +81,6 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({
           >
             <Printer className="w-5 h-5" />
             <span>Imprimir Etiqueta Adhesiva para Vaso</span>
-          </button>
-
-          {/* View in KDS Button */}
-          <button
-            onClick={() => {
-              closeSuccessModal();
-              onNavigateToKDS();
-            }}
-            className="w-full h-11 rounded-xl bg-slate-800 hover:bg-slate-750 text-amber-300 font-bold text-xs flex items-center justify-center gap-2 border border-slate-700 active:scale-95 transition-all"
-          >
-            <ChefHat className="w-4 h-4 text-amber-400" />
-            <span>Ver Comanda en Tablero KDS</span>
-            <ChevronRight className="w-4 h-4" />
           </button>
 
           {/* Next Sale Button */}
