@@ -16,6 +16,7 @@ import type {
 import { SIZE_OPTIONS, LIQUID_BASES, PROTEIN_OPTIONS, EXTRA_OPTIONS } from '../data/mockModifiers';
 import { MOCK_MEMBERS } from '../data/mockMembers';
 import { useInventoryStore } from './inventoryStore';
+import { useClosureStore } from './closureStore';
 
 interface ToastInfo {
   message: string;
@@ -477,7 +478,8 @@ export const usePOSStore = create<POSState>((set, get) => ({
   closeSuccessModal: () => set({ isSuccessModalOpen: false }),
 
   completePayment: (method: PaymentMethod, cashAmount?: number): Order | null => {
-    const { cart, selectedMember, currentOrderNumberCounter, cashierName, members } = get();
+    const { cart, selectedMember, currentOrderNumberCounter, members } = get();
+    const activeCashierName = useClosureStore.getState().currentShift?.cashierName || 'Cajero Turno';
 
     if (cart.length === 0) return null;
 
@@ -536,7 +538,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
       cashReceived: cashAmount,
       cashChange,
       status: 'pending',
-      cashierName,
+      cashierName: activeCashierName,
       labelPrinted: false,
       startTimeStamp: Date.now(),
     };

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useInventoryStore } from '../../store/inventoryStore';
 import { useBillingStore } from '../../store/billingStore';
+import { useClosureStore } from '../../store/closureStore';
 
 export type AppViewMode = 'pos' | 'billing' | 'closure' | 'inventory';
 
@@ -31,6 +32,8 @@ export const Header: React.FC<HeaderProps> = ({
 
   const billingOrders = useBillingStore((s) => s.orders);
   const pendingBillingCount = billingOrders.filter((o) => o.status === 'pending_payment').length;
+
+  const currentShift = useClosureStore((state) => state.currentShift);
 
   const inventory = useInventoryStore((s) => s.inventory);
   const getItemStatus = useInventoryStore((s) => s.getItemStockStatus);
@@ -174,7 +177,16 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="text-[10px] text-stone-500 uppercase tracking-wider font-semibold">
               Cajero en Turno
             </span>
-            <span className="text-xs font-bold text-stone-900">Marcos Vega</span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-bold text-stone-900">
+                {currentShift?.cashierName || 'Sin turno activo'}
+              </span>
+              {currentShift?.status === 'closed' && (
+                <span className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-amber-50 text-amber-800 border border-amber-200">
+                  Turno Cerrado
+                </span>
+              )}
+            </div>
           </div>
         </div>
 

@@ -20,6 +20,7 @@ import type { ReceiptDataPayload } from '../types/electron';
 import { INITIAL_BILLING_ORDERS } from '../data/mockBillingOrders';
 import { useInventoryStore } from './inventoryStore';
 import { usePOSStore } from './posStore';
+import { useClosureStore } from './closureStore';
 
 interface CreatePendingOrderParams {
   items: CartItem[];
@@ -190,7 +191,7 @@ export const useBillingStore = create<BillingStoreState>((set, get) => ({
       createdAt: createdAtStr,
       timestamp: now,
       notes: params.notes,
-      cashierName: usePOSStore.getState().cashierName,
+      cashierName: useClosureStore.getState().currentShift?.cashierName || 'Cajero Turno',
     };
 
     set((state) => ({
@@ -217,6 +218,7 @@ export const useBillingStore = create<BillingStoreState>((set, get) => ({
     }
 
     const posStore = usePOSStore.getState();
+    const activeCashierName = useClosureStore.getState().currentShift?.cashierName || 'Cajero Turno';
     const now = new Date();
     const timestampStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     const totalWithTip = Math.round((targetOrder.total + payload.tipAmount) * 100) / 100;
@@ -283,7 +285,7 @@ export const useBillingStore = create<BillingStoreState>((set, get) => ({
       memberBalanceBefore,
       memberBalanceAfter,
       timestamp: timestampStr,
-      cashierName: targetOrder.cashierName || posStore.cashierName,
+      cashierName: targetOrder.cashierName || activeCashierName,
     };
 
     // Actualizar estado de comanda a 'paid'

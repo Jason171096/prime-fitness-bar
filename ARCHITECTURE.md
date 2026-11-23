@@ -159,7 +159,7 @@ prime-fitness-bar/
 - `src/App.css`: Hoja de estilos residual de plantilla Vite (no importada en `App.tsx` ni `main.tsx`).
 
 #### Componentes Comunes y Etiquetas (`src/components/common/`, `src/components/label/`)
-- `src/components/common/Header.tsx`: Barra superior fija con navegación de módulos, contadores de órdenes pendientes de cobro e insumos con stock bajo, estado de impresora y reloj digital en vivo.
+- `src/components/common/Header.tsx`: Barra superior fija con navegación de módulos, contadores de órdenes pendientes de cobro e insumos con stock bajo, estado de impresora, cajero en turno reactivo desde `useClosureStore` (`currentShift.cashierName` y badge `"Turno Cerrado"` si `status === 'closed'`) y reloj digital en vivo.
 - `src/components/common/Toast.tsx`: Banner flotante de notificaciones globales alimentado por `usePOSStore.toast`.
 - `src/components/label/PrintSimulatorModal.tsx`: Modal envoltorio para previsualizar e invocar la simulación de impresión de etiquetas adhesivas desde el carrito o éxito de orden.
 - `src/components/label/StickerLabelPreview.tsx`: Representación visual en papel térmico de 58mm con código de orden, nombre del vaso (`customerName`), ingredientes, tabla nutricional y botón de impresión simulada.
@@ -807,6 +807,9 @@ flowchart LR
     UI_POS["POS: ProductCatalog / CustomizerModal / CartSidebar"] --> posStore["usePOSStore"]
     posStore -- "createPendingOrder" --> billingStore["useBillingStore"]
     posStore -- "completePayment (directo)" --> invStore["useInventoryStore"]
+    posStore -- "Lee currentShift.cashierName" --> closureStore
+    billingStore -- "Lee currentShift.cashierName" --> closureStore
+    Header["Header.tsx"] -- "Suscripción reactiva a currentShift" --> closureStore
 
     UI_BILL["BillingView / PaymentModal"] --> useBilling["useBilling()"] --> billingStore
     billingStore -- "settlePayment: deductStockForOrder" --> invStore
@@ -993,7 +996,8 @@ sequenceDiagram
 
 4. **Apertura de un Nuevo Turno (`OpenShiftModal.tsx` → `closureStore.openNewShift`):**
    - Cuando `currentShift.status === 'closed'`, `CashClosureView` habilita el botón `#btn-open-next-shift`.
-   - `OpenShiftModal` captura nuevo `initialFloat`, `cashierName` y `notes`, llamando a `openNewShift(...)`, que crea el `CashShift` con `shiftNumber + 1` y `status: 'open'`, limpia movimientos/denominaciones en `localStorage` y reinicia el turno.
+   - `OpenShiftModal` captura nuevo `initialFloat`, `cashierName` y `notes`, llamando a `openNewShift(...)`, que crea una nueva referencia inmutable de `CashShift` con `shiftNumber + 1` y `status: 'open'`, persiste en `localStorage` (`pf_active_cash_shift`), limpia movimientos/denominaciones y reinicia el turno.
+   - **Sincronización reactiva del cajero activo:** `Header.tsx` se suscribe directamente a `useClosureStore((state) => state.currentShift)` para reflejar de inmediato `currentShift.cashierName` (o `'Sin turno activo'` / badge `'Turno Cerrado'`). Asimismo, `posStore.ts` (`completePayment`) y `billingStore.ts` (`createPendingOrder` y `settlePayment`) consultan dinámicamente `useClosureStore.getState().currentShift?.cashierName || 'Cajero Turno'` al registrar nuevas órdenes y transacciones.
 
 ---
 
