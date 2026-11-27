@@ -39,41 +39,44 @@ export const ProductCatalog: React.FC = () => {
   ];
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#FAF6F0] p-4 gap-3 select-none">
+    <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#FAF6F0] p-3 md:p-4 gap-3 select-none">
       {/* Category Tabs Row */}
       <CategoryTabs />
 
       {/* Search and Fast Tag Pills */}
-      <div className="flex items-center gap-3 shrink-0">
+      <div className="flex flex-col lg:flex-row lg:items-center gap-3 shrink-0">
         {/* Touch Search Bar */}
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+        <div className="relative flex-1 lg:max-w-sm xl:max-w-md">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400 pointer-events-none" />
           <input
             id="product-search-input"
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por batido, proteína o ingrediente..."
-            className="w-full h-11 pl-10 pr-9 rounded-xl bg-white border border-stone-200 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#4A6B3E] focus:ring-1 focus:ring-[#4A6B3E] transition-all font-medium shadow-sm"
+            className="w-full h-12 pl-11 pr-14 rounded-xl bg-white border border-stone-200 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#4A6B3E] focus:ring-1 focus:ring-[#4A6B3E] transition-all font-medium shadow-sm"
           />
           {searchQuery && (
             <button
+              type="button"
               onClick={() => setSearchQuery('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg bg-stone-100 text-stone-500 hover:text-stone-900 flex items-center justify-center cursor-pointer"
+              aria-label="Limpiar búsqueda"
+              className="absolute right-0 top-0 w-12 h-12 rounded-r-xl text-stone-500 hover:text-stone-900 flex items-center justify-center active:scale-95 transition-transform cursor-pointer"
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-4 h-4" />
             </button>
           )}
         </div>
 
         {/* Quick Filter Tags (Horizontal Scrollable) */}
-        <div className="flex items-center gap-2 overflow-x-auto scrollbar-none py-1">
+        <div className="flex items-center gap-3 overflow-x-auto scrollbar-none touch-pan-x py-0.5">
           <Filter className="w-4 h-4 text-stone-400 shrink-0 ml-1" />
           {availableTags.map((tag) => (
             <button
               key={tag.id}
+              type="button"
               onClick={() => setSelectedTag(tag.id)}
-              className={`px-3 h-9 rounded-xl text-xs font-bold whitespace-nowrap transition-all active:scale-95 shrink-0 cursor-pointer ${
+              className={`px-4 min-h-[48px] min-w-[48px] rounded-xl text-xs font-bold whitespace-nowrap transition-all active:scale-95 shrink-0 flex items-center justify-center cursor-pointer ${
                 selectedTag === tag.id
                   ? 'bg-[#4A6B3E] text-white border border-[#4A6B3E] shadow-sm'
                   : 'bg-white text-stone-700 hover:text-stone-900 border border-stone-200'
@@ -85,8 +88,8 @@ export const ProductCatalog: React.FC = () => {
         </div>
       </div>
 
-      {/* Product Grid (Smooth scrollable, large cards) */}
-      <div className="flex-1 overflow-y-auto pr-1">
+      {/* Product Grid (Smooth scrollable, large cards, extra bottom padding in portrait for floating cart bar) */}
+      <div className="flex-1 overflow-y-auto overscroll-contain-y pr-1">
         {filteredProducts.length === 0 ? (
           <div className="h-64 flex flex-col items-center justify-center text-center p-8 bg-white rounded-2xl border border-stone-200 shadow-sm">
             <Sparkles className="w-10 h-10 text-stone-400 mb-2" />
@@ -97,17 +100,18 @@ export const ProductCatalog: React.FC = () => {
               Prueba cambiando la búsqueda o seleccionando otra categoría en la botonera superior.
             </p>
             <button
+              type="button"
               onClick={() => {
                 setSearchQuery('');
                 setSelectedTag('todos');
               }}
-              className="mt-4 px-4 py-2 rounded-xl bg-[#4A6B3E] hover:bg-[#3d5933] text-xs font-bold text-white shadow-sm transition-all cursor-pointer"
+              className="mt-4 px-5 min-h-[48px] rounded-xl bg-[#4A6B3E] hover:bg-[#3d5933] text-xs font-bold text-white shadow-sm transition-all active:scale-95 cursor-pointer"
             >
               Restablecer Filtros
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3.5 pb-6">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3.5 md:gap-4 pb-28 lg:pb-6">
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

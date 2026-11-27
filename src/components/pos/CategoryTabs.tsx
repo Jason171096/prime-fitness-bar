@@ -55,7 +55,7 @@ export const CategoryTabs: React.FC = () => {
   const setActiveCategory = usePOSStore((s) => s.setActiveCategory);
 
   return (
-    <div className="flex items-center gap-2.5 overflow-x-auto p-1 py-2 scrollbar-none select-none">
+    <div className="flex items-center gap-3 overflow-x-auto py-1.5 px-0.5 scrollbar-none touch-pan-x snap-x snap-mandatory select-none shrink-0">
       {CATEGORIES.map((cat) => {
         const Icon = cat.icon;
         const isActive = activeCategory === cat.id;
@@ -66,7 +66,7 @@ export const CategoryTabs: React.FC = () => {
             key={cat.id}
             id={`category-tab-${cat.id}`}
             onClick={() => setActiveCategory(cat.id)}
-            className={`flex items-center gap-3.5 px-4.5 py-3 rounded-2xl min-h-[58px] transition-all text-left active:scale-[0.98] border shrink-0 cursor-pointer ${isActive
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-2xl min-h-[56px] min-w-[48px] transition-all text-left active:scale-[0.98] border shrink-0 snap-start cursor-pointer ${isActive
                 ? 'bg-[#4A6B3E] text-white border-[#4A6B3E] shadow-md shadow-[#4A6B3E]/25'
                 : 'bg-white text-stone-700 border-stone-200 hover:bg-stone-50 hover:border-stone-300 shadow-sm'
               }`}
@@ -86,7 +86,7 @@ export const CategoryTabs: React.FC = () => {
                   {cat.label}
                 </span>
                 <span
-                  className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full ${isActive
+                  className={`text-[11px] font-bold px-2 py-0.5 rounded-full font-mono ${isActive
                       ? 'bg-white/20 text-white'
                       : 'bg-[#FAF6F0] text-stone-600'
                     }`}
@@ -95,7 +95,7 @@ export const CategoryTabs: React.FC = () => {
                 </span>
               </div>
               <span
-                className={`text-[11px] ${isActive ? 'text-white/85 font-medium' : 'text-stone-500'
+                className={`text-[11px] whitespace-nowrap ${isActive ? 'text-white/85 font-medium' : 'text-stone-500'
                   }`}
               >
                 {cat.sublabel}

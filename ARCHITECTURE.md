@@ -155,22 +155,22 @@ prime-fitness-bar/
 #### Entrada y Estilos Frontend
 - `src/main.tsx`: Punto de entrada que renderiza `<App />` dentro de `React.StrictMode`.
 - `src/App.tsx`: Orquesta la navegación por vistas (`pos`, `billing`, `closure`, `inventory`) y monta los modales globales (`CustomizerModal`, `CheckoutModal`, `PrintSimulatorModal`, `OrderSuccessModal`, `Toast`).
-- `src/index.css`: Importa Tailwind v4, define la paleta base `#FAF6F0`, reglas táctiles (`user-select`, scrollbar), animaciones térmicas y reglas `@media print` para fichas de recetas.
+- `src/index.css`: Importa Tailwind v4, define la paleta base `#FAF6F0`, reglas táctiles globales para tableta (`touch-action: manipulation`, `-webkit-tap-highlight-color: transparent`, `overscroll-behavior-y: contain`, `.scrollbar-none`, `.overscroll-contain-y`), animaciones térmicas y reglas `@media print` para fichas de recetas.
 - `src/App.css`: Hoja de estilos residual de plantilla Vite (no importada en `App.tsx` ni `main.tsx`).
 
 #### Componentes Comunes y Etiquetas (`src/components/common/`, `src/components/label/`)
-- `src/components/common/Header.tsx`: Barra superior fija con navegación de módulos, contadores de órdenes pendientes de cobro e insumos con stock bajo, estado de impresora, cajero en turno reactivo desde `useClosureStore` (`currentShift.cashierName` y badge `"Turno Cerrado"` si `status === 'closed'`) y reloj digital en vivo.
+- `src/components/common/Header.tsx`: Barra superior fija responsiva (dos filas compactas en tableta vertical `< 1024px` y fila única en horizontal `lg: 1024px+`) con botones de navegación táctiles `min-h-[48px]`, contadores de órdenes pendientes e insumos con stock bajo, estado de impresora adaptativo, cajero en turno reactivo desde `useClosureStore` (`currentShift.cashierName` y badge `"Cerrado"` si `status === 'closed'`) y reloj digital en vivo.
 - `src/components/common/Toast.tsx`: Banner flotante de notificaciones globales alimentado por `usePOSStore.toast`.
 - `src/components/label/PrintSimulatorModal.tsx`: Modal envoltorio para previsualizar e invocar la simulación de impresión de etiquetas adhesivas desde el carrito o éxito de orden.
 - `src/components/label/StickerLabelPreview.tsx`: Representación visual en papel térmico de 58mm con código de orden, nombre del vaso (`customerName`), ingredientes, tabla nutricional y botón de impresión simulada.
 
 #### Módulo POS — Toma de Pedidos (`src/components/pos/`)
-- `src/components/pos/ProductCatalog.tsx`: Catálogo principal con barra de búsqueda textual, filtros rápidos por etiquetas y cuadrícula responsiva de productos.
-- `src/components/pos/CategoryTabs.tsx`: Selector horizontal táctil de categorías (`smoothies`, `omelets`, `chilaquiles`, `toasts`, `salads`, `juices`) con conteo dinámico.
-- `src/components/pos/ProductCard.tsx`: Tarjeta de producto que abre `CustomizerModal` si `isCustomizable` es verdadero o agrega directamente al carrito en caso contrario.
-- `src/components/pos/CustomizerModal.tsx`: Constructor de bebidas personalizables en 6 pasos (tamaño, base líquida, proteína/scoops, extras BOM, notas y `customerName` para el vaso) con cálculo de macros y vista previa de sticker en tiempo real.
-- `src/components/pos/CartSidebar.tsx`: Panel lateral derecho de comanda activa con socio vinculado, edición/duplicación de ítems, totales y botones para enviar a caja o cobrar inmediatamente.
-- `src/components/pos/CheckoutModal.tsx`: Modal de cobro directo en terminal POS con soporte para tarjeta, efectivo (cálculo de cambio) y cuenta de socio de gimnasio.
+- `src/components/pos/ProductCatalog.tsx`: Catálogo principal con barra de búsqueda táctil (`h-12`), filtros rápidos por etiquetas con desplazamiento horizontal (`min-h-[48px]`) y cuadrícula responsiva (`md:grid-cols-2` en vertical, `lg:grid-cols-3` en horizontal y `2xl:grid-cols-4`).
+- `src/components/pos/CategoryTabs.tsx`: Selector horizontal táctil fluido (`overflow-x-auto scrollbar-none touch-pan-x snap-x`) de categorías (`smoothies`, `omelets`, `chilaquiles`, `toasts`, `salads`, `juices`) con conteo dinámico y botones `min-h-[56px]`.
+- `src/components/pos/ProductCard.tsx`: Tarjeta completamente táctil (`<button>` con `active:scale-[0.98]`), muestra nombre, precio, macros clave (`kcal` y `g Prot`) e indicador rápido de producto `Personalizable` vs `1 Toque` con CTA `min-h-[48px]`.
+- `src/components/pos/CustomizerModal.tsx`: Constructor de bebidas adaptado a tableta (`max-h-[90dvh] h-[90dvh]`): cabecera `sticky` con título y macros en vivo, selección interna con scroll en cuadrículas táctiles de 2/3 columnas (`min-h-[76px]`, controles de scoops `48px × 48px`), vista previa de etiqueta 58mm (panel lateral en `lg:` o toggle en `< lg`) y pie `sticky` con campo `customerName` + botón `"Agregar a la orden"`.
+- `src/components/pos/CartSidebar.tsx`: Comanda activa responsiva: panel lateral derecho fijo (`lg:w-[34%] lg:min-w-[320px] lg:max-w-[420px]`) con scroll interno independiente en horizontal (`lg:`), y barra flotante fija inferior (`"Ver Comanda / Enviar"`, `min-h-[52px]`) + Bottom Sheet Drawer deslizable (`max-h-[85dvh]`) en vertical (`< 1024px`), con controles táctiles `48px × 48px`.
+- `src/components/pos/CheckoutModal.tsx`: Modal de cobro directo en terminal POS (`max-h-[90dvh]`) con cabecera y pie `sticky`, selector táctil de método de pago (`card`, `cash`, `gym_account`), presets de efectivo `min-h-[48px]` y cálculo de cambio.
 - `src/components/pos/OrderSuccessModal.tsx`: Modal de confirmación tras `completePayment`, muestra resumen del cobro y acciones para previsualizar etiqueta o iniciar una nueva venta.
 
 #### Módulo Caja / Cobro (`src/components/billing/`)
@@ -1070,3 +1070,38 @@ Todas las vistas operativas (`pos`, `billing`, `closure`, `inventory`), barras d
 4. **Módulo Cierre de Caja (`src/components/closure/`):** `CashClosureView.tsx` (sub-header unificado con `Scale`, badge de estado de turno y controles operativos, además del modal de historial), `CashMovementModal.tsx`, `ConfirmCloseModal.tsx`, `OpenShiftModal.tsx` y `ClosureReceiptModal.tsx` (conservando el ticket interno de 80 mm en blanco limpio estilo papel térmico con tipografía `stone-900`).
 5. **Módulo Inventario y Recetario BOM (`src/components/inventory/InventoryScreen.tsx`):** Sub-header unificado con `Boxes` y selector *Stock Insumos* / *Recetario & BOM*, pestaña *Stock Insumos*, pestaña *Recetario & BOM* (ficha editorial en `bg-white border-stone-200`) y modal de edición de receta BOM.
 6. **Simulador de Etiquetas (`src/components/label/`):** `PrintSimulatorModal.tsx` (`bg-white` / `bg-[#FAF6F0]` / `bg-[#4A6B3E]`) y `StickerLabelPreview.tsx` (apariencia física de etiqueta térmica blanca de 58 mm con alto contraste `stone-900`).
+
+---
+
+## 7. Adaptación Responsiva y Ergonomía Táctil para Tabletas (Módulo POS)
+
+El módulo de **Toma de Órdenes (`pos`)** y la barra superior (`Header.tsx`) están optimizados para operar de manera fluida en tabletas iPad, Android y Windows (`768px` a `1280px`, en orientación vertical/portrait y horizontal/landscape), manteniendo intacta la lógica de stores (`usePOSStore`, `useBillingStore`, `useClosureStore`, `useInventoryStore`) y el puente Electron IPC (`window.posHardware`).
+
+### 7.1 Distribución Responsiva y Manejo del Carrito (`App.tsx` + `CartSidebar.tsx`)
+
+| Orientación / Breakpoint | Resoluciones Objetivo | Catálogo (`ProductCatalog.tsx`) | Carrito (`CartSidebar.tsx`) |
+| :--- | :--- | :--- | :--- |
+| **Tableta Horizontal (`lg:` / `1024px+`)** | `1024×768` (iPad Air/Mini), `1280×800` (Tableta estándar) | Split View izquierdo (`flex-1 min-w-0`, ~66%–67% del ancho) con grid `lg:grid-cols-3` y scroll interno independiente (`overscroll-contain-y`). | Panel derecho fijo (`lg:w-[34%] lg:min-w-[320px] lg:max-w-[420px]`, ~33%–34% del ancho) con lista de ítems scrollable y pie de acciones siempre visible. |
+| **Tableta Vertical (`md:` / `< 1024px`)** | `768×1024` (iPad Air/Mini), `800×1280` (Tableta estándar) | Ocupa el 100% del ancho con grid `md:grid-cols-2` y margen inferior `pb-28` para evitar solapamiento con la barra flotante. | **Barra inferior flotante fija** (`lg:hidden fixed bottom-0`) con contador de artículos, total acumulado y botón `"Ver Comanda / Enviar"` (`min-h-[52px]`), que despliega un **Bottom Sheet Drawer** (`max-h-[85dvh]`, backdrop táctil y cierre automático al enviar/cobrar). |
+
+### 7.2 Ergonomía Táctil y Áreas Mínimas (`48px × 48px`)
+
+- **Navegación (`Header.tsx`):** En `< 1024px` se organiza en dos filas compactas (marca/estado arriba y barra de 4 pestañas `grid-cols-4` abajo) y en `lg:` vuelve a una sola fila; todos los botones de vista mantienen `min-h-[48px] min-w-[48px]`.
+- **Categorías y Filtros (`CategoryTabs.tsx`, `ProductCatalog.tsx`):** Desplazamiento horizontal táctil fluido (`overflow-x-auto scrollbar-none touch-pan-x snap-x`) con tarjetas de categoría `min-h-[56px]`, buscador `h-12` (botón de limpieza `48px × 48px`) y chips de filtro `min-h-[48px]` con separación `gap-3`.
+- **Tarjetas de Producto (`ProductCard.tsx`):** Superficie completa interactiva (`<button type="button">` con `active:scale-[0.98] transition-transform`), badge superior de modo (`Personalizable` vs `1 Toque`), precio superpuesto, pills de macros clave (`kcal` y `g Prot`) y CTA inferior `min-h-[48px]`.
+- **Controles del Carrito (`CartSidebar.tsx`):** Botones `+` / `-` de cantidad y botones por ítem (etiqueta, editar, eliminar) dimensionados a `48px × 48px` (`w-12 h-12`) con `gap-3`.
+
+### 7.3 Modales Táctiles con `dvh` y Cabecera/Pie Fijos (`CustomizerModal.tsx`, `CheckoutModal.tsx`)
+
+- **Viewport dinámico (`dvh`):** `App.tsx` e `index.html` usan `h-dvh`, mientras que `CustomizerModal` (`h-[90dvh] max-h-[90dvh]`) y `CheckoutModal` (`max-h-[90dvh]`) utilizan unidades `dvh` y `env(safe-area-inset-bottom)` para adaptarse automáticamente cuando aparece el teclado virtual en iPadOS/Android.
+- **`CustomizerModal.tsx`:**
+  - **Cabecera `sticky top-0`:** Título del producto, cliente asignado, botón de cierre (`48px × 48px`), toggle de etiqueta `58mm` en portrait y barra de **macros en vivo** (`kcal`, `Prot`, `Carbs`, `Fat`) + precio dinámico siempre visibles.
+  - **Cuerpo con scroll interno (`flex-1 overflow-y-auto overscroll-contain-y`):** Exclusivo para selección de tamaño, base líquida, proteína/scoops (controles `48px × 48px`), extras BOM y notas en cuadrículas táctiles de 2 y 3 columnas (`min-h-[76px]` a `min-h-[92px]`).
+  - **Pie `sticky bottom-0`:** Campo de entrada de nombre del cliente (`h-12`), chips de acceso rápido (`overflow-x-auto`) y botones `"Cancelar"` (`min-h-[52px]`) y `"Agregar a la orden"` (`min-h-[54px]`).
+- **`CheckoutModal.tsx`:** Cabecera y pie `sticky` (incluyendo campo de cliente y botón `"CONFIRMAR PAGO"` de `min-h-[52px]`), selector de método de pago en cuadrícula táctil (`min-h-[64px]`) y presets de efectivo `min-h-[48px]`.
+
+### 7.4 Reglas CSS Táctiles Globales (`src/index.css`)
+
+- `touch-action: manipulation` en `html, body` y controles interactivos para eliminar el retardo táctil de 300 ms y bloquear zoom accidental por doble toque.
+- `-webkit-tap-highlight-color: transparent` global para evitar destellos nativos de selección en WebKit/Android.
+- `overscroll-behavior-y: contain` en `html, body` y contenedores desplazables (`.overscroll-contain-y`) para prevenir el rebote elástico de página completa al deslizar listas y modales.

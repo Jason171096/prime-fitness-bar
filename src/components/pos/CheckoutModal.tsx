@@ -66,36 +66,38 @@ export const CheckoutModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/50 backdrop-blur-sm animate-fade-in select-none">
-      <div className="w-full max-w-4xl bg-white border border-stone-200 rounded-3xl shadow-2xl flex flex-col overflow-hidden max-h-[92vh]">
-        {/* Modal Top */}
-        <div className="h-16 px-6 bg-[#FAF6F0] border-b border-stone-200 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#4A6B3E]/10 border border-[#4A6B3E]/20 text-[#4A6B3E] flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-stone-900/50 backdrop-blur-sm animate-fade-in select-none">
+      <div className="w-full max-w-4xl bg-white border border-stone-200 rounded-3xl shadow-2xl flex flex-col overflow-hidden max-h-[90dvh]">
+        {/* Sticky Modal Top */}
+        <header className="sticky top-0 z-10 min-h-16 px-4 md:px-6 py-3 bg-[#FAF6F0] border-b border-stone-200 flex items-center justify-between gap-3 shrink-0">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-11 h-11 rounded-xl bg-[#4A6B3E]/10 border border-[#4A6B3E]/20 text-[#4A6B3E] flex items-center justify-center shrink-0">
               <CreditCard className="w-5 h-5" />
             </div>
-            <div>
-              <h2 className="text-lg font-black text-stone-900 tracking-tight">
+            <div className="min-w-0">
+              <h2 className="text-base md:text-lg font-black text-stone-900 tracking-tight truncate">
                 Terminal de Cobro Rápido
               </h2>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-stone-500 truncate">
                 Selecciona la forma de pago para cerrar la comanda
               </p>
             </div>
           </div>
 
           <button
+            type="button"
             onClick={closeCheckout}
-            className="w-10 h-10 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-stone-500 hover:text-stone-900 flex items-center justify-center transition-all active:scale-95 cursor-pointer"
+            aria-label="Cerrar terminal de cobro"
+            className="w-12 h-12 min-w-[48px] min-h-[48px] rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-stone-500 hover:text-stone-900 flex items-center justify-center transition-all active:scale-95 shrink-0 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
-        </div>
+        </header>
 
-        {/* Modal Body */}
-        <div className="p-6 flex-1 overflow-y-auto space-y-6 bg-white">
+        {/* Scrollable Modal Body */}
+        <div className="p-4 md:p-6 flex-1 overflow-y-auto overscroll-contain-y space-y-5 bg-white">
           {/* Total Amount Big Bar */}
-          <div className="p-5 rounded-2xl bg-[#FAF6F0] border border-stone-200 flex items-center justify-between">
+          <div className="p-4 md:p-5 rounded-2xl bg-[#FAF6F0] border border-stone-200 flex items-center justify-between">
             <div>
               <span className="text-xs uppercase font-extrabold tracking-wider text-stone-500 block">
                 Total a Pagar
@@ -107,42 +109,19 @@ export const CheckoutModal: React.FC = () => {
 
             <div className="flex items-baseline gap-1">
               <span className="text-[#4A6B3E] font-sans font-bold text-lg">$</span>
-              <span className="text-4xl font-black font-mono tracking-tight text-stone-900">
+              <span className="text-3xl md:text-4xl font-black font-mono tracking-tight text-stone-900">
                 {total.toFixed(2)}
               </span>
             </div>
           </div>
 
-          {/* Customer Identifier Bar */}
-          <div className="px-4 py-3 rounded-2xl bg-[#FAF6F0] border border-stone-200 flex items-center justify-between gap-3 text-xs">
-            <span className="text-stone-700 font-bold flex items-center gap-1.5 shrink-0">
-              <User className="w-4 h-4 text-[#4A6B3E]" />
-              Cliente:
-            </span>
-            {selectedMember ? (
-              <span className="font-extrabold text-stone-900 flex items-center gap-2">
-                {selectedMember.fullName}
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#4A6B3E]/10 text-[#4A6B3E] border border-[#4A6B3E]/20 font-bold">
-                  {selectedMember.memberNumber}
-                </span>
-              </span>
-            ) : (
-              <input
-                type="text"
-                value={orderCustomerName}
-                onChange={(e) => setOrderCustomerName(e.target.value)}
-                placeholder="Nombre del cliente (ej. Carlos, Valeria)..."
-                className="flex-1 max-w-sm h-9 px-3 rounded-lg bg-white border border-stone-300 text-xs text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#4A6B3E] focus:ring-2 focus:ring-[#4A6B3E]/20 font-semibold"
-              />
-            )}
-          </div>
-
-          {/* Payment Method Selector Tabs (Touch 54px height) */}
-          <div className="grid grid-cols-3 gap-3">
+          {/* Payment Method Selector Tabs (Touch >= 64px height) */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {/* Card */}
             <button
+              type="button"
               onClick={() => setPaymentMethod('card')}
-              className={`p-4 rounded-2xl border text-left transition-all active:scale-95 flex items-center gap-3 min-h-[64px] cursor-pointer ${
+              className={`p-3.5 md:p-4 rounded-2xl border text-left transition-all active:scale-95 flex items-center gap-3 min-h-[64px] cursor-pointer ${
                 paymentMethod === 'card'
                   ? 'bg-[#4A6B3E] text-white border-[#4A6B3E] shadow-md'
                   : 'bg-[#FAF6F0] text-stone-700 border-stone-200 hover:bg-stone-200/70'
@@ -157,16 +136,16 @@ export const CheckoutModal: React.FC = () => {
               >
                 <CreditCard className="w-5 h-5" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <span
-                  className={`font-black text-sm block ${
+                  className={`font-black text-sm block leading-tight ${
                     paymentMethod === 'card' ? 'text-white' : 'text-stone-900'
                   }`}
                 >
                   Tarjeta / Contactless
                 </span>
                 <span
-                  className={`text-[11px] ${
+                  className={`text-[11px] block truncate ${
                     paymentMethod === 'card' ? 'text-white/85' : 'text-stone-500'
                   }`}
                 >
@@ -177,11 +156,12 @@ export const CheckoutModal: React.FC = () => {
 
             {/* Cash */}
             <button
+              type="button"
               onClick={() => {
                 setPaymentMethod('cash');
                 if (cashAmount === 0) setCashAmount(Math.ceil(total));
               }}
-              className={`p-4 rounded-2xl border text-left transition-all active:scale-95 flex items-center gap-3 min-h-[64px] cursor-pointer ${
+              className={`p-3.5 md:p-4 rounded-2xl border text-left transition-all active:scale-95 flex items-center gap-3 min-h-[64px] cursor-pointer ${
                 paymentMethod === 'cash'
                   ? 'bg-[#4A6B3E] text-white border-[#4A6B3E] shadow-md'
                   : 'bg-[#FAF6F0] text-stone-700 border-stone-200 hover:bg-stone-200/70'
@@ -196,16 +176,16 @@ export const CheckoutModal: React.FC = () => {
               >
                 <Banknote className="w-5 h-5" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <span
-                  className={`font-black text-sm block ${
+                  className={`font-black text-sm block leading-tight ${
                     paymentMethod === 'cash' ? 'text-white' : 'text-stone-900'
                   }`}
                 >
                   Efectivo (Cash)
                 </span>
                 <span
-                  className={`text-[11px] ${
+                  className={`text-[11px] block truncate ${
                     paymentMethod === 'cash' ? 'text-white/85' : 'text-stone-500'
                   }`}
                 >
@@ -216,8 +196,9 @@ export const CheckoutModal: React.FC = () => {
 
             {/* Member Account */}
             <button
+              type="button"
               onClick={() => setPaymentMethod('gym_account')}
-              className={`p-4 rounded-2xl border text-left transition-all active:scale-95 flex items-center gap-3 min-h-[64px] cursor-pointer ${
+              className={`p-3.5 md:p-4 rounded-2xl border text-left transition-all active:scale-95 flex items-center gap-3 min-h-[64px] cursor-pointer ${
                 paymentMethod === 'gym_account'
                   ? 'bg-[#4A6B3E] text-white border-[#4A6B3E] shadow-md'
                   : 'bg-[#FAF6F0] text-stone-700 border-stone-200 hover:bg-stone-200/70'
@@ -232,16 +213,16 @@ export const CheckoutModal: React.FC = () => {
               >
                 <UserCheck className="w-5 h-5" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <span
-                  className={`font-black text-sm block ${
+                  className={`font-black text-sm block leading-tight ${
                     paymentMethod === 'gym_account' ? 'text-white' : 'text-stone-900'
                   }`}
                 >
                   Cuenta Socio Gym
                 </span>
                 <span
-                  className={`text-[11px] ${
+                  className={`text-[11px] block truncate ${
                     paymentMethod === 'gym_account' ? 'text-white/85' : 'text-stone-500'
                   }`}
                 >
@@ -275,19 +256,20 @@ export const CheckoutModal: React.FC = () => {
           )}
 
           {paymentMethod === 'cash' && (
-            <div className="p-5 rounded-2xl bg-[#FAF6F0] border border-stone-200 space-y-4">
+            <div className="p-4 md:p-5 rounded-2xl bg-[#FAF6F0] border border-stone-200 space-y-4">
               <div>
-                <label className="text-xs font-black uppercase tracking-wider text-stone-700 block mb-2">
+                <label className="text-xs font-black uppercase tracking-wider text-stone-700 block mb-2.5">
                   Efectivo Recibido
                 </label>
 
-                {/* Cash Quick Presets */}
-                <div className="flex flex-wrap gap-2 mb-3">
+                {/* Cash Quick Presets (min 48px touch targets) */}
+                <div className="flex flex-wrap gap-3 mb-3">
                   {cashPresets.map((preset) => (
                     <button
                       key={preset.label}
+                      type="button"
                       onClick={() => setCashAmount(preset.value)}
-                      className={`px-4 py-2.5 rounded-xl font-bold text-xs font-mono transition-all active:scale-95 border cursor-pointer ${
+                      className={`px-4 min-h-[48px] min-w-[48px] rounded-xl font-bold text-xs font-mono transition-all active:scale-95 border cursor-pointer ${
                         cashAmount === preset.value
                           ? 'bg-[#4A6B3E] text-white border-[#4A6B3E] shadow-sm'
                           : 'bg-white text-stone-700 border-stone-200 hover:bg-stone-100'
@@ -304,6 +286,7 @@ export const CheckoutModal: React.FC = () => {
                   </span>
                   <input
                     type="number"
+                    inputMode="decimal"
                     step="0.5"
                     value={cashAmount || ''}
                     onChange={(e) => setCashAmount(parseFloat(e.target.value) || 0)}
@@ -342,30 +325,30 @@ export const CheckoutModal: React.FC = () => {
           )}
 
           {paymentMethod === 'gym_account' && (
-            <div className="p-5 rounded-2xl bg-[#FAF6F0] border border-stone-200 space-y-4">
+            <div className="p-4 md:p-5 rounded-2xl bg-[#FAF6F0] border border-stone-200 space-y-4">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-black uppercase tracking-wider text-stone-700">
                   Buscar Socio del Gimnasio
                 </label>
                 <span className="text-xs text-stone-500">
-                  {members.length} socios registrados en base de datos
+                  {members.length} socios registrados
                 </span>
               </div>
 
               {/* Member Search input */}
               <div className="relative">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" />
                 <input
                   type="text"
                   value={memberSearchQuery}
                   onChange={(e) => setMemberSearchQuery(e.target.value)}
                   placeholder="Buscar por nombre o ID (ej: Carlos, PF-1042)..."
-                  className="w-full h-11 pl-10 pr-4 rounded-xl bg-white border border-stone-300 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#4A6B3E] focus:ring-2 focus:ring-[#4A6B3E]/20 font-medium"
+                  className="w-full h-12 pl-10 pr-4 rounded-xl bg-white border border-stone-300 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#4A6B3E] focus:ring-2 focus:ring-[#4A6B3E]/20 font-medium"
                 />
               </div>
 
               {/* Members Touch List */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 max-h-56 overflow-y-auto pr-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-56 overflow-y-auto overscroll-contain-y pr-1">
                 {filteredMembers.map((member: GymMember) => {
                   const isSelected = selectedMember?.id === member.id;
                   const hasSufficientBalance = member.balance >= total;
@@ -373,32 +356,31 @@ export const CheckoutModal: React.FC = () => {
                   return (
                     <button
                       key={member.id}
+                      type="button"
                       onClick={() => setSelectedMember(member)}
-                      className={`p-3 rounded-xl border text-left transition-all active:scale-95 flex items-center justify-between cursor-pointer ${
+                      className={`p-3 rounded-xl border text-left transition-all active:scale-95 flex items-center justify-between min-h-[64px] cursor-pointer ${
                         isSelected
                           ? 'bg-[#4A6B3E]/10 border-2 border-[#4A6B3E] shadow-sm'
                           : 'bg-white border-stone-200 hover:border-stone-300'
                       }`}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
                         <img
                           src={member.avatar}
                           alt={member.fullName}
-                          className="w-10 h-10 rounded-full object-cover border border-stone-200"
+                          className="w-10 h-10 rounded-full object-cover border border-stone-200 shrink-0"
                         />
-                        <div>
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-bold text-xs text-stone-900 leading-tight">
-                              {member.fullName}
-                            </span>
-                          </div>
-                          <span className="text-[10px] text-stone-500 block font-mono">
+                        <div className="min-w-0">
+                          <span className="font-bold text-xs text-stone-900 leading-tight block truncate">
+                            {member.fullName}
+                          </span>
+                          <span className="text-[10px] text-stone-500 block font-mono truncate">
                             {member.memberNumber} · {member.tier}
                           </span>
                         </div>
                       </div>
 
-                      <div className="text-right">
+                      <div className="text-right shrink-0 ml-2">
                         <span
                           className={`text-xs font-black font-mono block ${
                             hasSufficientBalance ? 'text-emerald-700' : 'text-amber-800'
@@ -449,26 +431,54 @@ export const CheckoutModal: React.FC = () => {
           )}
         </div>
 
-        {/* Modal Bottom: Confirm Action */}
-        <div className="h-20 px-6 bg-[#FAF6F0] border-t border-stone-200 flex items-center justify-between shrink-0">
-          <button
-            onClick={closeCheckout}
-            className="px-5 h-12 rounded-xl bg-white hover:bg-stone-100 text-stone-700 text-xs font-bold transition-all border border-stone-200 cursor-pointer"
-          >
-            Regresar al Carrito
-          </button>
+        {/* Sticky Modal Bottom: Customer Name + Confirm Action */}
+        <footer className="sticky bottom-0 z-10 px-4 md:px-6 py-3.5 bg-[#FAF6F0] border-t border-stone-200 shrink-0 space-y-3 pb-[max(0.875rem,env(safe-area-inset-bottom))]">
+          {/* Customer Identifier Bar */}
+          <div className="flex items-center justify-between gap-3 text-xs">
+            <span className="text-stone-700 font-bold flex items-center gap-1.5 shrink-0">
+              <User className="w-4 h-4 text-[#4A6B3E]" />
+              Cliente:
+            </span>
+            {selectedMember ? (
+              <span className="font-extrabold text-stone-900 flex items-center gap-2 truncate">
+                {selectedMember.fullName}
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#4A6B3E]/10 text-[#4A6B3E] border border-[#4A6B3E]/20 font-bold shrink-0">
+                  {selectedMember.memberNumber}
+                </span>
+              </span>
+            ) : (
+              <input
+                type="text"
+                value={orderCustomerName}
+                onChange={(e) => setOrderCustomerName(e.target.value)}
+                placeholder="Nombre del cliente (ej. Carlos, Valeria)..."
+                className="flex-1 h-12 px-3.5 rounded-xl bg-white border border-stone-300 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#4A6B3E] focus:ring-2 focus:ring-[#4A6B3E]/20 font-semibold"
+              />
+            )}
+          </div>
 
-          <button
-            id="btn-confirm-payment"
-            disabled={!canConfirmPayment}
-            onClick={handleConfirm}
-            className="px-8 h-13 rounded-2xl bg-[#4A6B3E] hover:bg-[#3d5933] disabled:opacity-40 disabled:pointer-events-none text-white font-black text-sm shadow-md flex items-center gap-3 transition-all active:scale-95 cursor-pointer"
-          >
-            <Receipt className="w-5 h-5" />
-            <span>CONFIRMAR PAGO (${total.toFixed(2)})</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
+          <div className="flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={closeCheckout}
+              className="px-4 md:px-5 min-h-[52px] rounded-xl bg-white hover:bg-stone-100 text-stone-700 text-xs sm:text-sm font-bold transition-all border border-stone-200 active:scale-95 shrink-0 cursor-pointer"
+            >
+              Regresar al Carrito
+            </button>
+
+            <button
+              id="btn-confirm-payment"
+              type="button"
+              disabled={!canConfirmPayment}
+              onClick={handleConfirm}
+              className="flex-1 sm:flex-initial px-6 md:px-8 min-h-[52px] rounded-2xl bg-[#4A6B3E] hover:bg-[#3d5933] disabled:opacity-40 disabled:pointer-events-none text-white font-black text-xs sm:text-sm shadow-md flex items-center justify-center gap-2.5 transition-all active:scale-95 cursor-pointer"
+            >
+              <Receipt className="w-5 h-5 shrink-0" />
+              <span>CONFIRMAR PAGO (${total.toFixed(2)})</span>
+              <ArrowRight className="w-4 h-4 shrink-0" />
+            </button>
+          </div>
+        </footer>
       </div>
     </div>
   );

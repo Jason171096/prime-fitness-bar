@@ -92,7 +92,7 @@ export function App() {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-[#FAF6F0] text-stone-900 overflow-hidden font-sans">
+    <div className="h-dvh w-screen flex flex-col bg-[#FAF6F0] text-stone-900 overflow-hidden font-sans">
       {/* Universal POS Header */}
       <Header
         activeView={activeView}
@@ -103,10 +103,10 @@ export function App() {
       {/* Main Dynamic Viewport */}
       <main className="flex-1 flex overflow-hidden relative bg-[#FAF6F0]">
         {activeView === 'pos' && (
-          <div className="flex-1 flex overflow-hidden">
-            {/* Catalog Grid */}
+          <div className="flex-1 flex overflow-hidden relative min-w-0">
+            {/* Catalog Grid (65-70% in landscape, 100% in portrait) */}
             <ProductCatalog />
-            {/* Active Cart & Checkout Trigger */}
+            {/* Active Cart & Checkout Trigger (Split sidebar on lg+, Drawer + Floating bar on <lg) */}
             <CartSidebar onNavigateToBilling={() => setActiveView('billing')} />
           </div>
         )}

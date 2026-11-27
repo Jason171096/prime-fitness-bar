@@ -75,6 +75,7 @@ export const CustomizerModal: React.FC<CustomizerModalProps> = ({
 
   // Tab switch for right panel: 'nutrition' (Macros en vivo) | 'label' (Sticker 58mm)
   const [activeRightTab, setActiveRightTab] = useState<'nutrition' | 'label'>('nutrition');
+  const [showPortraitLabel, setShowPortraitLabel] = useState<boolean>(false);
   const [currentTime] = useState<string>(() =>
     new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   );
@@ -123,6 +124,7 @@ export const CustomizerModal: React.FC<CustomizerModalProps> = ({
   ];
 
   const handleClose = () => {
+    setShowPortraitLabel(false);
     if (onClose) {
       onClose();
     } else {
@@ -148,493 +150,569 @@ export const CustomizerModal: React.FC<CustomizerModalProps> = ({
     }
 
     saveCustomizationToCart();
+    setShowPortraitLabel(false);
 
     if (onClose) {
       onClose();
     }
   };
 
+  const renderThermalLabelPreview = () => (
+    <div className="animate-fade-in flex flex-col items-center">
+      <div className="w-full max-w-sm bg-white text-stone-900 p-4 rounded-xl shadow-md border-2 border-dashed border-stone-300 font-mono text-xs flex flex-col justify-between">
+        {/* Paper Top Perforation Cut Header */}
+        <div className="border-b-2 border-dashed border-stone-300 pb-2 text-center">
+          <div className="flex items-center justify-between text-[9px] text-stone-500 font-bold uppercase tracking-wider">
+            <span>PRIME FITNESS BAR</span>
+            <span>58mm ESC/POS</span>
+          </div>
+
+          <div className="mt-1 flex items-center justify-between">
+            <span className="text-xl font-black font-mono tracking-tight text-stone-900">
+              #ORD-{effectiveOrderNumber}
+            </span>
+            <span className="text-[10px] font-bold text-stone-700 bg-stone-100 px-1.5 py-0.5 rounded border border-stone-200">
+              {currentTime}
+            </span>
+          </div>
+
+          {/* CLIENTE EN CABECERA DE ETIQUETA EN TIEMPO REAL */}
+          <div className="text-left mt-1.5 pt-1 border-t border-stone-200 text-[11px] font-bold text-stone-900 truncate">
+            VASO:{' '}
+            <span className="text-xs font-black uppercase text-[#4A6B3E] bg-[#4A6B3E]/10 px-1.5 py-0.5 rounded border border-[#4A6B3E]/25">
+              {resolvedCustomerName}
+            </span>
+          </div>
+        </div>
+
+        {/* Product & Size */}
+        <div className="py-2 border-b border-stone-200">
+          <h4 className="text-xs font-black uppercase tracking-tight text-stone-900">
+            {selectedProduct.name}
+          </h4>
+          <div className="text-[10px] font-black text-[#4A6B3E] mt-0.5 uppercase flex items-center gap-1">
+            <span>FORMATO: {customSize.label}</span>
+            <span>({customSize.volumeLabel})</span>
+          </div>
+        </div>
+
+        {/* Ingredients Checklist for Blender Operator */}
+        <div className="py-2 space-y-1 text-[10px]">
+          <div className="text-[9px] uppercase font-black tracking-wider text-stone-500 mb-0.5">
+            RECETA DE PREPARACIÓN:
+          </div>
+
+          <div className="flex items-start gap-1 text-stone-800 font-semibold">
+            <span className="w-3 h-3 rounded border border-stone-800 flex items-center justify-center shrink-0 mt-0.5">
+              <Check className="w-2 h-2 stroke-[3]" />
+            </span>
+            <span>BASE: {customLiquid.shortName} (250ml)</span>
+          </div>
+
+          <div className="flex items-start gap-1 text-stone-900 font-bold">
+            <span className="w-3 h-3 rounded border border-stone-800 flex items-center justify-center shrink-0 mt-0.5">
+              <Check className="w-2 h-2 stroke-[3]" />
+            </span>
+            <span>
+              PROT: {customProteinScoops}x SCOOP {customProtein.flavor}
+            </span>
+          </div>
+
+          {customExtras.map((ex) => (
+            <div key={ex.id} className="flex items-start gap-1 text-stone-800 font-medium">
+              <span className="w-3 h-3 rounded border border-stone-800 flex items-center justify-center shrink-0 mt-0.5">
+                <Check className="w-2 h-2 stroke-[3]" />
+              </span>
+              <span>SUPP: {ex.name}</span>
+            </div>
+          ))}
+
+          {customSpecialNotes && (
+            <div className="mt-1 p-1.5 bg-amber-50 rounded border border-amber-200 text-[9px] font-black text-amber-800">
+              ⚠ NOTA: {customSpecialNotes}
+            </div>
+          )}
+        </div>
+
+        {/* Nutrition Table Stamp */}
+        <div className="pt-2 border-t border-stone-200">
+          <div className="bg-stone-900 text-white p-1.5 rounded text-center">
+            <div className="text-[9px] font-bold text-stone-400 uppercase tracking-widest">
+              TABLA NUTRICIONAL
+            </div>
+            <div className="text-xs font-black font-mono tracking-wide text-emerald-300 mt-0.5">
+              {currentMacros.calories} KCAL · {currentMacros.protein}g PROT
+            </div>
+            <div className="text-[9px] font-mono text-stone-300">
+              {currentMacros.carbs}g C · {currentMacros.fat}g G
+            </div>
+          </div>
+        </div>
+
+        {/* Barcode / QR Stamp */}
+        <div className="pt-1.5 mt-1.5 border-t-2 border-dashed border-stone-300 flex items-center justify-between text-[9px] text-stone-500">
+          <div className="flex flex-col text-left">
+            <span className="font-bold tracking-widest font-mono text-stone-700">
+              *PF-{effectiveOrderNumber}-{resolvedCustomerName.slice(0, 4).toUpperCase()}*
+            </span>
+            <span className="text-[8px]">BARRA PRINCIPAL #01</span>
+          </div>
+          <div className="w-6 h-6 bg-stone-900 text-white rounded flex items-center justify-center">
+            <QrCode className="w-4 h-4 text-white" />
+          </div>
+        </div>
+      </div>
+
+      <span className="text-[11px] text-stone-500 mt-2 text-center flex items-center gap-1">
+        <FileText className="w-3.5 h-3.5 text-[#4A6B3E]" />
+        Vista previa exacta del sticker térmico adhesivo
+      </span>
+    </div>
+  );
+
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-labelledby="customizer-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/50 backdrop-blur-sm animate-fade-in select-none"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-stone-900/50 backdrop-blur-sm animate-fade-in select-none"
     >
-      <div className="w-full max-w-6xl h-[92vh] bg-[#FAF6F0] border border-stone-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-        {/* Header Modal */}
-        <div className="h-18 px-6 bg-white border-b border-stone-200/80 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-xl overflow-hidden bg-[#FAF6F0] border border-stone-200 shrink-0">
-              <img
-                src={selectedProduct.image}
-                alt={selectedProduct.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-black uppercase tracking-wider bg-[#4A6B3E]/10 text-[#4A6B3E] px-2.5 py-0.5 rounded-md border border-[#4A6B3E]/20">
-                  Constructor de Batido / Bowl
-                </span>
-                <span className="text-xs text-stone-500 font-mono">
-                  Base: ${selectedProduct.basePrice.toFixed(2)}
-                </span>
-                <span className="text-xs text-stone-700 font-mono bg-[#FAF6F0] px-2 py-0.5 rounded-md border border-stone-200">
-                  Cliente: <strong className="text-[#4A6B3E]">{resolvedCustomerName}</strong>
-                </span>
-              </div>
-              <h2
-                id="customizer-modal-title"
-                className="text-xl font-black text-stone-900 tracking-tight flex items-center gap-2 mt-0.5"
-              >
-                {selectedProduct.name}
-              </h2>
-            </div>
-          </div>
-
-          <button
-            onClick={handleClose}
-            aria-label="Cerrar modal de personalización"
-            className="w-11 h-11 rounded-xl bg-white hover:bg-stone-100 text-stone-500 hover:text-stone-900 flex items-center justify-center transition-all active:scale-95 border border-stone-200 cursor-pointer"
-          >
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-
-        {/* Modal Main Content: Left Configuration Steps & Right Dynamic Nutrition / Label Panel */}
-        <div className="flex-1 flex overflow-hidden">
-          {/* LEFT: Modifiers Cascade (Scrollable) */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-7 pr-4">
-            {/* 1. SELECCIÓN DE TAMAÑO */}
-            <section>
-              <div className="flex items-center justify-between mb-3">
-                <label className="text-xs font-black uppercase tracking-wider text-stone-800 flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-md bg-[#4A6B3E]/15 text-[#4A6B3E] flex items-center justify-center text-[11px] font-mono font-bold">
-                    1
-                  </span>
-                  Selecciona el Tamaño
-                </label>
-                <span className="text-xs text-stone-500">Impacta volumen y concentración</span>
-              </div>
-
-              <div className="grid grid-cols-3 gap-3">
-                {SIZE_OPTIONS.map((size: SizeOption) => {
-                  const isSelected = customSize.id === size.id;
-                  const addedPrice =
-                    size.priceMultiplier > 1
-                      ? `+$${(selectedProduct.basePrice * (size.priceMultiplier - 1)).toFixed(2)}`
-                      : 'Incluido';
-
-                  return (
-                    <button
-                      key={size.id}
-                      onClick={() => setCustomSize(size)}
-                      className={`p-3.5 rounded-2xl text-left transition-all active:scale-95 flex flex-col justify-between min-h-[96px] cursor-pointer ${isSelected
-                          ? 'bg-[#4A6B3E]/10 border-2 border-[#4A6B3E] shadow-sm'
-                          : 'bg-white border border-stone-200 hover:bg-stone-50 hover:border-stone-300 shadow-sm'
-                        }`}
-                    >
-                      <div className="flex items-center justify-between gap-1">
-                        <span
-                          className={`font-black text-sm tracking-tight ${isSelected ? 'text-stone-900' : 'text-stone-800'
-                            }`}
-                        >
-                          {size.label}
-                        </span>
-                        <span
-                          className={`text-xs font-bold font-mono px-2 py-0.5 rounded-md ${isSelected
-                              ? 'bg-[#4A6B3E] text-white'
-                              : 'bg-stone-100 text-stone-600'
-                            }`}
-                        >
-                          {addedPrice}
-                        </span>
-                      </div>
-                      <div className="mt-2">
-                        <span className="text-xs font-bold text-stone-700 block">
-                          {size.volumeLabel}
-                        </span>
-                        <span className="text-[11px] text-stone-500 block mt-0.5">
-                          {size.sublabel}
-                        </span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* 2. BASE LÍQUIDA */}
-            <section>
-              <div className="flex items-center justify-between mb-3">
-                <label className="text-xs font-black uppercase tracking-wider text-stone-800 flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-md bg-[#4A6B3E]/15 text-[#4A6B3E] flex items-center justify-center text-[11px] font-mono font-bold">
-                    2
-                  </span>
-                  Base Líquida (250 ml)
-                </label>
-                <span className="text-xs text-stone-500">
-                  Calidad barista & leches vegetales
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                {LIQUID_BASES.map((liq: LiquidBase) => {
-                  const isSelected = customLiquid.id === liq.id;
-
-                  return (
-                    <button
-                      key={liq.id}
-                      onClick={() => setCustomLiquid(liq)}
-                      className={`p-3 rounded-xl text-left transition-all active:scale-95 flex flex-col justify-between min-h-[78px] cursor-pointer ${isSelected
-                          ? 'bg-[#4A6B3E]/10 border-2 border-[#4A6B3E] shadow-sm'
-                          : 'bg-white border border-stone-200 hover:bg-stone-50 hover:border-stone-300 shadow-sm'
-                        }`}
-                    >
-                      <div className="flex items-start justify-between gap-1">
-                        <span
-                          className={`text-xs leading-tight line-clamp-1 ${isSelected
-                              ? 'font-black text-stone-900'
-                              : 'font-bold text-stone-800'
-                            }`}
-                        >
-                          {liq.shortName}
-                        </span>
-                        {isSelected && (
-                          <span className="w-4 h-4 rounded-full bg-[#4A6B3E] text-white flex items-center justify-center shrink-0">
-                            <Check className="w-2.5 h-2.5 stroke-[3]" />
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-stone-100 text-[11px]">
-                        <span className="text-stone-500 font-mono">
-                          {liq.macros.calories} kcal · {liq.macros.protein}g P
-                        </span>
-                        <span
-                          className={`font-bold ${liq.price > 0 ? 'text-[#D96B43]' : 'text-[#4A6B3E]'
-                            }`}
-                        >
-                          {liq.price > 0 ? `+$${liq.price.toFixed(2)}` : 'Gratis'}
-                        </span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* 3. TIPO Y PORCIONES DE PROTEÍNA */}
-            <section className="p-4.5 rounded-2xl bg-white/75 border border-stone-200 shadow-sm">
-              <div className="flex items-center justify-between mb-3">
-                <label className="text-xs font-black uppercase tracking-wider text-stone-800 flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-md bg-[#4A6B3E]/15 text-[#4A6B3E] flex items-center justify-center text-[11px] font-mono font-bold">
-                    3
-                  </span>
-                  Tipo de Proteína & Porciones
-                </label>
-
-                {/* Tactile Scoops Controller */}
-                <div className="flex items-center gap-2 bg-[#FAF6F0] px-3 py-1.5 rounded-xl border border-stone-200">
-                  <span className="text-xs font-bold text-stone-700 mr-1">Scoops:</span>
-                  <button
-                    disabled={customProteinScoops <= 1}
-                    onClick={() => setCustomProteinScoops(Math.max(1, customProteinScoops - 1))}
-                    className="w-8 h-8 rounded-lg bg-white hover:bg-stone-100 border border-stone-300 disabled:opacity-35 disabled:pointer-events-none flex items-center justify-center text-stone-700 cursor-pointer transition-colors"
-                  >
-                    <Minus className="w-3.5 h-3.5" />
-                  </button>
-
-                  <span className="text-sm font-black text-[#4A6B3E] font-mono w-6 text-center">
-                    {customProteinScoops}x
-                  </span>
-
-                  <button
-                    disabled={customProteinScoops >= 3}
-                    onClick={() => setCustomProteinScoops(Math.min(3, customProteinScoops + 1))}
-                    className="w-8 h-8 rounded-lg bg-[#4A6B3E] hover:bg-[#3d5933] disabled:opacity-35 disabled:pointer-events-none flex items-center justify-center text-white cursor-pointer transition-colors"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                {PROTEIN_OPTIONS.map((prot: ProteinOption) => {
-                  const isSelected = customProtein.id === prot.id;
-
-                  return (
-                    <button
-                      key={prot.id}
-                      onClick={() => setCustomProtein(prot)}
-                      className={`p-3.5 rounded-xl text-left transition-all active:scale-95 flex flex-col justify-between cursor-pointer ${isSelected
-                          ? 'bg-[#4A6B3E]/10 border-2 border-[#4A6B3E] shadow-sm'
-                          : 'bg-white border border-stone-200 hover:bg-stone-50 hover:border-stone-300'
-                        }`}
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <span
-                            className={`font-black text-xs uppercase tracking-wider block ${isSelected ? 'text-[#4A6B3E]' : 'text-stone-500'
-                              }`}
-                          >
-                            {prot.name}
-                          </span>
-                          <span className="font-bold text-sm text-stone-900 block mt-0.5">
-                            {prot.flavor}
-                          </span>
-                        </div>
-                        {isSelected && (
-                          <div className="w-5 h-5 rounded-full bg-[#4A6B3E] text-white flex items-center justify-center shrink-0">
-                            <Check className="w-3.5 h-3.5 stroke-[3]" />
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="mt-2.5 pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
-                        <span className="text-[#4A6B3E] font-bold font-mono">
-                          +{prot.macrosPerScoop.protein}g Proteína
-                        </span>
-                        <span className="text-stone-500 text-[11px] font-mono">
-                          {prot.scoopGrams}g scoop · {prot.macrosPerScoop.calories} kcal
-                        </span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* 4. EXTRAS Y SUPLEMENTOS FUNCIONALES */}
-            <section>
-              <div className="flex items-center justify-between mb-3">
-                <label className="text-xs font-black uppercase tracking-wider text-stone-800 flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-md bg-[#4A6B3E]/15 text-[#4A6B3E] flex items-center justify-center text-[11px] font-mono font-bold">
-                    4
-                  </span>
-                  Extras & Suplementos Funcionales (BOM)
-                </label>
-                <span className="text-xs text-stone-500">
-                  Selecciona uno o más potenciadores
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                {EXTRA_OPTIONS.map((ext: ExtraOption) => {
-                  const isChecked = customExtras.some((e) => e.id === ext.id);
-
-                  return (
-                    <button
-                      key={ext.id}
-                      onClick={() => toggleCustomExtra(ext)}
-                      className={`p-3 rounded-xl text-left transition-all active:scale-95 flex flex-col justify-between min-h-[88px] relative cursor-pointer ${isChecked
-                          ? 'bg-[#4A6B3E]/10 border-2 border-[#4A6B3E] shadow-sm'
-                          : 'bg-white border border-stone-200 hover:bg-stone-50 hover:border-stone-300 shadow-sm'
-                        }`}
-                    >
-                      <div>
-                        <div className="flex items-start justify-between gap-1">
-                          <span
-                            className={`text-xs leading-snug line-clamp-2 ${isChecked
-                                ? 'font-black text-stone-900'
-                                : 'font-bold text-stone-800'
-                              }`}
-                          >
-                            {ext.name}
-                          </span>
-                          <div
-                            className={`w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 ${isChecked
-                                ? 'bg-[#4A6B3E] border-[#4A6B3E] text-white'
-                                : 'border-stone-300 bg-[#FAF6F0]'
-                              }`}
-                          >
-                            {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
-                          </div>
-                        </div>
-
-                        {ext.highlight && (
-                          <span className="text-[10px] text-[#D96B43] font-semibold block mt-1">
-                            ★ {ext.highlight}
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="flex items-center justify-between mt-2 pt-1 border-t border-stone-100 text-[11px]">
-                        <span className="text-stone-500 font-mono">
-                          {ext.macros.protein > 0 ? `+${ext.macros.protein}g Prot` : ext.servingSize}
-                        </span>
-                        <span className="font-extrabold text-[#D96B43] font-mono">
-                          +${ext.price.toFixed(2)}
-                        </span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* 5. NOTAS ESPECIALES DE PREPARACIÓN */}
-            <section>
-              <label className="text-xs font-black uppercase tracking-wider text-stone-800 flex items-center gap-2 mb-2">
-                <span className="w-5 h-5 rounded-md bg-[#4A6B3E]/15 text-[#4A6B3E] flex items-center justify-center text-[11px] font-mono font-bold">
-                  5
-                </span>
-                Instrucciones Rápidas para Cocina / Licuadora
-              </label>
-
-              <div className="flex flex-wrap gap-2 mb-2.5">
-                {quickNotesPresets.map((note) => {
-                  const isIncluded = customSpecialNotes.includes(note);
-                  return (
-                    <button
-                      key={note}
-                      onClick={() => {
-                        if (isIncluded) {
-                          setCustomSpecialNotes(
-                            customSpecialNotes.replace(note, '').trim()
-                          );
-                        } else {
-                          const separator = customSpecialNotes.trim() ? ', ' : '';
-                          setCustomSpecialNotes(customSpecialNotes.trim() + separator + note);
-                        }
-                      }}
-                      className={`text-xs px-3 py-1.5 rounded-xl border transition-all active:scale-95 font-medium cursor-pointer ${isIncluded
-                          ? 'bg-[#4A6B3E]/10 text-[#4A6B3E] border-[#4A6B3E] font-bold'
-                          : 'bg-white text-stone-600 border-stone-200 hover:text-stone-900 hover:border-stone-300'
-                        }`}
-                    >
-                      {note}
-                    </button>
-                  );
-                })}
-              </div>
-
-              <input
-                type="text"
-                value={customSpecialNotes}
-                onChange={(e) => setCustomSpecialNotes(e.target.value)}
-                placeholder="Escribe otra indicación especial para la barra..."
-                className="w-full h-11 px-4 rounded-xl bg-white border border-stone-300 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-[#4A6B3E] focus:ring-2 focus:ring-[#4A6B3E]/20 transition-all"
-              />
-            </section>
-
-            {/* 6. IDENTIFICACIÓN DEL VASO Y ETIQUETA TÉRMICA */}
-            <section className="p-4.5 rounded-2xl bg-white border border-stone-200 shadow-sm relative overflow-hidden">
-              <div className="flex items-center justify-between mb-2">
-                <label
-                  htmlFor={inputNameId}
-                  className="text-xs font-black uppercase tracking-wider text-stone-800 flex items-center gap-2"
-                >
-                  <span className="w-5 h-5 rounded-md bg-[#4A6B3E]/15 text-[#4A6B3E] flex items-center justify-center text-[11px] font-mono font-bold">
-                    6
-                  </span>
-                  <span className="flex items-center gap-1.5 text-[#4A6B3E]">
-                    <User className="w-4 h-4 text-[#4A6B3E]" />
-                    Nombre para el Vaso (Etiqueta Térmica)
-                  </span>
-                </label>
-                <span className="text-[10px] font-extrabold uppercase text-[#4A6B3E] bg-[#4A6B3E]/10 border border-[#4A6B3E]/20 px-2 py-0.5 rounded-md tracking-wider flex items-center gap-1">
-                  <Printer className="w-3 h-3" />
-                  Impresión 58mm
-                </span>
-              </div>
-
-              <p className="text-xs text-stone-500 mb-3 leading-relaxed">
-                Asigna el nombre del cliente o identificación del vaso. Se imprimirá directamente en
-                la cabecera de la etiqueta física para la barra de licuado.
-              </p>
-
-              {/* Large Touch-Optimized Input with Quick Clear Button */}
-              <div className="relative flex items-center">
-                <div className="absolute left-3.5 flex items-center pointer-events-none">
-                  <Tag className="w-5 h-5 text-[#4A6B3E]" />
-                </div>
-
-                <input
-                  id={inputNameId}
-                  type="text"
-                  value={customCustomerName}
-                  onChange={(e) => setCustomCustomerName(e.target.value)}
-                  placeholder={
-                    selectedMember
-                      ? `Ej. ${selectedMember.fullName} (Socio asignado)`
-                      : 'Escribe el nombre para el vaso (ej. Carlos Mendoza, Shaker #4)...'
-                  }
-                  autoComplete="off"
-                  className="w-full h-14 pl-11 pr-12 rounded-xl bg-white border border-stone-300 text-base font-bold text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-[#4A6B3E] focus:ring-2 focus:ring-[#4A6B3E]/20 transition-all"
+      <div className="w-full max-w-6xl max-h-[90dvh] h-[90dvh] bg-[#FAF6F0] border border-stone-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+        {/* STICKY MODAL HEADER: Title, Live Macros & Close */}
+        <header className="sticky top-0 z-20 px-4 md:px-6 py-3 bg-white border-b border-stone-200/80 shrink-0 space-y-2.5">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-11 h-11 rounded-xl overflow-hidden bg-[#FAF6F0] border border-stone-200 shrink-0">
+                <img
+                  src={selectedProduct.image}
+                  alt={selectedProduct.name}
+                  className="w-full h-full object-cover"
                 />
-
-                {customCustomerName.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setCustomCustomerName('')}
-                    title="Limpiar nombre"
-                    aria-label="Borrar texto del nombre"
-                    className="absolute right-2.5 w-10 h-10 rounded-lg bg-[#FAF6F0] hover:bg-stone-200 text-stone-500 hover:text-stone-900 flex items-center justify-center transition-all active:scale-90 border border-stone-200 cursor-pointer"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
               </div>
-
-              {/* Quick Tactile Suggestion Chips */}
-              <div className="mt-3 flex flex-wrap items-center gap-2">
-                <span className="text-[11px] font-bold text-stone-500 mr-0.5">
-                  Acceso rápido:
-                </span>
-
-                {selectedMember && (
-                  <button
-                    type="button"
-                    onClick={() => setCustomCustomerName(selectedMember.fullName)}
-                    className="text-xs px-3 py-1.5 rounded-xl bg-[#4A6B3E]/10 border border-[#4A6B3E]/30 text-[#4A6B3E] hover:bg-[#4A6B3E]/15 font-bold transition-all active:scale-95 flex items-center gap-1.5 shadow-sm cursor-pointer"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-[#4A6B3E]" />
-                    Socio: {selectedMember.fullName}
-                  </button>
-                )}
-
-                {quickNamePresets.map((preset) => (
-                  <button
-                    key={preset}
-                    type="button"
-                    onClick={() => setCustomCustomerName(preset)}
-                    className={`text-xs px-3 py-1.5 rounded-xl border transition-all active:scale-95 font-medium cursor-pointer ${customCustomerName === preset
-                        ? 'bg-[#4A6B3E] text-white border-[#4A6B3E] font-bold shadow-sm'
-                        : 'bg-[#FAF6F0] text-stone-700 border-stone-200 hover:border-stone-300 hover:text-stone-900'
-                      }`}
-                  >
-                    {preset}
-                  </button>
-                ))}
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="text-[11px] font-black uppercase tracking-wider bg-[#4A6B3E]/10 text-[#4A6B3E] px-2 py-0.5 rounded-md border border-[#4A6B3E]/20">
+                    Constructor de Batido
+                  </span>
+                  <span className="text-xs text-stone-500 font-mono">
+                    Base: ${selectedProduct.basePrice.toFixed(2)}
+                  </span>
+                  <span className="text-xs text-stone-700 font-mono bg-[#FAF6F0] px-2 py-0.5 rounded-md border border-stone-200 truncate max-w-[180px] sm:max-w-none">
+                    Vaso: <strong className="text-[#4A6B3E]">{resolvedCustomerName}</strong>
+                  </span>
+                </div>
+                <h2
+                  id="customizer-modal-title"
+                  className="text-base md:text-xl font-black text-stone-900 tracking-tight truncate mt-0.5"
+                >
+                  {selectedProduct.name}
+                </h2>
               </div>
+            </div>
 
-              {/* Real-time preview pill */}
-              <div className="mt-3 pt-2.5 border-t border-stone-200/80 flex items-center justify-between text-xs">
-                <span className="text-stone-500 flex items-center gap-1">
-                  <span>Cabecera en etiqueta:</span>
-                  {!customCustomerName.trim() && (
-                    <span className="text-[10px] text-[#D96B43] font-mono">(Por defecto)</span>
-                  )}
-                </span>
-                <span className="font-mono font-black text-[#4A6B3E] text-sm tracking-wide uppercase bg-[#4A6B3E]/10 px-2.5 py-0.5 rounded-md border border-[#4A6B3E]/20">
-                  {resolvedCustomerName}
-                </span>
-              </div>
-            </section>
+            <div className="flex items-center gap-2 shrink-0">
+              {/* Portrait-only quick label toggle */}
+              <button
+                type="button"
+                onClick={() => setShowPortraitLabel((prev) => !prev)}
+                className={`lg:hidden min-h-[48px] px-3 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
+                  showPortraitLabel
+                    ? 'bg-[#4A6B3E] text-white border-[#4A6B3E]'
+                    : 'bg-[#FAF6F0] text-stone-700 border-stone-200'
+                }`}
+              >
+                <Tag className="w-4 h-4" />
+                <span>{showPortraitLabel ? 'Ver Ingredientes' : 'Etiqueta 58mm'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleClose}
+                aria-label="Cerrar modal de personalización"
+                className="w-12 h-12 min-w-[48px] min-h-[48px] rounded-xl bg-white hover:bg-stone-100 text-stone-500 hover:text-stone-900 flex items-center justify-center transition-all active:scale-95 border border-stone-200 cursor-pointer"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
           </div>
 
-          {/* RIGHT: LIVE DYNAMIC NUTRITIONAL CALCULATION & PHYSICAL LABEL VISUALIZER */}
-          <div className="w-[400px] bg-[#FAF6F0] border-l border-stone-200 flex flex-col justify-between shrink-0 overflow-hidden">
-            <div className="flex-1 overflow-y-auto p-6 space-y-5">
+          {/* Live Macros Strip (Always visible in sticky header across all tablet sizes) */}
+          <div className="flex items-center justify-between gap-2 pt-2 border-t border-stone-100 overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FAF6F0] border border-stone-200 text-xs font-mono font-black text-stone-900">
+                <Flame className="w-3.5 h-3.5 text-[#D96B43]" />
+                {currentMacros.calories} kcal
+              </span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#4A6B3E]/10 border border-[#4A6B3E]/25 text-xs font-mono font-black text-[#4A6B3E]">
+                <Dumbbell className="w-3.5 h-3.5 text-[#4A6B3E]" />
+                {currentMacros.protein}g Prot
+              </span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FAF6F0] border border-stone-200 text-xs font-mono font-bold text-[#D96B43]">
+                <Wheat className="w-3.5 h-3.5 text-[#D96B43]" />
+                {currentMacros.carbs}g C
+              </span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FAF6F0] border border-stone-200 text-xs font-mono font-bold text-stone-700">
+                <Droplet className="w-3.5 h-3.5 text-stone-500" />
+                {currentMacros.fat}g G
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[11px] font-bold text-stone-500 hidden sm:inline">
+                {customSize.label}
+              </span>
+              <span className="px-2.5 py-1 rounded-lg bg-[#4A6B3E] text-white font-mono font-black text-sm shadow-sm">
+                ${currentPrice.toFixed(2)}
+              </span>
+            </div>
+          </div>
+        </header>
+
+        {/* MODAL MAIN CONTENT: Internal Scroll for Ingredients/Modifiers Only */}
+        <div className="flex-1 flex overflow-hidden min-h-0">
+          {/* LEFT / MAIN: Modifiers Cascade (Scrollable) */}
+          <div className="flex-1 overflow-y-auto overscroll-contain-y p-4 md:p-6 space-y-6">
+            {showPortraitLabel ? (
+              <div className="lg:hidden py-2">
+                {renderThermalLabelPreview()}
+              </div>
+            ) : (
+              <>
+                {/* 1. SELECCIÓN DE TAMAÑO */}
+                <section>
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="text-xs font-black uppercase tracking-wider text-stone-800 flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-md bg-[#4A6B3E]/15 text-[#4A6B3E] flex items-center justify-center text-[11px] font-mono font-bold">
+                        1
+                      </span>
+                      Selecciona el Tamaño
+                    </label>
+                    <span className="text-xs text-stone-500">Impacta volumen y concentración</span>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {SIZE_OPTIONS.map((size: SizeOption) => {
+                      const isSelected = customSize.id === size.id;
+                      const addedPrice =
+                        size.priceMultiplier > 1
+                          ? `+$${(selectedProduct.basePrice * (size.priceMultiplier - 1)).toFixed(2)}`
+                          : 'Incluido';
+
+                      return (
+                        <button
+                          key={size.id}
+                          type="button"
+                          onClick={() => setCustomSize(size)}
+                          className={`p-3.5 rounded-2xl text-left transition-all active:scale-95 flex flex-col justify-between min-h-[92px] cursor-pointer ${isSelected
+                              ? 'bg-[#4A6B3E]/10 border-2 border-[#4A6B3E] shadow-sm'
+                              : 'bg-white border border-stone-200 hover:bg-stone-50 hover:border-stone-300 shadow-sm'
+                            }`}
+                        >
+                          <div className="flex items-center justify-between gap-1.5">
+                            <span
+                              className={`font-black text-sm tracking-tight ${isSelected ? 'text-stone-900' : 'text-stone-800'
+                                }`}
+                            >
+                              {size.label}
+                            </span>
+                            <span
+                              className={`text-xs font-bold font-mono px-2 py-0.5 rounded-md shrink-0 ${isSelected
+                                  ? 'bg-[#4A6B3E] text-white'
+                                  : 'bg-stone-100 text-stone-600'
+                                }`}
+                            >
+                              {addedPrice}
+                            </span>
+                          </div>
+                          <div className="mt-2">
+                            <span className="text-xs font-bold text-stone-700 block">
+                              {size.volumeLabel}
+                            </span>
+                            <span className="text-[11px] text-stone-500 block mt-0.5">
+                              {size.sublabel}
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
+
+                {/* 2. BASE LÍQUIDA */}
+                <section>
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="text-xs font-black uppercase tracking-wider text-stone-800 flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-md bg-[#4A6B3E]/15 text-[#4A6B3E] flex items-center justify-center text-[11px] font-mono font-bold">
+                        2
+                      </span>
+                      Base Líquida (250 ml)
+                    </label>
+                    <span className="text-xs text-stone-500">
+                      Calidad barista & leches vegetales
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {LIQUID_BASES.map((liq: LiquidBase) => {
+                      const isSelected = customLiquid.id === liq.id;
+
+                      return (
+                        <button
+                          key={liq.id}
+                          type="button"
+                          onClick={() => setCustomLiquid(liq)}
+                          className={`p-3.5 rounded-xl text-left transition-all active:scale-95 flex flex-col justify-between min-h-[76px] cursor-pointer ${isSelected
+                              ? 'bg-[#4A6B3E]/10 border-2 border-[#4A6B3E] shadow-sm'
+                              : 'bg-white border border-stone-200 hover:bg-stone-50 hover:border-stone-300 shadow-sm'
+                            }`}
+                        >
+                          <div className="flex items-start justify-between gap-1.5">
+                            <span
+                              className={`text-xs leading-tight line-clamp-1 ${isSelected
+                                  ? 'font-black text-stone-900'
+                                  : 'font-bold text-stone-800'
+                                }`}
+                            >
+                              {liq.shortName}
+                            </span>
+                            {isSelected && (
+                              <span className="w-5 h-5 rounded-full bg-[#4A6B3E] text-white flex items-center justify-center shrink-0">
+                                <Check className="w-3 h-3 stroke-[3]" />
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-stone-100 text-[11px]">
+                            <span className="text-stone-500 font-mono">
+                              {liq.macros.calories} kcal · {liq.macros.protein}g P
+                            </span>
+                            <span
+                              className={`font-bold ${liq.price > 0 ? 'text-[#D96B43]' : 'text-[#4A6B3E]'
+                                }`}
+                            >
+                              {liq.price > 0 ? `+$${liq.price.toFixed(2)}` : 'Gratis'}
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
+
+                {/* 3. TIPO Y PORCIONES DE PROTEÍNA */}
+                <section className="p-4 rounded-2xl bg-white/80 border border-stone-200 shadow-sm">
+                  <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+                    <label className="text-xs font-black uppercase tracking-wider text-stone-800 flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-md bg-[#4A6B3E]/15 text-[#4A6B3E] flex items-center justify-center text-[11px] font-mono font-bold">
+                        3
+                      </span>
+                      Tipo de Proteína & Porciones
+                    </label>
+
+                    {/* Tactile Scoops Controller (48x48 buttons with gap-3) */}
+                    <div className="flex items-center gap-3 bg-[#FAF6F0] px-3 py-1.5 rounded-xl border border-stone-200">
+                      <span className="text-xs font-bold text-stone-700">Scoops:</span>
+                      <button
+                        type="button"
+                        disabled={customProteinScoops <= 1}
+                        onClick={() => setCustomProteinScoops(Math.max(1, customProteinScoops - 1))}
+                        aria-label="Disminuir scoops de proteína"
+                        className="w-12 h-12 min-w-[48px] min-h-[48px] rounded-xl bg-white hover:bg-stone-100 border border-stone-300 disabled:opacity-35 disabled:pointer-events-none flex items-center justify-center text-stone-700 active:scale-95 cursor-pointer transition-all"
+                      >
+                        <Minus className="w-4 h-4" />
+                      </button>
+
+                      <span className="text-base font-black text-[#4A6B3E] font-mono min-w-[28px] text-center">
+                        {customProteinScoops}x
+                      </span>
+
+                      <button
+                        type="button"
+                        disabled={customProteinScoops >= 3}
+                        onClick={() => setCustomProteinScoops(Math.min(3, customProteinScoops + 1))}
+                        aria-label="Aumentar scoops de proteína"
+                        className="w-12 h-12 min-w-[48px] min-h-[48px] rounded-xl bg-[#4A6B3E] hover:bg-[#3d5933] disabled:opacity-35 disabled:pointer-events-none flex items-center justify-center text-white active:scale-95 cursor-pointer transition-all"
+                      >
+                        <Plus className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {PROTEIN_OPTIONS.map((prot: ProteinOption) => {
+                      const isSelected = customProtein.id === prot.id;
+
+                      return (
+                        <button
+                          key={prot.id}
+                          type="button"
+                          onClick={() => setCustomProtein(prot)}
+                          className={`p-3.5 rounded-xl text-left transition-all active:scale-95 flex flex-col justify-between min-h-[84px] cursor-pointer ${isSelected
+                              ? 'bg-[#4A6B3E]/10 border-2 border-[#4A6B3E] shadow-sm'
+                              : 'bg-white border border-stone-200 hover:bg-stone-50 hover:border-stone-300'
+                            }`}
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <span
+                                className={`font-black text-xs uppercase tracking-wider block ${isSelected ? 'text-[#4A6B3E]' : 'text-stone-500'
+                                  }`}
+                              >
+                                {prot.name}
+                              </span>
+                              <span className="font-bold text-sm text-stone-900 block mt-0.5">
+                                {prot.flavor}
+                              </span>
+                            </div>
+                            {isSelected && (
+                              <div className="w-5 h-5 rounded-full bg-[#4A6B3E] text-white flex items-center justify-center shrink-0">
+                                <Check className="w-3.5 h-3.5 stroke-[3]" />
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="mt-2.5 pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
+                            <span className="text-[#4A6B3E] font-bold font-mono">
+                              +{prot.macrosPerScoop.protein}g Proteína
+                            </span>
+                            <span className="text-stone-500 text-[11px] font-mono">
+                              {prot.scoopGrams}g scoop · {prot.macrosPerScoop.calories} kcal
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
+
+                {/* 4. EXTRAS Y SUPLEMENTOS FUNCIONALES */}
+                <section>
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="text-xs font-black uppercase tracking-wider text-stone-800 flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-md bg-[#4A6B3E]/15 text-[#4A6B3E] flex items-center justify-center text-[11px] font-mono font-bold">
+                        4
+                      </span>
+                      Extras & Suplementos Funcionales (BOM)
+                    </label>
+                    <span className="text-xs text-stone-500">
+                      Selecciona uno o más potenciadores
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {EXTRA_OPTIONS.map((ext: ExtraOption) => {
+                      const isChecked = customExtras.some((e) => e.id === ext.id);
+
+                      return (
+                        <button
+                          key={ext.id}
+                          type="button"
+                          onClick={() => toggleCustomExtra(ext)}
+                          className={`p-3.5 rounded-xl text-left transition-all active:scale-95 flex flex-col justify-between min-h-[88px] relative cursor-pointer ${isChecked
+                              ? 'bg-[#4A6B3E]/10 border-2 border-[#4A6B3E] shadow-sm'
+                              : 'bg-white border border-stone-200 hover:bg-stone-50 hover:border-stone-300 shadow-sm'
+                            }`}
+                        >
+                          <div>
+                            <div className="flex items-start justify-between gap-1.5">
+                              <span
+                                className={`text-xs leading-snug line-clamp-2 ${isChecked
+                                    ? 'font-black text-stone-900'
+                                    : 'font-bold text-stone-800'
+                                  }`}
+                              >
+                                {ext.name}
+                              </span>
+                              <div
+                                className={`w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 ${isChecked
+                                    ? 'bg-[#4A6B3E] border-[#4A6B3E] text-white'
+                                    : 'border-stone-300 bg-[#FAF6F0]'
+                                  }`}
+                              >
+                                {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                              </div>
+                            </div>
+
+                            {ext.highlight && (
+                              <span className="text-[10px] text-[#D96B43] font-semibold block mt-1">
+                                ★ {ext.highlight}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-stone-100 text-[11px]">
+                            <span className="text-stone-500 font-mono">
+                              {ext.macros.protein > 0 ? `+${ext.macros.protein}g Prot` : ext.servingSize}
+                            </span>
+                            <span className="font-extrabold text-[#D96B43] font-mono">
+                              +${ext.price.toFixed(2)}
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
+
+                {/* 5. NOTAS ESPECIALES DE PREPARACIÓN */}
+                <section>
+                  <label className="text-xs font-black uppercase tracking-wider text-stone-800 flex items-center gap-2 mb-2.5">
+                    <span className="w-6 h-6 rounded-md bg-[#4A6B3E]/15 text-[#4A6B3E] flex items-center justify-center text-[11px] font-mono font-bold">
+                      5
+                    </span>
+                    Instrucciones Rápidas para Cocina / Licuadora
+                  </label>
+
+                  <div className="flex flex-wrap gap-2.5 mb-3">
+                    {quickNotesPresets.map((note) => {
+                      const isIncluded = customSpecialNotes.includes(note);
+                      return (
+                        <button
+                          key={note}
+                          type="button"
+                          onClick={() => {
+                            if (isIncluded) {
+                              setCustomSpecialNotes(
+                                customSpecialNotes.replace(note, '').trim()
+                              );
+                            } else {
+                              const separator = customSpecialNotes.trim() ? ', ' : '';
+                              setCustomSpecialNotes(customSpecialNotes.trim() + separator + note);
+                            }
+                          }}
+                          className={`text-xs px-3.5 min-h-[48px] rounded-xl border transition-all active:scale-95 font-medium cursor-pointer ${isIncluded
+                              ? 'bg-[#4A6B3E]/10 text-[#4A6B3E] border-[#4A6B3E] font-bold'
+                              : 'bg-white text-stone-600 border-stone-200 hover:text-stone-900 hover:border-stone-300'
+                            }`}
+                        >
+                          {note}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <input
+                    type="text"
+                    value={customSpecialNotes}
+                    onChange={(e) => setCustomSpecialNotes(e.target.value)}
+                    placeholder="Escribe otra indicación especial para la barra..."
+                    className="w-full h-12 px-4 rounded-xl bg-white border border-stone-300 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-[#4A6B3E] focus:ring-2 focus:ring-[#4A6B3E]/20 transition-all"
+                  />
+                </section>
+              </>
+            )}
+          </div>
+
+          {/* RIGHT (lg+ Landscape): LIVE DYNAMIC NUTRITIONAL CALCULATION & PHYSICAL LABEL VISUALIZER */}
+          <div className="hidden lg:flex lg:w-[340px] xl:w-[380px] bg-[#FAF6F0] border-l border-stone-200 flex-col shrink-0 overflow-hidden">
+            <div className="flex-1 overflow-y-auto overscroll-contain-y p-5 space-y-4">
               {/* Panel Header & Dual Mode Segmented Tab Switch */}
               <div className="flex items-center justify-between pb-3 border-b border-stone-200">
-                <div className="w-full flex items-center gap-1 bg-stone-200/60 p-1 rounded-xl border border-stone-200">
+                <div className="w-full flex items-center gap-1.5 bg-stone-200/60 p-1 rounded-xl border border-stone-200">
                   <button
                     type="button"
                     onClick={() => setActiveRightTab('nutrition')}
-                    className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${activeRightTab === 'nutrition'
+                    className={`flex-1 min-h-[48px] px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${activeRightTab === 'nutrition'
                         ? 'bg-[#4A6B3E] text-white shadow-sm font-black'
                         : 'text-stone-600 hover:text-stone-900'
                       }`}
@@ -646,7 +724,7 @@ export const CustomizerModal: React.FC<CustomizerModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setActiveRightTab('label')}
-                    className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${activeRightTab === 'label'
+                    className={`flex-1 min-h-[48px] px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${activeRightTab === 'label'
                         ? 'bg-[#4A6B3E] text-white shadow-sm font-black'
                         : 'text-stone-600 hover:text-stone-900'
                       }`}
@@ -659,14 +737,14 @@ export const CustomizerModal: React.FC<CustomizerModalProps> = ({
 
               {/* TAB CONTENT: NUTRITION CALCULATOR */}
               {activeRightTab === 'nutrition' && (
-                <div className="space-y-4 animate-fade-in">
+                <div className="space-y-3.5 animate-fade-in">
                   {/* Total Calories Big Display */}
-                  <div className="bg-white p-4.5 rounded-xl border border-stone-200 text-center shadow-sm">
+                  <div className="bg-white p-4 rounded-xl border border-stone-200 text-center shadow-sm">
                     <span className="text-xs font-bold text-stone-500 uppercase tracking-widest block">
                       Energía Total del Batido
                     </span>
                     <div className="flex items-baseline justify-center gap-1.5 mt-1">
-                      <span className="text-5xl font-black font-mono tracking-tight text-stone-900">
+                      <span className="text-4xl xl:text-5xl font-black font-mono tracking-tight text-stone-900">
                         {currentMacros.calories}
                       </span>
                       <span className="text-base font-bold text-[#4A6B3E] font-sans">
@@ -684,7 +762,7 @@ export const CustomizerModal: React.FC<CustomizerModalProps> = ({
 
                   {/* Macronutrients Gauges & Bars */}
                   <div className="space-y-3">
-                    {/* PROTEIN (Anabolic Hero) */}
+                    {/* PROTEIN */}
                     <div className="p-3.5 rounded-xl bg-white border border-[#4A6B3E]/30 shadow-sm">
                       <div className="flex items-center justify-between text-xs mb-1.5">
                         <span className="font-bold text-[#4A6B3E] flex items-center gap-1.5">
@@ -759,172 +837,136 @@ export const CustomizerModal: React.FC<CustomizerModalProps> = ({
                   </div>
 
                   {/* Cup Badge Quick Preview Pill */}
-                  <div
+                  <button
+                    type="button"
                     onClick={() => setActiveRightTab('label')}
-                    className="p-2.5 rounded-xl bg-white border border-stone-200 hover:border-[#4A6B3E] cursor-pointer transition-all flex items-center justify-between text-xs shadow-sm"
+                    className="w-full min-h-[48px] p-2.5 rounded-xl bg-white border border-stone-200 hover:border-[#4A6B3E] cursor-pointer transition-all flex items-center justify-between text-xs shadow-sm"
                   >
                     <div className="flex items-center gap-2">
                       <Tag className="w-4 h-4 text-[#4A6B3E]" />
-                      <div>
+                      <div className="text-left">
                         <span className="text-[11px] text-stone-500 block">Etiqueta Adhesiva:</span>
                         <strong className="text-stone-900 font-mono uppercase">
                           {resolvedCustomerName}
                         </strong>
                       </div>
                     </div>
-                    <span className="text-[10px] font-bold text-[#4A6B3E] bg-[#4A6B3E]/10 px-2 py-0.5 rounded border border-[#4A6B3E]/20">
+                    <span className="text-[10px] font-bold text-[#4A6B3E] bg-[#4A6B3E]/10 px-2 py-1 rounded border border-[#4A6B3E]/20">
                       Ver Sticker →
                     </span>
-                  </div>
+                  </button>
                 </div>
               )}
 
-              {/* TAB CONTENT: PHYSICAL 58MM THERMAL STICKER PREVIEW (EN TIEMPO REAL) */}
-              {activeRightTab === 'label' && (
-                <div className="animate-fade-in flex flex-col items-center">
-                  <div className="w-full bg-white text-stone-900 p-4 rounded-xl shadow-md border-2 border-dashed border-stone-300 font-mono text-xs flex flex-col justify-between">
-                    {/* Paper Top Perforation Cut Header */}
-                    <div className="border-b-2 border-dashed border-stone-300 pb-2 text-center">
-                      <div className="flex items-center justify-between text-[9px] text-stone-500 font-bold uppercase tracking-wider">
-                        <span>PRIME FITNESS BAR</span>
-                        <span>58mm ESC/POS</span>
-                      </div>
-
-                      <div className="mt-1 flex items-center justify-between">
-                        <span className="text-xl font-black font-mono tracking-tight text-stone-900">
-                          #ORD-{effectiveOrderNumber}
-                        </span>
-                        <span className="text-[10px] font-bold text-stone-700 bg-stone-100 px-1.5 py-0.5 rounded border border-stone-200">
-                          {currentTime}
-                        </span>
-                      </div>
-
-                      {/* CLIENTE EN CABECERA DE ETIQUETA EN TIEMPO REAL */}
-                      <div className="text-left mt-1.5 pt-1 border-t border-stone-200 text-[11px] font-bold text-stone-900 truncate">
-                        VASO:{' '}
-                        <span className="text-xs font-black uppercase text-[#4A6B3E] bg-[#4A6B3E]/10 px-1.5 py-0.5 rounded border border-[#4A6B3E]/25">
-                          {resolvedCustomerName}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Product & Size */}
-                    <div className="py-2 border-b border-stone-200">
-                      <h4 className="text-xs font-black uppercase tracking-tight text-stone-900">
-                        {selectedProduct.name}
-                      </h4>
-                      <div className="text-[10px] font-black text-[#4A6B3E] mt-0.5 uppercase flex items-center gap-1">
-                        <span>FORMATO: {customSize.label}</span>
-                        <span>({customSize.volumeLabel})</span>
-                      </div>
-                    </div>
-
-                    {/* Ingredients Checklist for Blender Operator */}
-                    <div className="py-2 space-y-1 text-[10px]">
-                      <div className="text-[9px] uppercase font-black tracking-wider text-stone-500 mb-0.5">
-                        RECETA DE PREPARACIÓN:
-                      </div>
-
-                      <div className="flex items-start gap-1 text-stone-800 font-semibold">
-                        <span className="w-3 h-3 rounded border border-stone-800 flex items-center justify-center shrink-0 mt-0.5">
-                          <Check className="w-2 h-2 stroke-[3]" />
-                        </span>
-                        <span>BASE: {customLiquid.shortName} (250ml)</span>
-                      </div>
-
-                      <div className="flex items-start gap-1 text-stone-900 font-bold">
-                        <span className="w-3 h-3 rounded border border-stone-800 flex items-center justify-center shrink-0 mt-0.5">
-                          <Check className="w-2 h-2 stroke-[3]" />
-                        </span>
-                        <span>
-                          PROT: {customProteinScoops}x SCOOP {customProtein.flavor}
-                        </span>
-                      </div>
-
-                      {customExtras.map((ex) => (
-                        <div key={ex.id} className="flex items-start gap-1 text-stone-800 font-medium">
-                          <span className="w-3 h-3 rounded border border-stone-800 flex items-center justify-center shrink-0 mt-0.5">
-                            <Check className="w-2 h-2 stroke-[3]" />
-                          </span>
-                          <span>SUPP: {ex.name}</span>
-                        </div>
-                      ))}
-
-                      {customSpecialNotes && (
-                        <div className="mt-1 p-1.5 bg-amber-50 rounded border border-amber-200 text-[9px] font-black text-amber-800">
-                          ⚠ NOTA: {customSpecialNotes}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Nutrition Table Stamp */}
-                    <div className="pt-2 border-t border-stone-200">
-                      <div className="bg-stone-900 text-white p-1.5 rounded text-center">
-                        <div className="text-[9px] font-bold text-stone-400 uppercase tracking-widest">
-                          TABLA NUTRICIONAL
-                        </div>
-                        <div className="text-xs font-black font-mono tracking-wide text-emerald-300 mt-0.5">
-                          {currentMacros.calories} KCAL · {currentMacros.protein}g PROT
-                        </div>
-                        <div className="text-[9px] font-mono text-stone-300">
-                          {currentMacros.carbs}g C · {currentMacros.fat}g G
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Barcode / QR Stamp */}
-                    <div className="pt-1.5 mt-1.5 border-t-2 border-dashed border-stone-300 flex items-center justify-between text-[9px] text-stone-500">
-                      <div className="flex flex-col text-left">
-                        <span className="font-bold tracking-widest font-mono text-stone-700">
-                          *PF-{effectiveOrderNumber}-{resolvedCustomerName.slice(0, 4).toUpperCase()}*
-                        </span>
-                        <span className="text-[8px]">BARRA PRINCIPAL #01</span>
-                      </div>
-                      <div className="w-6 h-6 bg-stone-900 text-white rounded flex items-center justify-center">
-                        <QrCode className="w-4 h-4 text-white" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <span className="text-[11px] text-stone-500 mt-2 text-center flex items-center gap-1">
-                    <FileText className="w-3.5 h-3.5 text-[#4A6B3E]" />
-                    Vista previa exacta del sticker térmico adhesivo
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* Bottom Actions: Anchored Pure White Footer */}
-            <div className="p-5 bg-white border-t border-stone-200 flex flex-col gap-2.5 shrink-0">
-              <button
-                id="btn-confirm-customization"
-                onClick={handleConfirmAndAdd}
-                className="w-full h-15 rounded-2xl bg-[#4A6B3E] hover:bg-[#3d5933] text-white font-semibold text-base shadow-md flex items-center justify-between px-5 transition-all active:scale-95 cursor-pointer"
-              >
-                <div className="flex flex-col text-left">
-                  <span className="text-xs uppercase tracking-wider text-white font-bold flex items-center gap-1.5">
-                    <span>Agregar al Pedido</span>
-                    <span className="text-white/85 font-normal">({resolvedCustomerName})</span>
-                  </span>
-                  <span className="text-xs text-white/90 font-mono">
-                    {currentMacros.protein}g Prot · {currentMacros.calories} kcal
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-1 font-mono text-xl font-black">
-                  <span>${currentPrice.toFixed(2)}</span>
-                </div>
-              </button>
-
-              <button
-                onClick={handleClose}
-                className="w-full h-11 rounded-xl bg-[#FAF6F0] hover:bg-stone-200/70 text-stone-700 text-xs font-bold transition-all border border-stone-300 cursor-pointer"
-              >
-                Cancelar
-              </button>
+              {/* TAB CONTENT: PHYSICAL 58MM THERMAL STICKER PREVIEW */}
+              {activeRightTab === 'label' && renderThermalLabelPreview()}
             </div>
           </div>
         </div>
+
+        {/* STICKY MODAL FOOTER: Customer Name Input + Quick Chips + Add to Order CTA */}
+        <footer className="sticky bottom-0 z-20 px-4 md:px-6 py-3 bg-white border-t border-stone-200 shrink-0 space-y-2.5 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+          {/* Customer Name Row + Quick Presets */}
+          <div className="flex flex-col lg:flex-row lg:items-center gap-2.5">
+            <div className="relative flex-1 flex items-center min-w-0">
+              <label htmlFor={inputNameId} className="sr-only">
+                Nombre del cliente para el vaso (Etiqueta 58mm)
+              </label>
+              <div className="absolute left-3.5 flex items-center pointer-events-none">
+                <User className="w-4 h-4 text-[#4A6B3E]" />
+              </div>
+              <input
+                id={inputNameId}
+                type="text"
+                value={customCustomerName}
+                onChange={(e) => setCustomCustomerName(e.target.value)}
+                placeholder={
+                  selectedMember
+                    ? `Nombre vaso (Socio: ${selectedMember.fullName})`
+                    : 'Nombre del cliente para el vaso (ej. Carlos, Shaker #4)...'
+                }
+                autoComplete="off"
+                className="w-full h-12 pl-10 pr-12 rounded-xl bg-[#FAF6F0] border border-stone-300 text-sm font-bold text-stone-900 placeholder:text-stone-400 focus:outline-none focus:bg-white focus:border-[#4A6B3E] focus:ring-2 focus:ring-[#4A6B3E]/20 transition-all"
+              />
+              {customCustomerName.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setCustomCustomerName('')}
+                  title="Limpiar nombre"
+                  aria-label="Borrar texto del nombre"
+                  className="absolute right-0 w-12 h-12 min-w-[48px] min-h-[48px] rounded-r-xl text-stone-500 hover:text-stone-900 flex items-center justify-center transition-all active:scale-90 cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Quick Tactile Name Chips (Horizontal scrollable on tablet) */}
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-none touch-pan-x shrink-0 lg:max-w-[50%]">
+              <span className="hidden xl:inline-flex items-center gap-1 text-[11px] font-bold text-stone-500 shrink-0">
+                <Printer className="w-3.5 h-3.5 text-[#4A6B3E]" />
+                58mm:
+              </span>
+
+              {selectedMember && (
+                <button
+                  type="button"
+                  onClick={() => setCustomCustomerName(selectedMember.fullName)}
+                  className="text-xs px-3 min-h-[48px] rounded-xl bg-[#4A6B3E]/10 border border-[#4A6B3E]/30 text-[#4A6B3E] hover:bg-[#4A6B3E]/15 font-bold transition-all active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-[#4A6B3E]" />
+                  <span className="whitespace-nowrap">Socio: {selectedMember.fullName}</span>
+                </button>
+              )}
+
+              {quickNamePresets.map((preset) => (
+                <button
+                  key={preset}
+                  type="button"
+                  onClick={() => setCustomCustomerName(preset)}
+                  className={`text-xs px-3 min-h-[48px] rounded-xl border transition-all active:scale-95 font-semibold whitespace-nowrap shrink-0 cursor-pointer ${customCustomerName === preset
+                      ? 'bg-[#4A6B3E] text-white border-[#4A6B3E] font-bold shadow-sm'
+                      : 'bg-[#FAF6F0] text-stone-700 border-stone-200 hover:border-stone-300 hover:text-stone-900'
+                    }`}
+                >
+                  {preset}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Primary Action Row: Cancel + Add to Order */}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleClose}
+              className="min-h-[52px] px-5 rounded-xl bg-[#FAF6F0] hover:bg-stone-200/70 text-stone-700 text-xs sm:text-sm font-bold transition-all border border-stone-300 active:scale-95 shrink-0 cursor-pointer"
+            >
+              Cancelar
+            </button>
+
+            <button
+              id="btn-confirm-customization"
+              type="button"
+              onClick={handleConfirmAndAdd}
+              className="flex-1 min-h-[54px] rounded-2xl bg-[#4A6B3E] hover:bg-[#3d5933] text-white font-semibold text-sm sm:text-base shadow-md flex items-center justify-between px-4 sm:px-5 transition-all active:scale-[0.98] cursor-pointer"
+            >
+              <div className="flex flex-col text-left min-w-0">
+                <span className="text-xs sm:text-sm uppercase tracking-wider text-white font-bold flex items-center gap-1.5 truncate">
+                  <span>Agregar a la orden</span>
+                  <span className="text-white/85 font-normal truncate">({resolvedCustomerName})</span>
+                </span>
+                <span className="text-[11px] text-white/90 font-mono">
+                  {currentMacros.protein}g Prot · {currentMacros.calories} kcal
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1 font-mono text-lg sm:text-xl font-black shrink-0 ml-2">
+                <span>${currentPrice.toFixed(2)}</span>
+              </div>
+            </button>
+          </div>
+        </footer>
       </div>
     </div>
   );
