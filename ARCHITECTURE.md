@@ -40,10 +40,10 @@ La interfaz principal (`src/App.tsx` y `src/components/common/Header.tsx`) artic
 
 | Script | Comando exacto | Propósito |
 | :--- | :--- | :--- |
-| `dev` | `vite` | Inicia únicamente el servidor web de desarrollo en `http://localhost:5173`. |
+| `dev` | `vite --host` | Inicia el servidor web de desarrollo en `http://localhost:5173` y lo expone en la red Wi-Fi local (`--host`). |
 | `build` | `tsc -b && vite build` | Ejecuta validación de tipos (`tsconfig.json` con referencias a `app` y `node`) y compila a `dist/` con `base: './'`. |
 | `lint` | `oxlint` | Ejecuta el análisis estático con `oxlint` usando las reglas de `.oxlintrc.json`. |
-| `preview` | `vite preview` | Sirve localmente el bundle compilado en `dist/`. |
+| `preview` | `vite preview --host` | Sirve localmente el bundle compilado en `dist/` y lo expone en la red local (`--host`). |
 | `electron:dev` | `concurrently -k "cross-env NODE_ENV=development vite" "wait-on tcp:5173 && cross-env NODE_ENV=development electron ."` | Levanta Vite y espera a que el puerto `5173` responda para iniciar Electron (`electron/main.cjs`) con DevTools desacopladas. |
 | `electron:build:win` | `npm run build && electron-builder --win --x64` | Compila el frontend y empaqueta el instalador NSIS y la versión portable Windows x64 en `release/`. |
 
